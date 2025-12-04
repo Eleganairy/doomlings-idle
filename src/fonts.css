@@ -1,0 +1,15 @@
+@font-face {
+	font-family: "Minecraft";
+	src: url("./assets/Minecraft.ttf") format("truetype");
+}
+
+/* If you have multiple weights/styles */
+@font-face {
+	font-family: "PrStart";
+	src: url("./assets/PrStart.ttf") format("truetype");
+}
+
+@font-face {
+	font-family: "PrStartK";
+	src: url("./assets/prstartk.ttf") format("truetype");
+}

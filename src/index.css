@@ -1,0 +1,15 @@
+:root {
+	color: black;
+}
+
+* {
+	font-family: "Minecraft", sans-serif;
+}
+
+html,
+body {
+	font-family: "Minecraft", sans-serif;
+	overscroll-behavior: none;
+	overflow: hidden;
+	margin: 0;
+}
