@@ -1,4 +1,5 @@
-import { EnemyRarity, type Enemy } from "../../enemy/types/enemy.types";
+import { EnemyRarity } from "../../enemy/types/enemy.types";
+import type { Enemy } from "../types/combat.types";
 
 // Weight enemies by rarity for selection
 export function getWeightedEnemyPool(enemies: Record<string, Enemy>) {
@@ -9,16 +10,13 @@ export function getWeightedEnemyPool(enemies: Record<string, Enemy>) {
 
     switch (enemy.rarity) {
       case EnemyRarity.COMMON:
-        weight = 50; // 50% chance
+        weight = 80; // 80% chance
         break;
       case EnemyRarity.UNCOMMON:
-        weight = 30; // 30% chance
+        weight = 20; // 20% chance
         break;
       case EnemyRarity.RARE:
-        weight = 15; // 15% chance
-        break;
-      case EnemyRarity.LEGENDARY:
-        weight = 5; // 5% chance
+        weight = 0; // 0% chance
         break;
     }
 
@@ -38,8 +36,5 @@ export function getRandomEnemy(enemies: Record<string, Enemy>): Enemy {
   const selectedEnemy = pool[randomIndex];
 
   // Return a copy with full health
-  return {
-    ...selectedEnemy,
-    currentHealth: selectedEnemy.health,
-  };
+  return selectedEnemy;
 }

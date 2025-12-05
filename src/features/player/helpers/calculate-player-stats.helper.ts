@@ -1,9 +1,9 @@
-import { UpgradeId } from "../../progression/config/progression-list.config";
+import type { Entity } from "../../combat/types/combat.types";
+import { UpgradeStat } from "../../progression/config/progression-list.config";
 import type { Upgrade } from "../../progression/types/progression.types";
 import { PLAYER_CONFIG } from "../config/player-stats.config";
-import type { Player } from "../types/player.types";
 
-export function calculatePlayerStats(upgrades: Upgrade[]): Player {
+export function calculatePlayerStats(upgrades: Upgrade[]): Entity {
   let health = PLAYER_CONFIG.BASE_HEALTH;
   let attackDamage = PLAYER_CONFIG.BASE_ATTACK_DAMAGE;
   let attackSpeed = PLAYER_CONFIG.BASE_ATTACK_SPEED;
@@ -14,36 +14,33 @@ export function calculatePlayerStats(upgrades: Upgrade[]): Player {
 
     const totalValue = upgrade.value * upgrade.level;
 
-    switch (upgrade.id) {
-      case UpgradeId.HEALTH:
+    switch (upgrade.upgradedStat) {
+      case UpgradeStat.HEALTH:
         health += totalValue;
         break;
 
-      case UpgradeId.ATTACK_DAMAGE:
+      case UpgradeStat.ATTACK_DAMAGE:
         attackDamage += totalValue;
         break;
 
-      case UpgradeId.ATTACK_SPEED:
+      case UpgradeStat.ATTACK_SPEED:
         // Percentage increase
         attackSpeed += (attackSpeed * totalValue) / 100;
         break;
 
-      case UpgradeId.SLAYER_INSTINCT:
+      case UpgradeStat.CRITICAL_STRIKE_CHANCE:
         // Multiplicative damage bonus
-        attackDamage *= 1 + totalValue;
-        break;
-
-      case UpgradeId.CRITICAL_STRIKE:
-        criticalChance += totalValue;
+        criticalChance *= 1 + totalValue;
         break;
     }
   }
 
   return {
-    totalHealth: Math.floor(health),
+    name: "Hero",
+    maxHealth: Math.floor(health),
     currentHealth: Math.floor(health),
-    totalAttackDamage: Math.floor(attackDamage),
-    totalAttackSpeed: Number(attackSpeed.toFixed(2)),
-    totalCritChange: Math.min(criticalChance, 1), // Cap at 100%
+    attackDamage: Math.floor(attackDamage),
+    attackSpeed: Number(attackSpeed.toFixed(2)),
+    critChance: Math.min(criticalChance, 1), // Cap at 100%
   };
 }

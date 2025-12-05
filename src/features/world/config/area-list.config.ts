@@ -1,8 +1,8 @@
+import type { Enemy } from "../../combat/types/combat.types";
 import {
   ENEMY_LIST_AREA_1,
   ENEMY_LIST_AREA_2,
 } from "../../enemy/config/enemy-list.config";
-import type { Enemy } from "../../enemy/types/enemy.types";
 
 export interface Area {
   id: number;

@@ -1,15 +1,39 @@
 import { Box, Stack, Button } from "@mui/material";
-import { useCombat } from "../../features/combat/hooks/useCombat.hook";
+
+import { useAtomValue } from "jotai";
+import { useCombat } from "../../features/combat/hooks/use-combat.hook";
+import { CombatEntity } from "./combat-entity";
+import { playerEnergyAtom } from "../../features/combat/store/combat.atoms";
+import { activeAreaAtom } from "../../features/world/store/area.atoms";
+import { useCallback } from "react";
 
 export const OpenWorldPage = () => {
   const {
-    player,
-    enemy,
+    activePlayers,
+    activeEnemies,
     isCombatActive,
-    playerAttackProgress,
-    enemyAttackProgress,
     toggleCombat,
+    playerAttack,
+    enemyAttack,
   } = useCombat();
+
+  const playerEnergy = useAtomValue(playerEnergyAtom);
+  const activeArea = useAtomValue(activeAreaAtom);
+
+  // Memoize attack handlers per entity ID
+  const createPlayerAttackHandler = useCallback(
+    (damage: number) => {
+      playerAttack(damage, activeArea.enemyPool);
+    },
+    [activeArea.enemyPool, playerAttack]
+  );
+
+  const createEnemyAttackHandler = useCallback(
+    (damage: number) => {
+      enemyAttack(damage);
+    },
+    [enemyAttack]
+  );
 
   return (
     <Box
@@ -27,82 +51,23 @@ export const OpenWorldPage = () => {
           display: "flex",
           alignItems: "flex-end",
           justifyContent: "center",
-          paddingBottom: "7%",
-          marginLeft: "1%",
+          paddingBottom: "10%",
         }}
       >
-        <Stack direction="row" spacing={3}>
-          {/* {[1].map((player) => ( */}
-          <Stack
-            // key={`player-${player}`}
-            alignItems="center"
-            spacing={0.5}
-            sx={{ width: "200px" }}
-          >
-            {/* Health Points */}
-            <Box sx={{ color: "white", fontSize: "14px" }}>
-              HP: {Math.round(player.currentHealth)}/{player.totalHealth}
-            </Box>
-
-            {/* Health Bar */}
-            <Box
-              sx={{
-                width: "100%",
-                height: "10px",
-                backgroundColor: "#2c2c2c",
-                border: "2px solid #1d1d1d",
-                borderRadius: "4px",
-                overflow: "hidden",
-              }}
-            >
-              <Box
-                sx={{
-                  width: `${
-                    (player.currentHealth / player.totalHealth) * 100
-                  }%`,
-                  height: "100%",
-                  backgroundColor: "#4caf50",
-                }}
-              />
-            </Box>
-
-            {/* Attack Progress Bar */}
-            <Box
-              sx={{
-                width: "100%",
-                height: "8px",
-                backgroundColor: "#2c2c2c",
-                border: "2px solid #1d1d1d",
-                borderRadius: "4px",
-                overflow: "hidden",
-              }}
-            >
-              <Box
-                sx={{
-                  width: `${playerAttackProgress}%`,
-                  height: "100%",
-                  backgroundColor: "#ff9800",
-                  transition: "width 0.1s",
-                }}
-              />
-            </Box>
-
-            {/* Player Box */}
-            <Box
-              sx={{
-                width: "200px",
-                height: "300px",
-                backgroundColor: "#4060b7",
-                border: "3px solid #1d1d1d",
-                borderRadius: "4px",
-              }}
+        <Stack direction="row" spacing={2}>
+          {activePlayers.map((player) => (
+            <CombatEntity
+              key={player.id}
+              entity={player}
+              isActive={isCombatActive}
+              type="player"
+              onAttack={(damage) => createPlayerAttackHandler(damage)}
             />
-          </Stack>
-          {/* ))} */}
+          ))}
         </Stack>
       </Box>
 
-      {/* Middle Section - Information */}
+      {/* Middle Section - Controls */}
       <Box
         sx={{
           flex: 1,
@@ -113,61 +78,20 @@ export const OpenWorldPage = () => {
           padding: "20px",
         }}
       >
-        {/* Top - Level Selection */}
-        <Stack spacing={2} alignItems="center">
-          <Box
-            sx={{
-              backgroundColor: "#2c2c2c",
-              border: "3px solid #1d1d1d",
-              borderRadius: "4px",
-              padding: "10px",
-            }}
-          >
-            <Stack direction="row" spacing={1}>
-              {["<-", 1, 2, 3, 4, 5, "->"].map((level) => (
-                <Button
-                  key={`level-${level}`}
-                  disableRipple
-                  disableElevation
-                  sx={{
-                    width: "40px",
-                    height: "40px",
-                    minWidth: "40px",
-                    backgroundColor: level === 1 ? "#4060b7" : "#753b3b",
-                    color: "white",
-                    border: "2px solid #1d1d1d",
-                    borderRadius: "4px",
-                    fontFamily: "Minecraft",
-                    "&:hover": {
-                      backgroundColor: level === 1 ? "#4060b7" : "#753b3b",
-                    },
-                    "&:focus": {
-                      outline: "none",
-                    },
-                  }}
-                >
-                  {level}
-                </Button>
-              ))}
-            </Stack>
-          </Box>
+        <Box
+          sx={{
+            backgroundColor: "#2c2c2c",
+            border: "3px solid #1d1d1d",
+            borderRadius: "4px",
+            padding: "15px 30px",
+            color: "white",
+            fontSize: "20px",
+            fontWeight: "bold",
+          }}
+        >
+          ⚡ Energy: {playerEnergy}
+        </Box>
 
-          {/* Defeated Enemies Counter */}
-          <Box
-            sx={{
-              color: "white",
-              fontSize: "18px",
-              backgroundColor: "#2c2c2c",
-              border: "2px solid #1d1d1d",
-              borderRadius: "4px",
-              padding: "10px 20px",
-            }}
-          >
-            Defeated: 0/50
-          </Box>
-        </Stack>
-
-        {/* Start or Pause combat button */}
         <Button
           onClick={toggleCombat}
           disableRipple
@@ -184,38 +108,12 @@ export const OpenWorldPage = () => {
             "&:hover": {
               backgroundColor: isCombatActive ? "#d45050" : "#5cbf60",
             },
-            "&:focus": {
-              outline: "none",
-            },
           }}
         >
           {isCombatActive ? "PAUSE" : "START"}
         </Button>
 
-        {/* Bottom - Challenge Boss Button */}
-        <Button
-          disableRipple
-          disableElevation
-          sx={{
-            width: "200px",
-            height: "60px",
-            backgroundColor: "#b74040",
-            color: "white",
-            fontSize: "16px",
-            fontWeight: "bold",
-            border: "3px solid #1d1d1d",
-            borderRadius: "4px",
-            fontFamily: "Minecraft",
-            "&:hover": {
-              backgroundColor: "#d45050",
-            },
-            "&:focus": {
-              outline: "none",
-            },
-          }}
-        >
-          Challenge Boss
-        </Button>
+        <Box />
       </Box>
 
       {/* Right Section - Enemies */}
@@ -225,76 +123,19 @@ export const OpenWorldPage = () => {
           display: "flex",
           alignItems: "flex-end",
           justifyContent: "center",
-          paddingBottom: "7%",
-          marginRight: "1%",
+          paddingBottom: "10%",
         }}
       >
-        <Stack direction="row" spacing={3}>
-          {/* {[1].map((enemy) => ( */}
-          <Stack
-            //   key={`enemy-${enemy}`}
-            alignItems="center"
-            spacing={0.5}
-            sx={{ width: "200px" }}
-          >
-            {/* Health Points */}
-            <Box sx={{ color: "white", fontSize: "14px" }}>
-              HP: {Math.round(enemy.currentHealth)}/{enemy.health}
-            </Box>
-
-            {/* Health Bar */}
-            <Box
-              sx={{
-                width: "100%",
-                height: "10px",
-                backgroundColor: "#2c2c2c",
-                border: "2px solid #1d1d1d",
-                borderRadius: "4px",
-                overflow: "hidden",
-              }}
-            >
-              <Box
-                sx={{
-                  width: `${(enemy.currentHealth / enemy.health) * 100}%`,
-                  height: "100%",
-                  backgroundColor: "#f44336",
-                }}
-              />
-            </Box>
-
-            {/* Attack Progress Bar */}
-            <Box
-              sx={{
-                width: "100%",
-                height: "8px",
-                backgroundColor: "#2c2c2c",
-                border: "2px solid #1d1d1d",
-                borderRadius: "4px",
-                overflow: "hidden",
-              }}
-            >
-              <Box
-                sx={{
-                  width: `${enemyAttackProgress}%`,
-                  height: "100%",
-                  backgroundColor: "#ff9800",
-                  transition: "width 0.1s",
-                }}
-              />
-            </Box>
-
-            {/* Enemy Box */}
-            <Box
-              sx={{
-                width: "200px",
-                height: "300px",
-                backgroundColor: "#b74040",
-                border: "3px solid #1d1d1d",
-                borderRadius: "4px",
-              }}
+        <Stack direction="row" spacing={2}>
+          {activeEnemies.map((enemy) => (
+            <CombatEntity
+              key={enemy.id}
+              entity={enemy}
+              isActive={isCombatActive}
+              type="enemy"
+              onAttack={(damage) => createEnemyAttackHandler(damage)}
             />
-          </Stack>
-          {/* ))} */}
+          ))}
         </Stack>
       </Box>
     </Box>
