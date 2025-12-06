@@ -11,6 +11,7 @@ import { activeAreaAtom } from "../../world/store/area.atoms";
 import { getRandomEnemy } from "../helpers/get-random-enemy.helper";
 import { useCallback } from "react";
 import type { Enemy, SpawnedEnemy, SpawnedPlayer } from "../types/combat.types";
+import { useStageProgression } from "../../world/hooks/use-stage-progression.hook";
 
 export const useCombat = () => {
   const [activePlayers, setActivePlayers] = useAtom(activePlayersAtom);
@@ -19,6 +20,8 @@ export const useCombat = () => {
   const setPlayerEnergy = useSetAtom(playerEnergyAtom);
 
   const activeArea = useAtomValue(activeAreaAtom);
+  const { recordEnemyKill, currentAreaId, currentStageNumber } =
+    useStageProgression();
 
   // Initialize combat (spawn initial entities)
   const startCombat = () => {
@@ -28,7 +31,14 @@ export const useCombat = () => {
 
     if (activeEnemies.length === 0) {
       setActiveEnemies([
-        EntityManager.spawnEnemy(0, getRandomEnemy(activeArea.enemyPool)),
+        EntityManager.spawnEnemy(
+          0,
+          getRandomEnemy(
+            activeArea.enemyPool,
+            currentAreaId,
+            currentStageNumber
+          )
+        ),
       ]);
     }
 
@@ -63,10 +73,12 @@ export const useCombat = () => {
     (enemy: SpawnedEnemy) => {
       // Give loot
       setPlayerEnergy((prev) => prev + enemy.lootTable.energy);
+      // Track kill for stage progression
+      recordEnemyKill();
       // Remove the enemy from the enemies array
       setActiveEnemies((current) => current.filter((e) => e.id !== enemy.id));
     },
-    [setActiveEnemies, setPlayerEnergy]
+    [setActiveEnemies, setPlayerEnergy, recordEnemyKill]
   );
 
   // Player attacks enemies
@@ -79,15 +91,20 @@ export const useCombat = () => {
           handleEnemyDeath
         );
 
-        // If no enemies left, spawn new wave
+        // If no enemies left, spawn new wave with difficulty scaling
         if (updated.length === 0) {
-          return [EntityManager.spawnEnemy(0, getRandomEnemy(enemyPool))];
+          return [
+            EntityManager.spawnEnemy(
+              0,
+              getRandomEnemy(enemyPool, currentAreaId, currentStageNumber)
+            ),
+          ];
         }
 
         return updated;
       });
     },
-    [handleEnemyDeath, setActiveEnemies]
+    [handleEnemyDeath, setActiveEnemies, currentAreaId, currentStageNumber]
   );
 
   // Enemy attacks players

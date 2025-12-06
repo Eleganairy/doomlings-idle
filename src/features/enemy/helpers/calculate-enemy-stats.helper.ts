@@ -8,6 +8,7 @@ export function calculateEnemyStats({
   areaNumber,
   rarity,
   type,
+  sprite,
 }: BaseEnemy): Enemy {
   const { BASE, AREA_SCALING, RARITY, TYPE } = ENEMY_CONFIG;
 
@@ -46,7 +47,7 @@ export function calculateEnemyStats({
     critChance: 0,
     lootTable: loot,
     icon: `../../../enemies/icons/${modifiedName}_icon.png`,
-    sprite: `../../../enemies/sprites/${modifiedName}_sprite.png`,
+    sprite,
     rarity,
     type,
   };

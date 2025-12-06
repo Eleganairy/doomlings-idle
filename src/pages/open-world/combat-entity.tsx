@@ -5,6 +5,8 @@ import type {
   SpawnedPlayer,
 } from "../../features/combat/types/combat.types";
 
+import PlayerSprite from "../../../public/player/Blob1.png";
+
 interface CombatEntityProps {
   entity: SpawnedPlayer | SpawnedEnemy;
   isActive: boolean;
@@ -32,9 +34,11 @@ export const CombatEntity = ({
   const maxHealth = entity.maxHealth;
   const currentHealth = entity.currentHealth;
   const name = entity.name;
-  const icon = entity.name.charAt(0).toUpperCase();
 
-  const color = type === "player" ? "#4060b7" : "#b74040";
+  // Get sprite based on entity type
+  const icon =
+    type === "player" ? PlayerSprite : (entity as SpawnedEnemy).sprite;
+
   const healthColor = type === "player" ? "#4caf50" : "#f44336";
   const attackColor = "#ff9800";
 
@@ -77,7 +81,7 @@ export const CombatEntity = ({
           border: "2px solid #1d1d1d",
           borderRadius: "4px",
           overflow: "hidden",
-          marginBottom: "15px",
+          marginBottom: "40px",
         }}
       >
         <Box
@@ -95,8 +99,6 @@ export const CombatEntity = ({
         sx={{
           width: "120px",
           height: "120px",
-          backgroundColor: color,
-          border: "3px solid #1d1d1d",
           borderRadius: "4px",
           display: "flex",
           alignItems: "center",
@@ -104,7 +106,7 @@ export const CombatEntity = ({
           fontSize: "48px",
         }}
       >
-        {icon}
+        <img src={icon} alt="Entity Icon" />
       </Box>
     </Stack>
   );

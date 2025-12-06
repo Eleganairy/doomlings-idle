@@ -1,12 +1,16 @@
-import { Button } from "@mui/material";
+import { Button, Box, Stack } from "@mui/material";
 import LockIcon from "@mui/icons-material/Lock";
-import { Box, Stack } from "@mui/system";
-import background from "../../../public/doomlings-idle-background.png";
+import background from "../../../public/area/GrasslandsBackground.png";
 import { Pages, PageTypes } from "../../constants/pages.constants";
 import { useState } from "react";
 import { pageComponents } from "../../utils/pages.utils";
+import { useAtomValue } from "jotai";
+import { playerEnergyAtom } from "../../features/combat/store/combat.atoms";
+import PlayerSprite from "../../../public/player/Blob1.png";
 
 export const Layout = () => {
+  const playerEnergy = useAtomValue(playerEnergyAtom);
+
   const [activePage, setActivePage] = useState(PageTypes.OPEN_WORLD);
   const ActivePageComponent = pageComponents[activePage];
 
@@ -32,8 +36,15 @@ export const Layout = () => {
           color: "white",
         }}
       >
-        <Box sx={{ flex: 1, textAlign: "left" }}>Energy: 0</Box>
-        <Box sx={{ flex: 1, textAlign: "center" }}>Player Icon</Box>
+        <Box sx={{ flex: 1, textAlign: "left" }}>Energy: {playerEnergy}</Box>
+        <Box sx={{ flex: 1, textAlign: "center" }}>
+          <img
+            src={PlayerSprite}
+            alt="Player Icon"
+            height={"100px"}
+            width={"100px"}
+          />
+        </Box>
         <Stack
           direction={"row"}
           sx={{ flex: 1, textAlign: "right", justifyContent: "space-around" }}
@@ -53,8 +64,6 @@ export const Layout = () => {
           backgroundSize: "cover",
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",
-          // padding: "20px",
-          // overflow: "hidden",
         }}
       >
         {ActivePageComponent ? (

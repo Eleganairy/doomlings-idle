@@ -3,9 +3,9 @@ import { Box, Stack, Button } from "@mui/material";
 import { useAtomValue } from "jotai";
 import { useCombat } from "../../features/combat/hooks/use-combat.hook";
 import { CombatEntity } from "./combat-entity";
-import { playerEnergyAtom } from "../../features/combat/store/combat.atoms";
 import { activeAreaAtom } from "../../features/world/store/area.atoms";
 import { useCallback } from "react";
+import { StageSelector } from "./components/StageSelector";
 
 export const OpenWorldPage = () => {
   const {
@@ -17,7 +17,6 @@ export const OpenWorldPage = () => {
     enemyAttack,
   } = useCombat();
 
-  const playerEnergy = useAtomValue(playerEnergyAtom);
   const activeArea = useAtomValue(activeAreaAtom);
 
   // Memoize attack handlers per entity ID
@@ -51,7 +50,7 @@ export const OpenWorldPage = () => {
           display: "flex",
           alignItems: "flex-end",
           justifyContent: "center",
-          paddingBottom: "10%",
+          paddingBottom: "8%",
         }}
       >
         <Stack direction="row" spacing={2}>
@@ -78,19 +77,9 @@ export const OpenWorldPage = () => {
           padding: "20px",
         }}
       >
-        <Box
-          sx={{
-            backgroundColor: "#2c2c2c",
-            border: "3px solid #1d1d1d",
-            borderRadius: "4px",
-            padding: "15px 30px",
-            color: "white",
-            fontSize: "20px",
-            fontWeight: "bold",
-          }}
-        >
-          ⚡ Energy: {playerEnergy}
-        </Box>
+        <Stack direction="column" spacing={2}>
+          <StageSelector />
+        </Stack>
 
         <Button
           onClick={toggleCombat}
@@ -123,7 +112,7 @@ export const OpenWorldPage = () => {
           display: "flex",
           alignItems: "flex-end",
           justifyContent: "center",
-          paddingBottom: "10%",
+          paddingBottom: "8%",
         }}
       >
         <Stack direction="row" spacing={2}>

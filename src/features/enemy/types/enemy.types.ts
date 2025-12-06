@@ -9,6 +9,7 @@ export interface BaseEnemy {
   description: string;
   rarity: EnemyRarity;
   type: EnemyType;
+  sprite: string;
 }
 
 export enum EnemyRarity {

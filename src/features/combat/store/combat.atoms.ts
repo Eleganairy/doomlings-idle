@@ -11,8 +11,6 @@ export const enemyAttackProgressAtom = atom<number>(0);
 
 export const maxNumberOfActiveEnemiesAtom = atom<number>(1);
 
-export const enemiesSlainOnActiveStageAtom = atom<number>(0);
-
 export const combatStatsAtom = atom<CombatStats>(BASE_COMBAT_STATS);
 
 export const activePlayersAtom = atom<SpawnedPlayer[]>([]);

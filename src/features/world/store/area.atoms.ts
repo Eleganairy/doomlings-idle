@@ -1,4 +1,14 @@
 import { atom } from "jotai";
 import { AREA_LIST, type Area } from "../config/area-list.config";
+import { playerProgressAtom } from "./progression.atoms";
 
-export const activeAreaAtom = atom<Area>(AREA_LIST[0]);
+/**
+ * Derived atom that automatically syncs with player's current area
+ */
+export const activeAreaAtom = atom<Area>((get) => {
+  const playerProgress = get(playerProgressAtom);
+  const currentArea = AREA_LIST.find(
+    (area) => area.id === playerProgress.currentAreaId
+  );
+  return currentArea || AREA_LIST[0];
+});
