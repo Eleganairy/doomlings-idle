@@ -51,18 +51,36 @@ export const OpenWorldPage = () => {
           alignItems: "flex-end",
           justifyContent: "center",
           paddingBottom: "8%",
+          paddingLeft: "60px", // Space from the middle section
         }}
       >
         <Stack direction="row" spacing={2}>
-          {activePlayers.map((player) => (
-            <CombatEntity
-              key={player.id}
-              entity={player}
-              isActive={isCombatActive}
-              type="player"
-              onAttack={(damage) => createPlayerAttackHandler(damage)}
-            />
-          ))}
+          {/* Create fixed slots for players: front (0), middle (1), back (2) */}
+          {[0, 1, 2].map((slotPosition) => {
+            const player = activePlayers.find(
+              (p) => p.position === slotPosition
+            );
+            return (
+              <Box
+                key={`player-slot-${slotPosition}`}
+                sx={{
+                  width: "200px",
+                  minWidth: "200px",
+                  visibility: player ? "visible" : "hidden",
+                }}
+              >
+                {player && (
+                  <CombatEntity
+                    key={player.id}
+                    entity={player}
+                    isActive={isCombatActive}
+                    type="player"
+                    onAttack={(damage) => createPlayerAttackHandler(damage)}
+                  />
+                )}
+              </Box>
+            );
+          })}
         </Stack>
       </Box>
 
@@ -113,18 +131,36 @@ export const OpenWorldPage = () => {
           alignItems: "flex-end",
           justifyContent: "center",
           paddingBottom: "8%",
+          paddingRight: "60px", // Space from the middle section
         }}
       >
         <Stack direction="row" spacing={2}>
-          {activeEnemies.map((enemy) => (
-            <CombatEntity
-              key={enemy.id}
-              entity={enemy}
-              isActive={isCombatActive}
-              type="enemy"
-              onAttack={(damage) => createEnemyAttackHandler(damage)}
-            />
-          ))}
+          {/* Create fixed slots for enemies: front (0), middle (1), back (2) */}
+          {[0, 1, 2].map((slotPosition) => {
+            const enemy = activeEnemies.find(
+              (e) => e.position === slotPosition
+            );
+            return (
+              <Box
+                key={`enemy-slot-${slotPosition}`}
+                sx={{
+                  width: "200px",
+                  minWidth: "200px",
+                  visibility: enemy ? "visible" : "hidden",
+                }}
+              >
+                {enemy && (
+                  <CombatEntity
+                    key={enemy.id}
+                    entity={enemy}
+                    isActive={isCombatActive}
+                    type="enemy"
+                    onAttack={(damage) => createEnemyAttackHandler(damage)}
+                  />
+                )}
+              </Box>
+            );
+          })}
         </Stack>
       </Box>
     </Box>

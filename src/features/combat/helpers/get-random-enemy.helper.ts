@@ -50,9 +50,14 @@ export function getRandomEnemy(
   const randomIndex = Math.floor(Math.random() * pool.length);
   const selectedEnemy = pool[randomIndex];
 
-  // Calculate difficulty multiplier based on area and stage
-  const multiplier = calculateDifficultyMultiplier(areaId, stageNumber);
+  // Calculate difficulty multipliers based on area and stage
+  // Pass the enemy's base attack speed for linear scaling
+  const multipliers = calculateDifficultyMultiplier(
+    areaId,
+    stageNumber,
+    selectedEnemy.attackSpeed
+  );
 
   // Apply difficulty scaling to enemy stats
-  return applyDifficultyMultiplier(selectedEnemy, multiplier);
+  return applyDifficultyMultiplier(selectedEnemy, multipliers);
 }

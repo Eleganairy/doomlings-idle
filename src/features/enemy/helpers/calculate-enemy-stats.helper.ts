@@ -2,6 +2,12 @@ import type { Enemy } from "../../combat/types/combat.types";
 import { ENEMY_CONFIG } from "../config/enemy-stats.config";
 import type { BaseEnemy } from "../types/enemy.types";
 
+/**
+ * Calculate base enemy stats with rarity and type multipliers
+ *
+ * Note: Area and stage difficulty scaling is applied separately by
+ * the difficulty multiplier system in getRandomEnemy()
+ */
 export function calculateEnemyStats({
   name,
   description,
@@ -10,29 +16,20 @@ export function calculateEnemyStats({
   type,
   sprite,
 }: BaseEnemy): Enemy {
-  const { BASE, AREA_SCALING, RARITY, TYPE } = ENEMY_CONFIG;
+  const { BASE, RARITY, TYPE } = ENEMY_CONFIG;
 
-  // Calculate area-scaled base stats
-  const areaHealth =
-    BASE.maxHealth * AREA_SCALING.maxHealth ** (areaNumber - 1);
-  const areaDamage =
-    BASE.attackDamage * AREA_SCALING.attackDamage ** (areaNumber - 1);
-  const areaSpeed =
-    BASE.attackSpeed * AREA_SCALING.attackSpeed ** (areaNumber - 1);
-  const areaReward =
-    BASE.currencyReward * AREA_SCALING.currencyReward ** (areaNumber - 1);
-
-  // Add the rarity multipliers
+  // Apply rarity multipliers to base stats
   const rarityMod = RARITY[rarity];
-  const health = Math.floor(areaHealth * rarityMod.maxHealth);
-  const attackDamage = Math.floor(areaDamage * rarityMod.attackDamage);
-  const loot = { energy: Math.floor(areaReward * rarityMod.currencyReward) };
+  const health = Math.floor(BASE.maxHealth * rarityMod.maxHealth);
+  const attackDamage = Math.floor(BASE.attackDamage * rarityMod.attackDamage);
+  const energyReward = Math.floor(BASE.energyReward * rarityMod.energyReward);
 
-  // Add the type multipliers
+  // Apply type multipliers
   const typeMod = TYPE[type];
   const totalHealth = Math.floor(health * typeMod.maxHealth);
   const totalAttackDamage = Math.floor(attackDamage * typeMod.attackDamage);
-  const totalAttackSpeed = Math.floor(areaSpeed * typeMod.attackSpeed);
+  const totalAttackSpeed = BASE.attackSpeed * typeMod.attackSpeed;
+  const totalEnergyReward = energyReward; // Type doesn't affect rewards
 
   const modifiedName = name.toLowerCase().replace(/\s+/g, "_");
 
@@ -45,7 +42,7 @@ export function calculateEnemyStats({
     attackDamage: totalAttackDamage,
     attackSpeed: totalAttackSpeed,
     critChance: 0,
-    lootTable: loot,
+    lootTable: { energy: totalEnergyReward },
     icon: `../../../enemies/icons/${modifiedName}_icon.png`,
     sprite,
     rarity,

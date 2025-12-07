@@ -37,7 +37,7 @@ export const Pages: Page[] = [
     id: PageTypes.TRAITS,
     name: "Traits",
     icon: "icon",
-    lockedByBossNumber: 1,
+    lockedByBossNumber: 0,
   },
   {
     id: PageTypes.EVOLVE,

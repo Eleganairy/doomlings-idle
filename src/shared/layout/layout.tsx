@@ -7,9 +7,13 @@ import { pageComponents } from "../../utils/pages.utils";
 import { useAtomValue } from "jotai";
 import { playerEnergyAtom } from "../../features/combat/store/combat.atoms";
 import PlayerSprite from "../../../public/player/Blob1.png";
+import { usePersistentCombat } from "../../features/combat/hooks/use-persistent-combat.hook";
 
 export const Layout = () => {
   const playerEnergy = useAtomValue(playerEnergyAtom);
+
+  // Run persistent combat in background
+  usePersistentCombat();
 
   const [activePage, setActivePage] = useState(PageTypes.OPEN_WORLD);
   const ActivePageComponent = pageComponents[activePage];
@@ -64,6 +68,7 @@ export const Layout = () => {
           backgroundSize: "cover",
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",
+          padding: "20px",
         }}
       >
         {ActivePageComponent ? (

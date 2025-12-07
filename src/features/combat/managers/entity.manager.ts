@@ -10,7 +10,7 @@ export class EntityManager {
   static spawnEnemy(position: 0 | 1 | 2, enemy: Enemy): SpawnedEnemy {
     return {
       ...enemy,
-      id: `enemy-${position}`,
+      id: `enemy-${position}-${Date.now()}`,
       position,
     };
   }
@@ -52,10 +52,7 @@ export class EntityManager {
       }
     }
 
-    // Reposition remaining entities
-    return updatedEntities.map((entity, index) => ({
-      ...entity,
-      position: index,
-    }));
+    // Return entities without repositioning - they keep their original slots
+    return updatedEntities;
   }
 }

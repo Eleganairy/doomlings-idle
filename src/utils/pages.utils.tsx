@@ -1,5 +1,5 @@
 import { PageTypes } from "../constants/pages.constants";
-import { OpenWorldPage, UpgradesPage, TraitsPage } from "../pages";
+import { OpenWorldPage, UpgradesPage, TraitsPage, StatsPage } from "../pages";
 
 export const pageComponents: Record<
   PageTypes,
@@ -15,6 +15,6 @@ export const pageComponents: Record<
   [PageTypes.RELICS]: undefined,
   [PageTypes.PETS]: undefined,
   [PageTypes.TRAINING]: undefined,
-  [PageTypes.STATS]: undefined,
+  [PageTypes.STATS]: StatsPage,
   [PageTypes.SETTINGS]: undefined,
 };
