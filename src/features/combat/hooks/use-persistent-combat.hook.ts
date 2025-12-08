@@ -34,8 +34,12 @@ export const usePersistentCombat = () => {
   const setPlayerTrackedStats = useSetAtom(playerTrackedStatsAtom);
   const upgradeLevels = useAtomValue(upgradeLevelsAtom);
   const activeArea = useAtomValue(activeAreaAtom);
-  const { recordEnemyKill, currentAreaId, currentStageNumber } =
-    useStageProgression();
+  const {
+    recordEnemyKill,
+    resetStageProgress,
+    currentAreaId,
+    currentStageNumber,
+  } = useStageProgression();
 
   // Use refs to avoid stale closures in the interval
   const activePlayersRef = useRef(activePlayers);
@@ -178,7 +182,6 @@ export const usePersistentCombat = () => {
         const newTime = currentTime + TICK_RATE;
 
         if (newTime >= attackIntervalMs) {
-          // Enemy attacks!
           const damage = enemy.attackDamage;
 
           // Track damage taken
@@ -188,11 +191,11 @@ export const usePersistentCombat = () => {
           }));
 
           // Deal damage to players
-          setActivePlayers((current) => {
-            if (current.length === 0) return current;
+          setActivePlayers((players) => {
+            if (players.length === 0) return players;
 
             let remainingDamage = damage;
-            const sortedPlayers = [...current].sort(
+            const sortedPlayers = [...players].sort(
               (a, b) => a.position - b.position
             );
             const updatedPlayers: SpawnedPlayer[] = [];
@@ -217,6 +220,9 @@ export const usePersistentCombat = () => {
 
             // If no players left, spawn a new one with upgraded stats
             if (updatedPlayers.length === 0) {
+              // Reset stage progress when player dies
+              resetStageProgress();
+
               const calculatedStats = calculatePlayerStats(
                 upgradeLevelsRef.current
               );
@@ -255,8 +261,8 @@ export const usePersistentCombat = () => {
     if (activePlayers.length > 0) {
       const calculatedStats = calculatePlayerStats(upgradeLevels);
 
-      setActivePlayers((current) =>
-        current.map((player) => ({
+      setActivePlayers((players) =>
+        players.map((player) => ({
           ...player,
           maxHealth: calculatedStats.maxHealth,
           // Only update current health if it exceeds new max, otherwise keep it

@@ -1,12 +1,12 @@
 import { Button, Box, Stack } from "@mui/material";
 import LockIcon from "@mui/icons-material/Lock";
-import background from "../../../public/area/GrasslandsBackground.png";
+import background from "/area/GrasslandsBackground.png";
 import { Pages, PageTypes } from "../../constants/pages.constants";
 import { useState } from "react";
 import { pageComponents } from "../../utils/pages.utils";
 import { useAtomValue } from "jotai";
 import { playerEnergyAtom } from "../../features/combat/store/combat.atoms";
-import PlayerSprite from "../../../public/player/Blob1.png";
+import PlayerSprite from "/player/Blob1.png";
 import { usePersistentCombat } from "../../features/combat/hooks/use-persistent-combat.hook";
 
 export const Layout = () => {

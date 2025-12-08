@@ -20,7 +20,7 @@ export function getWeightedEnemyPool(enemies: Record<string, Enemy>) {
         weight = 30; // 30% chance
         break;
       case EnemyRarity.RARE:
-        weight = 20; // 0% chance
+        weight = 20; // 20% chance
         break;
     }
 
@@ -33,14 +33,7 @@ export function getWeightedEnemyPool(enemies: Record<string, Enemy>) {
   return pool;
 }
 
-/**
- * Select random enemy from weighted pool and apply difficulty scaling
- *
- * @param enemies - Pool of enemies to select from
- * @param areaId - Current area ID for difficulty scaling
- * @param stageNumber - Current stage number for difficulty scaling
- * @returns Scaled enemy with difficulty multiplier applied
- */
+//Get random enemy from pool and apply difficulty scaling
 export function getRandomEnemy(
   enemies: Record<string, Enemy>,
   areaId: number,
@@ -51,7 +44,6 @@ export function getRandomEnemy(
   const selectedEnemy = pool[randomIndex];
 
   // Calculate difficulty multipliers based on area and stage
-  // Pass the enemy's base attack speed for linear scaling
   const multipliers = calculateDifficultyMultiplier(
     areaId,
     stageNumber,

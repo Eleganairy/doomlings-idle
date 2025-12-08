@@ -1,24 +1,18 @@
 import { Stack, Box } from "@mui/material";
+
+import PlayerSprite from "/player/Blob1.png";
 import type {
   SpawnedEnemy,
   SpawnedPlayer,
-} from "../../features/combat/types/combat.types";
-
-import PlayerSprite from "../../../public/player/Blob1.png";
+} from "../../../features/combat/types/combat.types";
 
 interface CombatEntityProps {
   entity: SpawnedPlayer | SpawnedEnemy;
   isActive: boolean;
   type: "player" | "enemy";
-  onAttack: (damage: number) => void;
 }
 
-export const CombatEntity = ({
-  entity,
-  isActive,
-  type,
-  onAttack,
-}: CombatEntityProps) => {
+export const CombatEntity = ({ entity, isActive, type }: CombatEntityProps) => {
   const maxHealth = entity.maxHealth;
   const currentHealth = entity.currentHealth;
 
@@ -99,7 +93,7 @@ export const CombatEntity = ({
       </Stack>
       {/* Entity Box */}
       <Box>
-        <img src={icon} alt="Entity Icon" />
+        <img height="120px" src={icon} alt="Entity Icon" />
       </Box>
     </Stack>
   );

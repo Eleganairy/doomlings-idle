@@ -3,7 +3,7 @@ import { useAtomValue } from "jotai";
 import { activePlayersAtom } from "../../features/combat/store/combat.atoms";
 import { upgradeLevelsAtom } from "../../features/progression/store/progression.atoms";
 import { calculatePlayerStats } from "../../features/player/helpers/calculate-player-stats.helper";
-import PlayerSprite from "../../../public/player/Blob1.png";
+import PlayerSprite from "/player/Blob1.png";
 
 interface StatRowProps {
   label: string;

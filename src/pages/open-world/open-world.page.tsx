@@ -1,38 +1,12 @@
 import { Box, Stack, Button } from "@mui/material";
 
-import { useAtomValue } from "jotai";
 import { useCombat } from "../../features/combat/hooks/use-combat.hook";
-import { CombatEntity } from "./combat-entity";
-import { activeAreaAtom } from "../../features/world/store/area.atoms";
-import { useCallback } from "react";
 import { StageSelector } from "./components/StageSelector";
+import { CombatEntity } from "./components/combat-entity";
 
 export const OpenWorldPage = () => {
-  const {
-    activePlayers,
-    activeEnemies,
-    isCombatActive,
-    toggleCombat,
-    playerAttack,
-    enemyAttack,
-  } = useCombat();
-
-  const activeArea = useAtomValue(activeAreaAtom);
-
-  // Memoize attack handlers per entity ID
-  const createPlayerAttackHandler = useCallback(
-    (damage: number) => {
-      playerAttack(damage, activeArea.enemyPool);
-    },
-    [activeArea.enemyPool, playerAttack]
-  );
-
-  const createEnemyAttackHandler = useCallback(
-    (damage: number) => {
-      enemyAttack(damage);
-    },
-    [enemyAttack]
-  );
+  const { activePlayers, activeEnemies, isCombatActive, toggleCombat } =
+    useCombat();
 
   return (
     <Box
@@ -43,7 +17,7 @@ export const OpenWorldPage = () => {
         position: "relative",
       }}
     >
-      {/* Left Section - Players */}
+      {/* Left section - players */}
       <Box
         sx={{
           flex: 1,
@@ -51,11 +25,11 @@ export const OpenWorldPage = () => {
           alignItems: "flex-end",
           justifyContent: "center",
           paddingBottom: "8%",
-          paddingLeft: "60px", // Space from the middle section
+          paddingLeft: "60px",
         }}
       >
         <Stack direction="row" spacing={2}>
-          {/* Create fixed slots for players: front (0), middle (1), back (2) */}
+          {/* Positions for players: front (0), middle (1), back (2) */}
           {[0, 1, 2].map((slotPosition) => {
             const player = activePlayers.find(
               (p) => p.position === slotPosition
@@ -75,7 +49,6 @@ export const OpenWorldPage = () => {
                     entity={player}
                     isActive={isCombatActive}
                     type="player"
-                    onAttack={(damage) => createPlayerAttackHandler(damage)}
                   />
                 )}
               </Box>
@@ -83,8 +56,7 @@ export const OpenWorldPage = () => {
           })}
         </Stack>
       </Box>
-
-      {/* Middle Section - Controls */}
+      {/* Middle section - controls */}
       <Box
         sx={{
           flex: 1,
@@ -122,8 +94,7 @@ export const OpenWorldPage = () => {
 
         <Box />
       </Box>
-
-      {/* Right Section - Enemies */}
+      {/* Right section - enemies */}
       <Box
         sx={{
           flex: 1,
@@ -131,11 +102,11 @@ export const OpenWorldPage = () => {
           alignItems: "flex-end",
           justifyContent: "center",
           paddingBottom: "8%",
-          paddingRight: "60px", // Space from the middle section
+          paddingRight: "60px",
         }}
       >
         <Stack direction="row" spacing={2}>
-          {/* Create fixed slots for enemies: front (0), middle (1), back (2) */}
+          {/* Positions for enemies: front (0), middle (1), back (2) */}
           {[0, 1, 2].map((slotPosition) => {
             const enemy = activeEnemies.find(
               (e) => e.position === slotPosition
@@ -155,7 +126,6 @@ export const OpenWorldPage = () => {
                     entity={enemy}
                     isActive={isCombatActive}
                     type="enemy"
-                    onAttack={(damage) => createEnemyAttackHandler(damage)}
                   />
                 )}
               </Box>

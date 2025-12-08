@@ -75,6 +75,9 @@ export const useStageProgression = () => {
       const updatedStages = areaProgress.stages.map((stage) => {
         if (stage.stageNumber !== stageNumber) return stage;
 
+        // Don't count kills after stage is completed
+        if (stage.isCompleted) return stage;
+
         const newKillCount = stage.enemiesKilled + 1;
         const isNowCompleted = newKillCount >= stage.enemiesRequired;
 
@@ -154,6 +157,37 @@ export const useStageProgression = () => {
     [canNavigateToNextArea, setPlayerProgress, resetCombat]
   );
 
+  /**
+   * Reset the current stage progress (called when player dies)
+   */
+  const resetStageProgress = useCallback(() => {
+    setPlayerProgress((prev) => {
+      const areaId = prev.currentAreaId;
+      const stageNumber = prev.currentStageNumber;
+      const areaProgress = prev.areaProgress[areaId];
+
+      const updatedStages = areaProgress.stages.map((stage) => {
+        if (stage.stageNumber !== stageNumber) return stage;
+
+        return {
+          ...stage,
+          enemiesKilled: 0,
+        };
+      });
+
+      return {
+        ...prev,
+        areaProgress: {
+          ...prev.areaProgress,
+          [areaId]: {
+            ...areaProgress,
+            stages: updatedStages,
+          },
+        },
+      };
+    });
+  }, [setPlayerProgress]);
+
   return {
     // Current state
     currentStage: currentStageProgress,
@@ -164,6 +198,7 @@ export const useStageProgression = () => {
     // Actions
     navigateToStage,
     recordEnemyKill,
+    resetStageProgress,
     canNavigateToNextArea,
     navigateToNextArea,
   };

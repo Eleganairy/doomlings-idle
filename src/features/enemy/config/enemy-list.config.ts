@@ -9,7 +9,7 @@ export const ENEMY_LIST_AREA_1: Record<string, Enemy> = {
     areaNumber: 1,
     rarity: EnemyRarity.COMMON,
     type: EnemyType.FAST,
-    sprite: "../../../../enemy/Snail1.png",
+    sprite: "/enemy/Snail1.png",
   }),
   SNAIL: calculateEnemyStats({
     name: "Snail",
@@ -17,7 +17,7 @@ export const ENEMY_LIST_AREA_1: Record<string, Enemy> = {
     areaNumber: 1,
     rarity: EnemyRarity.COMMON,
     type: EnemyType.TANK,
-    sprite: "../../../../enemy/Snail1.png",
+    sprite: "/enemy/Snail1.png",
   }),
   FIELD_MOUSE: calculateEnemyStats({
     name: "Field mouse",
@@ -25,7 +25,7 @@ export const ENEMY_LIST_AREA_1: Record<string, Enemy> = {
     areaNumber: 1,
     rarity: EnemyRarity.UNCOMMON,
     type: EnemyType.STANDARD,
-    sprite: "../../../../enemy/Mouse1.png",
+    sprite: "/enemy/Mouse1.png",
   }),
   WILD_RABBIT: calculateEnemyStats({
     name: "Wild rabbit",
@@ -33,7 +33,7 @@ export const ENEMY_LIST_AREA_1: Record<string, Enemy> = {
     areaNumber: 1,
     rarity: EnemyRarity.UNCOMMON,
     type: EnemyType.STRONG,
-    sprite: "../../../../enemy/Rabbit1.png",
+    sprite: "/enemy/Rabbit1.png",
   }),
   RED_FOX: calculateEnemyStats({
     name: "Red fox",
@@ -41,7 +41,7 @@ export const ENEMY_LIST_AREA_1: Record<string, Enemy> = {
     areaNumber: 1,
     rarity: EnemyRarity.RARE,
     type: EnemyType.STRONG,
-    sprite: "../../../../enemy/RedFox1.png",
+    sprite: "/enemy/RedFox1.png",
   }),
 };
 
@@ -52,7 +52,7 @@ export const ENEMY_LIST_AREA_2: Record<string, Enemy> = {
     areaNumber: 2,
     rarity: EnemyRarity.COMMON,
     type: EnemyType.FAST,
-    sprite: "../../../../enemy/Snail1.png",
+    sprite: "/enemy/Snail1.png",
   }),
   COCKROACH: calculateEnemyStats({
     name: "Cockroach",
@@ -60,7 +60,7 @@ export const ENEMY_LIST_AREA_2: Record<string, Enemy> = {
     areaNumber: 2,
     rarity: EnemyRarity.COMMON,
     type: EnemyType.TANK,
-    sprite: "../../../../enemy/Snail1.png",
+    sprite: "/enemy/Snail1.png",
   }),
   MUTANT_RACCOON: calculateEnemyStats({
     name: "Mutant raccoon",
@@ -68,7 +68,7 @@ export const ENEMY_LIST_AREA_2: Record<string, Enemy> = {
     areaNumber: 2,
     rarity: EnemyRarity.UNCOMMON,
     type: EnemyType.STANDARD,
-    sprite: "../../../../enemy/Snail1.png",
+    sprite: "/enemy/Snail1.png",
   }),
   FERAL_DOG: calculateEnemyStats({
     name: "Feral dog",
@@ -76,7 +76,7 @@ export const ENEMY_LIST_AREA_2: Record<string, Enemy> = {
     areaNumber: 2,
     rarity: EnemyRarity.UNCOMMON,
     type: EnemyType.STRONG,
-    sprite: "../../../../enemy/Snail1.png",
+    sprite: "/enemy/Snail1.png",
   }),
   WASTE_ALLIGATOR: calculateEnemyStats({
     name: "Waste alligator",
@@ -84,7 +84,7 @@ export const ENEMY_LIST_AREA_2: Record<string, Enemy> = {
     areaNumber: 2,
     rarity: EnemyRarity.RARE,
     type: EnemyType.STRONG,
-    sprite: "../../../../enemy/Snail1.png",
+    sprite: "/enemy/Snail1.png",
   }),
 };
 
@@ -95,7 +95,7 @@ export const ENEMY_LIST_AREA_3: Record<string, Enemy> = {
     areaNumber: 2,
     rarity: EnemyRarity.COMMON,
     type: EnemyType.STRONG,
-    sprite: "../../../../enemy/Snail1.png",
+    sprite: "/enemy/Snail1.png",
   }),
   VINE_CREEPER: calculateEnemyStats({
     name: "Carnivorous Plant",
@@ -103,7 +103,7 @@ export const ENEMY_LIST_AREA_3: Record<string, Enemy> = {
     areaNumber: 2,
     rarity: EnemyRarity.COMMON,
     type: EnemyType.STANDARD,
-    sprite: "../../../../enemy/Snail1.png",
+    sprite: "/enemy/Snail1.png",
   }),
   CARNIVOROUS_PLANT: calculateEnemyStats({
     name: "Carnivorous Plant",
@@ -111,7 +111,7 @@ export const ENEMY_LIST_AREA_3: Record<string, Enemy> = {
     areaNumber: 2,
     rarity: EnemyRarity.UNCOMMON,
     type: EnemyType.STANDARD,
-    sprite: "../../../../enemy/Snail1.png",
+    sprite: "/enemy/Snail1.png",
   }),
   POISON_IVY_SERPENT: calculateEnemyStats({
     name: "Carnivorous Plant",
@@ -119,7 +119,7 @@ export const ENEMY_LIST_AREA_3: Record<string, Enemy> = {
     areaNumber: 2,
     rarity: EnemyRarity.UNCOMMON,
     type: EnemyType.STANDARD,
-    sprite: "../../../../enemy/Snail1.png",
+    sprite: "/enemy/Snail1.png",
   }),
   ANCIENT_TREANT: calculateEnemyStats({
     name: "Ancient Treant",
@@ -127,6 +127,6 @@ export const ENEMY_LIST_AREA_3: Record<string, Enemy> = {
     areaNumber: 2,
     rarity: EnemyRarity.RARE,
     type: EnemyType.TANK,
-    sprite: "../../../../enemy/Snail1.png",
+    sprite: "/enemy/Snail1.png",
   }),
 };
