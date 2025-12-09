@@ -1,10 +1,10 @@
-import { Button, Stack, Box, Typography } from "@mui/material";
-import { useStageProgression } from "../../../features/world/hooks/use-stage-progression.hook";
+import CheckIcon from "@mui/icons-material/Check";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import CheckIcon from "@mui/icons-material/Check";
 import LockIcon from "@mui/icons-material/Lock";
+import { Box, Button, Stack, Typography } from "@mui/material";
 import { AREA_LIST } from "../../../features/world/config/area-list.config";
+import { useStageProgression } from "../../../features/world/hooks/use-stage-progression.hook";
 
 /**
  * StageSelector Component

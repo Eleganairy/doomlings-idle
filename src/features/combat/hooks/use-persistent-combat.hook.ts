@@ -67,11 +67,17 @@ export const usePersistentCombat = () => {
   // Track attack timers per entity
   const playerAttackTimers = useRef<Record<string, number>>({});
   const enemyAttackTimers = useRef<Record<string, number>>({});
+  const lastUpdateTime = useRef<number>(performance.now());
 
   // Main combat loop
   useEffect(() => {
     const interval = setInterval(() => {
       if (!isCombatActiveRef.current) return;
+
+      // Calculate actual elapsed time since last update
+      const currentTime = performance.now();
+      const deltaTime = currentTime - lastUpdateTime.current;
+      lastUpdateTime.current = currentTime;
 
       const players = activePlayersRef.current;
       const enemies = activeEnemiesRef.current;
@@ -84,7 +90,7 @@ export const usePersistentCombat = () => {
         const currentTime = playerAttackTimers.current[timerId] ?? 0;
         const attackIntervalMs = 1000 / player.attackSpeed;
 
-        const newTime = currentTime + TICK_RATE;
+        const newTime = currentTime + deltaTime;
 
         if (newTime >= attackIntervalMs) {
           // Player attacks!
@@ -179,7 +185,7 @@ export const usePersistentCombat = () => {
         const currentTime = enemyAttackTimers.current[timerId] ?? 0;
         const attackIntervalMs = 1000 / enemy.attackSpeed;
 
-        const newTime = currentTime + TICK_RATE;
+        const newTime = currentTime + deltaTime;
 
         if (newTime >= attackIntervalMs) {
           const damage = enemy.attackDamage;

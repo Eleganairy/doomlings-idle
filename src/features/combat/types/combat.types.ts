@@ -12,6 +12,8 @@ export interface Entity {
   critChance: number;
   maxHealth: number;
   currentHealth: number;
+  icon: string;
+  sprite: string;
 }
 
 export interface Player extends Entity {
@@ -33,8 +35,6 @@ export interface Enemy extends Entity {
     energy: number;
     // Expandable for future loot types
   };
-  icon: string;
-  sprite: string;
 }
 
 export interface SpawnedEnemy extends Enemy {

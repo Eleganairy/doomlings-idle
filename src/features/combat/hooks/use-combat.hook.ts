@@ -38,6 +38,8 @@ export const useCombat = () => {
       const calculatedStats = calculatePlayerStats(upgradeLevels);
       setActivePlayers([
         EntityManager.spawnPlayer(1, { ...calculatedStats, shield: 0 }),
+        EntityManager.spawnPlayer(2, { ...calculatedStats, shield: 0 }),
+        EntityManager.spawnPlayer(0, { ...calculatedStats, shield: 0 }),
       ]);
     }
 
@@ -52,21 +54,32 @@ export const useCombat = () => {
             currentStageNumber
           )
         ),
+        EntityManager.spawnEnemy(
+          2,
+          getRandomEnemy(
+            activeArea.enemyPool,
+            currentAreaId,
+            currentStageNumber
+          )
+        ),
+        EntityManager.spawnEnemy(
+          0,
+          getRandomEnemy(
+            activeArea.enemyPool,
+            currentAreaId,
+            currentStageNumber
+          )
+        ),
       ]);
     }
 
     setIsCombatActive(true);
   };
 
-  // Pause combat
-  const pauseCombat = () => {
-    setIsCombatActive(false);
-  };
-
   // Toggle combat
   const toggleCombat = () => {
     if (isCombatActive) {
-      pauseCombat();
+      setIsCombatActive(false);
     } else {
       startCombat();
     }
@@ -143,6 +156,14 @@ export const useCombat = () => {
               1,
               getRandomEnemy(enemyPool, currentAreaId, currentStageNumber)
             ),
+            EntityManager.spawnEnemy(
+              2,
+              getRandomEnemy(enemyPool, currentAreaId, currentStageNumber)
+            ),
+            EntityManager.spawnEnemy(
+              0,
+              getRandomEnemy(enemyPool, currentAreaId, currentStageNumber)
+            ),
           ];
         }
 
@@ -178,6 +199,8 @@ export const useCombat = () => {
         if (updated.length === 0) {
           const calculatedStats = calculatePlayerStats(upgradeLevels);
           return [
+            EntityManager.spawnPlayer(1, { ...calculatedStats, shield: 0 }),
+            EntityManager.spawnPlayer(1, { ...calculatedStats, shield: 0 }),
             EntityManager.spawnPlayer(1, { ...calculatedStats, shield: 0 }),
           ];
         }

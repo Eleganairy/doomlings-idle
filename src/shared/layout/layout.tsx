@@ -1,13 +1,13 @@
-import { Button, Box, Stack } from "@mui/material";
 import LockIcon from "@mui/icons-material/Lock";
-import background from "/area/GrasslandsBackground.png";
-import { Pages, PageTypes } from "../../constants/pages.constants";
-import { useState } from "react";
-import { pageComponents } from "../../utils/pages.utils";
+import { Box, Button, Stack } from "@mui/material";
 import { useAtomValue } from "jotai";
-import { playerEnergyAtom } from "../../features/combat/store/combat.atoms";
-import PlayerSprite from "/player/Blob1.png";
+import { useState } from "react";
+import { Pages, PageTypes } from "../../constants/pages.constants";
 import { usePersistentCombat } from "../../features/combat/hooks/use-persistent-combat.hook";
+import { playerEnergyAtom } from "../../features/combat/store/combat.atoms";
+import { pageComponents } from "../../utils/pages.utils";
+import background from "/area/GrasslandsBackground.png";
+import PlayerSprite from "/player/Blob1.png";
 
 export const Layout = () => {
   const playerEnergy = useAtomValue(playerEnergyAtom);
