@@ -38,8 +38,6 @@ export const useCombat = () => {
       const calculatedStats = calculatePlayerStats(upgradeLevels);
       setActivePlayers([
         EntityManager.spawnPlayer(1, { ...calculatedStats, shield: 0 }),
-        EntityManager.spawnPlayer(2, { ...calculatedStats, shield: 0 }),
-        EntityManager.spawnPlayer(0, { ...calculatedStats, shield: 0 }),
       ]);
     }
 
@@ -48,22 +46,6 @@ export const useCombat = () => {
       setActiveEnemies([
         EntityManager.spawnEnemy(
           1,
-          getRandomEnemy(
-            activeArea.enemyPool,
-            currentAreaId,
-            currentStageNumber
-          )
-        ),
-        EntityManager.spawnEnemy(
-          2,
-          getRandomEnemy(
-            activeArea.enemyPool,
-            currentAreaId,
-            currentStageNumber
-          )
-        ),
-        EntityManager.spawnEnemy(
-          0,
           getRandomEnemy(
             activeArea.enemyPool,
             currentAreaId,
@@ -100,7 +82,7 @@ export const useCombat = () => {
       // Calculate energy with bonus
       const energyMultiplier = calculateEnergyBonusMultiplier(upgradeLevels);
       const energyGained = Math.floor(
-        enemy.lootTable.energy * energyMultiplier
+        enemy.lootTable.energy.dropAmount * energyMultiplier
       );
 
       // Give loot
@@ -156,14 +138,6 @@ export const useCombat = () => {
               1,
               getRandomEnemy(enemyPool, currentAreaId, currentStageNumber)
             ),
-            EntityManager.spawnEnemy(
-              2,
-              getRandomEnemy(enemyPool, currentAreaId, currentStageNumber)
-            ),
-            EntityManager.spawnEnemy(
-              0,
-              getRandomEnemy(enemyPool, currentAreaId, currentStageNumber)
-            ),
           ];
         }
 
@@ -200,15 +174,13 @@ export const useCombat = () => {
           const calculatedStats = calculatePlayerStats(upgradeLevels);
           return [
             EntityManager.spawnPlayer(1, { ...calculatedStats, shield: 0 }),
-            EntityManager.spawnPlayer(1, { ...calculatedStats, shield: 0 }),
-            EntityManager.spawnPlayer(1, { ...calculatedStats, shield: 0 }),
           ];
         }
 
         return updated;
       });
     },
-    [handlePlayerDeath, setActivePlayers, setPlayerTrackedStats]
+    [handlePlayerDeath, setActivePlayers, setPlayerTrackedStats, upgradeLevels]
   );
 
   return {

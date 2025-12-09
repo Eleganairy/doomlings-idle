@@ -1,8 +1,7 @@
-import type { Entity } from "../../combat/types/combat.types";
+import type { Player } from "../../combat/types/combat.types";
 import { ALL_UPGRADES } from "../../progression/config/progression.config";
 import { getTotalUpgradeValue } from "../../progression/hooks/use-upgrades.hook";
 import {
-  type Upgrade,
   UpgradeId,
   UpgradeStat,
   UpgradeIncrementType,
@@ -79,7 +78,7 @@ function applyModifiers(baseValue: number, modifiers: StatModifiers): number {
  */
 export function calculatePlayerStats(
   upgradeLevels: Record<UpgradeId, number>
-): Entity {
+): Player {
   // Get modifiers for each stat
   const attackDamageModifiers = getStatModifiers(
     UpgradeStat.ATTACK_DAMAGE,
@@ -98,6 +97,8 @@ export function calculatePlayerStats(
     upgradeLevels
   );
 
+  const shieldModifiers = getStatModifiers(UpgradeStat.SHIELD, upgradeLevels);
+
   // Apply modifiers to base stats
   const attackDamage = applyModifiers(
     PLAYER_CONFIG.BASE_ATTACK_DAMAGE,
@@ -115,6 +116,7 @@ export function calculatePlayerStats(
     PLAYER_CONFIG.BASE_CRITICAL_CHANCE,
     critChanceModifiers
   );
+  const shield = applyModifiers(PLAYER_CONFIG.BASE_SHIELD, shieldModifiers);
 
   return {
     name: "Hero",
@@ -123,6 +125,9 @@ export function calculatePlayerStats(
     attackDamage: Math.floor(attackDamage),
     attackSpeed: Number(attackSpeed.toFixed(2)),
     critChance: Math.min(critChance, 100), // Cap at 100%
+    shield: Math.floor(shield),
+    icon: "/player/Blob1.png",
+    sprite: "/player/Blob1.png",
   };
 }
 
