@@ -1,8 +1,3 @@
-export interface LootTable {
-  energy: number;
-  // Expandable for future loot types
-}
-
 export interface BaseEnemy {
   areaNumber: number;
   name: string;
@@ -10,6 +5,7 @@ export interface BaseEnemy {
   rarity: EnemyRarity;
   type: EnemyType;
   sprite: string;
+  icon: string;
 }
 
 export enum EnemyRarity {

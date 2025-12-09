@@ -6,12 +6,17 @@ export const ENEMY_CONFIG = {
     attackDamage: 1,
     attackSpeed: 0.5, // 0.5 attacks per second
     energyReward: 1,
+    meteoriteReward: 0.1,
+    meteoriteDropChance: 10, // 10% base chance for meteorite drop
   },
 
   AREA_SCALING: {
-    maxHealth: 2.5,
-    attackDamage: 2.5,
-    // Note: energyReward scaling is now handled by difficulty multiplier
+    health: 2.5,
+    attackDamage: 2.3,
+    attackSpeed: 0.2,
+    energyReward: 3,
+    meteoriteReward: 2,
+    specificAreaReward: 1,
   },
 
   RARITY: {

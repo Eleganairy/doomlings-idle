@@ -1,9 +1,9 @@
+import {
+  getEnemyCalculatedStats,
+  getEnemyCalculationMultipliers,
+} from "../../enemy/helpers/get-enemy-calculated-stats.helper";
 import { EnemyRarity } from "../../enemy/types/enemy.types";
 import type { Enemy } from "../types/combat.types";
-import {
-  calculateDifficultyMultiplier,
-  applyDifficultyMultiplier,
-} from "../../world/helpers/calculate-difficulty-multiplier.helper";
 
 // Weight enemies by rarity for selection
 export function getWeightedEnemyPool(enemies: Record<string, Enemy>) {
@@ -44,12 +44,8 @@ export function getRandomEnemy(
   const selectedEnemy = pool[randomIndex];
 
   // Calculate difficulty multipliers based on area and stage
-  const multipliers = calculateDifficultyMultiplier(
-    areaId,
-    stageNumber,
-    selectedEnemy.attackSpeed
-  );
+  const multipliers = getEnemyCalculationMultipliers(areaId, stageNumber);
 
   // Apply difficulty scaling to enemy stats
-  return applyDifficultyMultiplier(selectedEnemy, multipliers);
+  return getEnemyCalculatedStats(selectedEnemy, multipliers);
 }

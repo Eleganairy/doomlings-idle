@@ -67,7 +67,11 @@ export const usePersistentCombat = () => {
   // Track attack timers per entity
   const playerAttackTimers = useRef<Record<string, number>>({});
   const enemyAttackTimers = useRef<Record<string, number>>({});
-  const lastUpdateTime = useRef<number>(performance.now());
+  const lastUpdateTime = useRef<number>(0);
+
+  useEffect(() => {
+    lastUpdateTime.current = performance.now();
+  }, []);
 
   // Main combat loop
   useEffect(() => {
@@ -132,7 +136,7 @@ export const usePersistentCombat = () => {
                   upgradeLevelsRef.current
                 );
                 const energyGained = Math.floor(
-                  enemy.lootTable.energy * energyMultiplier
+                  enemy.lootTable.energy.dropAmount * energyMultiplier
                 );
 
                 setPlayerEnergy((prev) => prev + energyGained);
@@ -256,6 +260,7 @@ export const usePersistentCombat = () => {
     currentAreaId,
     currentStageNumber,
     recordEnemyKill,
+    resetStageProgress,
     setActiveEnemies,
     setActivePlayers,
     setPlayerEnergy,
@@ -282,5 +287,5 @@ export const usePersistentCombat = () => {
         }))
       );
     }
-  }, [upgradeLevels, setActivePlayers]);
+  }, [upgradeLevels, setActivePlayers, activePlayers.length]);
 };

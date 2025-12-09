@@ -8,12 +8,13 @@ import type { BaseEnemy } from "../types/enemy.types";
  * Note: Area and stage difficulty scaling is applied separately by
  * the difficulty multiplier system in getRandomEnemy()
  */
-export function calculateEnemyStats({
+export function getEnemyBaseStats({
   name,
   description,
   areaNumber,
   rarity,
   type,
+  icon,
   sprite,
 }: BaseEnemy): Enemy {
   const { BASE, RARITY, TYPE } = ENEMY_CONFIG;
@@ -29,9 +30,9 @@ export function calculateEnemyStats({
   const totalHealth = Math.floor(health * typeMod.maxHealth);
   const totalAttackDamage = Math.floor(attackDamage * typeMod.attackDamage);
   const totalAttackSpeed = BASE.attackSpeed * typeMod.attackSpeed;
-  const totalEnergyReward = energyReward; // Type doesn't affect rewards
-
-  const modifiedName = name.toLowerCase().replace(/\s+/g, "_");
+  const totalEnergyReward = energyReward;
+  const totalMeteoriteReward = BASE.meteoriteReward;
+  const totalMeteoriteDropChance = BASE.meteoriteDropChance; // 10% base chance for meteorite drop
 
   return {
     name,
@@ -42,8 +43,17 @@ export function calculateEnemyStats({
     attackDamage: totalAttackDamage,
     attackSpeed: totalAttackSpeed,
     critChance: 0,
-    lootTable: { energy: totalEnergyReward },
-    icon: `../../../enemies/icons/${modifiedName}_icon.png`,
+    lootTable: {
+      energy: {
+        dropChance: 100,
+        dropAmount: totalEnergyReward,
+      },
+      meteorite: {
+        dropChance: totalMeteoriteDropChance,
+        dropAmount: totalMeteoriteReward,
+      },
+    },
+    icon,
     sprite,
     rarity,
     type,

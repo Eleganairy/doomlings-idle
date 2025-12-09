@@ -5,6 +5,11 @@ export interface CombatStats {
   totalAmountOfPlayerDeaths: number;
 }
 
+export interface LootTableItem {
+  dropChance: number;
+  dropAmount: number;
+}
+
 export interface Entity {
   name: string;
   attackDamage: number;
@@ -17,7 +22,6 @@ export interface Entity {
 }
 
 export interface Player extends Entity {
-  // Additional player-specific properties can be added here
   shield: number;
 }
 
@@ -32,8 +36,8 @@ export interface Enemy extends Entity {
   rarity: string;
   type: string;
   lootTable: {
-    energy: number;
-    // Expandable for future loot types
+    energy: LootTableItem;
+    meteorite: LootTableItem;
   };
 }
 
