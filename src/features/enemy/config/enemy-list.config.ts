@@ -1,6 +1,6 @@
-import { EnemyRarity, EnemyType } from "../types/enemy.types";
-import { getEnemyBaseStats } from "../helpers/get-enemy-base-stats.helper";
 import type { Enemy } from "../../combat/types/combat.types";
+import { getEnemyBaseStats } from "../helpers/get-enemy-base-stats.helper";
+import { EnemyRarity, EnemyType } from "../types/enemy.types";
 
 export const ENEMY_LIST_AREA_1: Record<string, Enemy> = {
   GRASSHOPPER: getEnemyBaseStats({

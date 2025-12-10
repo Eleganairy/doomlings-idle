@@ -1,56 +1,20 @@
 import { Box, Stack } from "@mui/material";
 import { useAtomValue } from "jotai";
-import { activePlayersAtom } from "../../features/combat/store/combat.atoms";
-import { upgradeLevelsAtom } from "../../features/progression/store/progression.atoms";
 import { calculatePlayerStats } from "../../features/player/helpers/calculate-player-stats.helper";
+import { upgradeLevelsAtom } from "../../features/progression/store/progression.atoms";
 import PlayerSprite from "/player/Blob1.png";
-
-interface StatRowProps {
-  label: string;
-  value: string | number;
-  icon?: string;
-}
-
-const StatRow = ({ label, value, icon }: StatRowProps) => (
-  <Box
-    sx={{
-      display: "flex",
-      justifyContent: "space-between",
-      alignItems: "center",
-      padding: "12px 20px",
-      backgroundColor: "#2c2c2c",
-      border: "2px solid #1d1d1d",
-      borderRadius: "4px",
-      marginBottom: "8px",
-    }}
-  >
-    <Box sx={{ display: "flex", alignItems: "center", gap: "10px" }}>
-      {icon && <Box sx={{ fontSize: "24px" }}>{icon}</Box>}
-      <Box sx={{ color: "#cccccc", fontSize: "16px" }}>{label}</Box>
-    </Box>
-    <Box
-      sx={{
-        color: "white",
-        fontSize: "18px",
-        fontWeight: "bold",
-      }}
-    >
-      {value}
-    </Box>
-  </Box>
-);
+import { StatRow } from "./components";
+import { BigNumber } from "../../utils/big-number.utils";
+import { COLORS } from "../../constants/colors.constants";
 
 export const StatsPage = () => {
-  const activePlayers = useAtomValue(activePlayersAtom);
   const upgradeLevels = useAtomValue(upgradeLevelsAtom);
 
   // Get current calculated stats (what player would spawn with)
   const calculatedStats = calculatePlayerStats(upgradeLevels);
 
-  // Get active player stats if in combat (current health may differ)
-  const activePlayer = activePlayers[0];
-  const currentHealth =
-    activePlayer?.currentHealth ?? calculatedStats.maxHealth;
+  const fullHealth = new BigNumber(calculatedStats.maxHealth).format();
+  const fullAttackDamage = new BigNumber(calculatedStats.attackDamage).format();
 
   return (
     <Box
@@ -69,9 +33,9 @@ export const StatsPage = () => {
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
-          backgroundColor: "rgba(0, 0, 0, 0.3)",
+          backgroundColor: COLORS.CARD_BACKGROUND_CLEAR,
           borderRadius: "8px",
-          border: "3px solid #1d1d1d",
+          border: `3px solid ${COLORS.CARD_BORDER}`,
         }}
       >
         <Box
@@ -89,13 +53,12 @@ export const StatsPage = () => {
             style={{
               maxWidth: "100%",
               maxHeight: "100%",
-              imageRendering: "pixelated",
             }}
           />
         </Box>
         <Box
           sx={{
-            color: "white",
+            color: COLORS.TEXT_PRIMARY,
             fontSize: "28px",
             fontWeight: "bold",
             marginTop: "20px",
@@ -105,7 +68,7 @@ export const StatsPage = () => {
         </Box>
         <Box
           sx={{
-            color: "#888888",
+            color: COLORS.TEXT_SECONDARY,
             fontSize: "16px",
             marginTop: "8px",
           }}
@@ -135,23 +98,8 @@ export const StatsPage = () => {
         </Box>
 
         <Stack spacing={1}>
-          <StatRow
-            icon="❤️"
-            label="Current Health"
-            value={`${Math.floor(currentHealth)} / ${
-              calculatedStats.maxHealth
-            }`}
-          />
-          <StatRow
-            icon="💖"
-            label="Max Health"
-            value={calculatedStats.maxHealth}
-          />
-          <StatRow
-            icon="⚔️"
-            label="Attack Damage"
-            value={calculatedStats.attackDamage}
-          />
+          <StatRow icon="❤️" label="Max Health" value={fullHealth} />
+          <StatRow icon="⚔️" label="Attack Damage" value={fullAttackDamage} />
           <StatRow
             icon="⚡"
             label="Attack Speed"
@@ -161,6 +109,11 @@ export const StatsPage = () => {
             icon="💥"
             label="Critical Chance"
             value={`${Math.floor(calculatedStats.critChance)}%`}
+          />
+          <StatRow
+            icon="🛡️"
+            label="Shield"
+            value={Math.floor(calculatedStats.shield)}
           />
         </Stack>
 

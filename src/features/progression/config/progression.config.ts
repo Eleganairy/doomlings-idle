@@ -1,11 +1,11 @@
 import {
-  type Trait,
-  type Upgrade,
-  TraitId,
-  UpgradeId,
-  UpgradeStat,
-  UpgradeIncrementType,
   TrackedStatType,
+  type Trait,
+  TraitId,
+  type Upgrade,
+  UpgradeId,
+  UpgradeIncrementType,
+  UpgradeStat,
 } from "../types/progression.types";
 
 // ===== BASE UPGRADES (Always Unlocked) =====

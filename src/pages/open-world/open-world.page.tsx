@@ -4,6 +4,12 @@ import { useCombat } from "../../features/combat/hooks/use-combat.hook";
 import { StageSelector } from "./components/StageSelector";
 import { CombatEntity } from "./components/combat-entity";
 import { EntityStatusBar } from "./components/entity-status-bar";
+import { COLORS } from "../../constants/colors.constants";
+import {
+  getButtonBaseStateColors,
+  getButtonClickedStateColors,
+  getButtonHoverStateColors,
+} from "../../utils/button-state-colors.utils";
 
 export const OpenWorldPage = () => {
   const { activePlayers, activeEnemies, isCombatActive, toggleCombat } =
@@ -83,14 +89,23 @@ export const OpenWorldPage = () => {
               marginTop: "20px",
               width: "200px",
               height: "60px",
-              backgroundColor: isCombatActive ? "#b74040" : "#4caf50",
-              color: "white",
+              backgroundColor: getButtonBaseStateColors(isCombatActive, true),
+              color: COLORS.TEXT_PRIMARY,
               fontSize: "18px",
               fontWeight: "bold",
-              border: "3px solid #1d1d1d",
+              border: `3px solid ${COLORS.CARD_BORDER}`,
               borderRadius: "4px",
               "&:hover": {
-                backgroundColor: isCombatActive ? "#d45050" : "#5cbf60",
+                backgroundColor: getButtonHoverStateColors(
+                  isCombatActive,
+                  true
+                ),
+              },
+              "&:active": {
+                backgroundColor: getButtonClickedStateColors(
+                  isCombatActive,
+                  true
+                ),
               },
             }}
           >
