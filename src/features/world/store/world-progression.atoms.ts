@@ -1,12 +1,12 @@
 import { atom } from "jotai";
-import type { PlayerProgress } from "../types/progression.types";
-import { createInitialAreaProgress } from "../config/progression.config";
+import { createInitialAreaProgress } from "../config/world-progression.config";
+import type { WorldProgress } from "../types/progression.types";
 
 /**
  * Initial player progress state
  * Starts at Area 1, Stage 1
  */
-const initialPlayerProgress: PlayerProgress = {
+const initialWorldProgress: WorldProgress = {
   currentAreaId: 1,
   currentStageNumber: 1,
   areaProgress: {
@@ -17,13 +17,13 @@ const initialPlayerProgress: PlayerProgress = {
 /**
  * Main atom storing the player's progression state
  */
-export const playerProgressAtom = atom<PlayerProgress>(initialPlayerProgress);
+export const worldProgressAtom = atom<WorldProgress>(initialWorldProgress);
 
 /**
  * Derived atom for getting the current area's progress
  */
 export const currentAreaProgressAtom = atom((get) => {
-  const progress = get(playerProgressAtom);
+  const progress = get(worldProgressAtom);
   return progress.areaProgress[progress.currentAreaId];
 });
 

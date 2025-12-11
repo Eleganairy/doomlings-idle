@@ -34,6 +34,6 @@ export const COLORS = {
   // Miscellaneous colors
   HEALTH_PLAYER: "#4caf50",
   HEALTH_ENEMY: "#f44336",
-  ATTACK: "#2196f3",
+  ATTACK: "#ff9800",
   MANA: "#9b59b6",
 };

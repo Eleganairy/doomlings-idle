@@ -1,10 +1,11 @@
 import CheckIcon from "@mui/icons-material/Check";
-import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import LockIcon from "@mui/icons-material/Lock";
 import { Box, Button, Stack, Typography } from "@mui/material";
+import { COLORS } from "../../../constants/colors.constants";
 import { AREA_LIST } from "../../../features/world/config/area-list.config";
 import { useStageProgression } from "../../../features/world/hooks/use-stage-progression.hook";
+import type { StageProgress } from "../../../features/world/types/progression.types";
+import { StageSelectorAreaButton } from "./stage-selector-area-button";
 
 /**
  * StageSelector Component
@@ -25,11 +26,6 @@ export const StageSelector = () => {
     canNavigateToNextArea,
   } = useStageProgression();
 
-  // Determine the highest unlocked stage (for consistent blue highlighting)
-  const highestUnlockedStage = availableStages
-    .filter((s) => s.isUnlocked && !s.isCompleted)
-    .reduce((max, stage) => Math.max(max, stage.stageNumber), 0);
-
   const handlePreviousArea = () => {
     if (currentAreaId > 1) {
       navigateToNextArea(currentAreaId - 1);
@@ -46,14 +42,26 @@ export const StageSelector = () => {
   const canGoNextArea =
     currentAreaId < AREA_LIST.length && canNavigateToNextArea();
 
+  const getStageButtonBackgroundColor = (stage: StageProgress) => {
+    if (stage.isCompleted) return COLORS.ACCENT_GREEN;
+    if (!stage.isUnlocked) return COLORS.BUTTON_DISABLED;
+    return COLORS.BUTTON_ACTIVE;
+  };
+
+  const getStageButtonBackgroundColorOnHover = (stage: StageProgress) => {
+    if (stage.isCompleted) return COLORS.ACCENT_LIGHT_GREEN;
+    if (!stage.isUnlocked) return COLORS.BUTTON_DISABLED;
+    return COLORS.BUTTON_ACTIVE_HOVER;
+  };
+
   return (
     <Stack direction="column" spacing={1} alignItems="center">
       {/* Enemy Kill Counter - Displayed outside buttons */}
       {currentStage && (
         <Box
           sx={{
-            backgroundColor: "#2c2c2c",
-            border: "2px solid #1d1d1d",
+            backgroundColor: COLORS.CARD_BACKGROUND,
+            border: `2px solid ${COLORS.CARD_BORDER}`,
             borderRadius: "4px",
             padding: "4px 12px",
             minWidth: "100px",
@@ -64,7 +72,7 @@ export const StageSelector = () => {
             sx={{
               fontFamily: "Minecraft",
               fontSize: "14px",
-              color: "white",
+              color: COLORS.TEXT_PRIMARY,
               fontWeight: "bold",
             }}
           >
@@ -78,52 +86,25 @@ export const StageSelector = () => {
         direction="row"
         spacing={1}
         sx={{
-          backgroundColor: "#2c2c2c",
-          border: "3px solid #1d1d1d",
+          backgroundColor: COLORS.CARD_BACKGROUND,
+          border: `2px solid ${COLORS.CARD_BORDER}`,
           borderRadius: "4px",
           padding: "8px",
           alignItems: "center",
         }}
       >
         {/* Previous Area Arrow */}
-        <Button
-          onClick={handlePreviousArea}
-          disabled={!canGoPreviousArea}
-          disableRipple
-          sx={{
-            minWidth: "40px",
-            height: "50px",
-            backgroundColor: canGoPreviousArea ? "#4caf50" : "#3a3a3a",
-            color: "white",
-            border: "3px solid #1d1d1d",
-            borderRadius: "4px",
-            "&:hover": {
-              backgroundColor: canGoPreviousArea ? "#5cbf60" : "#3a3a3a",
-            },
-            "&:disabled": {
-              color: "#666",
-            },
-          }}
-        >
-          <ChevronLeftIcon />
-        </Button>
+        <StageSelectorAreaButton
+          handleNavigation={handlePreviousArea}
+          isActive={canGoPreviousArea}
+          goNext={false}
+        />
 
         {/* Stage Buttons */}
         {availableStages.map((stage) => {
           const isCurrent = stage.stageNumber === currentStageNumber;
           const isCompleted = stage.isCompleted;
           const isLocked = !stage.isUnlocked;
-          const isHighestUnlocked = stage.stageNumber === highestUnlockedStage;
-
-          // Determine background color - CONSISTENT colors
-          let backgroundColor = "#753b3b"; // Locked (dark red)
-          if (isCompleted) {
-            backgroundColor = "#4caf50"; // Completed (green) - stays green
-          } else if (isHighestUnlocked) {
-            backgroundColor = "#4060b7"; // Highest unlocked (blue) - stays blue
-          } else if (stage.isUnlocked) {
-            backgroundColor = "#b74040"; // Other unlocked (red)
-          }
 
           return (
             <Button
@@ -134,9 +115,11 @@ export const StageSelector = () => {
               sx={{
                 minWidth: "50px",
                 height: "50px",
-                backgroundColor,
-                color: isLocked ? "#ffffff85" : "white",
-                border: isCurrent ? "3px solid #ffffff" : "3px solid #1d1d1d",
+                backgroundColor: getStageButtonBackgroundColor(stage),
+                color: isLocked ? COLORS.TEXT_DISABLED : COLORS.TEXT_PRIMARY,
+                border: isCurrent
+                  ? `3px solid ${COLORS.CARD_BORDER_ACTIVE}`
+                  : `3px solid ${COLORS.CARD_BORDER}`,
                 borderRadius: "4px",
                 fontFamily: "Minecraft",
                 fontSize: "14px",
@@ -147,13 +130,7 @@ export const StageSelector = () => {
                 alignItems: "center",
                 padding: "4px",
                 "&:hover": {
-                  backgroundColor: isLocked
-                    ? backgroundColor
-                    : isCompleted
-                    ? "#5cbf60"
-                    : isHighestUnlocked
-                    ? "#4a70da"
-                    : "#d74d4d",
+                  backgroundColor: getStageButtonBackgroundColorOnHover(stage),
                 },
                 "&:disabled": {
                   cursor: "not-allowed",
@@ -175,27 +152,11 @@ export const StageSelector = () => {
         })}
 
         {/* Next Area Arrow */}
-        <Button
-          onClick={handleNextArea}
-          disabled={!canGoNextArea}
-          disableRipple
-          sx={{
-            minWidth: "40px",
-            height: "50px",
-            backgroundColor: canGoNextArea ? "#4caf50" : "#3a3a3a",
-            color: "white",
-            border: "3px solid #1d1d1d",
-            borderRadius: "4px",
-            "&:hover": {
-              backgroundColor: canGoNextArea ? "#5cbf60" : "#3a3a3a",
-            },
-            "&:disabled": {
-              color: "#666",
-            },
-          }}
-        >
-          <ChevronRightIcon />
-        </Button>
+        <StageSelectorAreaButton
+          handleNavigation={handleNextArea}
+          isActive={canGoNextArea}
+          goNext={true}
+        />
       </Stack>
     </Stack>
   );

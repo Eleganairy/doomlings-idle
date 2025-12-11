@@ -36,10 +36,12 @@ export const TraitTierButton = ({
         }`,
         borderRadius: "4px",
         fontWeight: "bold",
+        fontFamily: "Minecraft",
         "&:hover": {
           backgroundColor: getButtonHoverStateColors(isSelected, !isAvailable),
         },
         "&:disabled": {
+          cursor: "not-allowed",
           backgroundColor: getButtonClickedStateColors(
             isSelected,
             !isAvailable

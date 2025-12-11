@@ -1,15 +1,13 @@
-import { Box, Stack, Button } from "@mui/material";
+import { Box, Button, Stack } from "@mui/material";
 
-import { useCombat } from "../../features/combat/hooks/use-combat.hook";
-import { StageSelector } from "./components/StageSelector";
-import { CombatEntity } from "./components/combat-entity";
-import { EntityStatusBar } from "./components/entity-status-bar";
 import { COLORS } from "../../constants/colors.constants";
+import { useCombat } from "../../features/combat/hooks/use-combat.hook";
 import {
   getButtonBaseStateColors,
   getButtonClickedStateColors,
   getButtonHoverStateColors,
 } from "../../utils/button-state-colors.utils";
+import { CombatEntity, EntityStatusBar, StageSelector } from "./components";
 
 export const OpenWorldPage = () => {
   const { activePlayers, activeEnemies, isCombatActive, toggleCombat } =
@@ -146,7 +144,7 @@ export const OpenWorldPage = () => {
         </Box>
       </Box>
 
-      {/* Bottom Status Panel - RPG Style */}
+      {/* Bottom Status Panel */}
       <Box
         sx={{
           position: "absolute",

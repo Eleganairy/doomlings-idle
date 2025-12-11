@@ -1,6 +1,6 @@
 import { atom } from "jotai";
 import { AREA_LIST, type Area } from "../config/area-list.config";
-import { playerProgressAtom } from "./progression.atoms";
+import { playerProgressAtom } from "./world-progression.atoms";
 
 /**
  * Derived atom that automatically syncs with player's current area

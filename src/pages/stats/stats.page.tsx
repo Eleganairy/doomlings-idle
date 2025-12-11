@@ -35,7 +35,7 @@ export const StatsPage = () => {
           justifyContent: "center",
           backgroundColor: COLORS.CARD_BACKGROUND_CLEAR,
           borderRadius: "8px",
-          border: `3px solid ${COLORS.CARD_BORDER}`,
+          border: `3px solid ${COLORS.CARD_BORDER_ACTIVE}`,
         }}
       >
         <Box
@@ -88,7 +88,7 @@ export const StatsPage = () => {
       >
         <Box
           sx={{
-            color: "white",
+            color: COLORS.TEXT_PRIMARY,
             fontSize: "24px",
             fontWeight: "bold",
             marginBottom: "20px",
@@ -119,7 +119,7 @@ export const StatsPage = () => {
 
         <Box
           sx={{
-            color: "white",
+            color: COLORS.TEXT_PRIMARY,
             fontSize: "24px",
             fontWeight: "bold",
             marginTop: "30px",

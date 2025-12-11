@@ -189,6 +189,7 @@ export const UpgradeCard = ({
               backgroundColor: getButtonClickedColor(),
             },
             "&:disabled": {
+              cursor: "not-allowed",
               color: COLORS.TEXT_DISABLED,
             },
           }}

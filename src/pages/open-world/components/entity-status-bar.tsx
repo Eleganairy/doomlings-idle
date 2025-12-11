@@ -4,6 +4,7 @@ import type {
   SpawnedEnemy,
   SpawnedPlayer,
 } from "../../../features/combat/types/combat.types";
+import { COLORS } from "../../../constants/colors.constants";
 
 interface EntityStatusBarProps {
   entity: SpawnedPlayer | SpawnedEnemy;
@@ -20,14 +21,16 @@ export const EntityStatusBar = ({
   const maxHealth = entity.maxHealth;
   const currentHealth = entity.currentHealth;
 
-  const healthColor = type === "player" ? "#4caf50" : "#f44336";
-  const attackColor = "#ff9800";
-  const borderColor = type === "player" ? "#4caf50" : "#f44336";
+  const healthColor =
+    type === "player" ? COLORS.HEALTH_PLAYER : COLORS.HEALTH_ENEMY;
+  const attackColor = COLORS.ATTACK;
+  const borderColor =
+    type === "player" ? COLORS.HEALTH_PLAYER : COLORS.HEALTH_ENEMY;
 
   return (
     <Box
       sx={{
-        backgroundColor: "#2c2c2c",
+        backgroundColor: COLORS.CARD_BACKGROUND,
         border: `2px solid ${borderColor}`,
         borderRadius: "6px",
         padding: "8px 12px",
@@ -51,7 +54,7 @@ export const EntityStatusBar = ({
           sx={{
             width: "100%",
             height: "12px",
-            backgroundColor: "#1d1d1d",
+            backgroundColor: COLORS.CARD_BACKGROUND_DARK,
             borderRadius: "3px",
             overflow: "hidden",
           }}
@@ -71,7 +74,7 @@ export const EntityStatusBar = ({
           sx={{
             width: "100%",
             height: "8px",
-            backgroundColor: "#1d1d1d",
+            backgroundColor: COLORS.CARD_BACKGROUND_DARK,
             borderRadius: "3px",
             overflow: "hidden",
           }}

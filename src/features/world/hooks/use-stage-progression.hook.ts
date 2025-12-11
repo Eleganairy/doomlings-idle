@@ -1,27 +1,27 @@
 import { useAtom, useAtomValue } from "jotai";
-import {
-  playerProgressAtom,
-  currentAreaProgressAtom,
-  currentStageProgressAtom,
-} from "../store/progression.atoms";
 import { useCallback } from "react";
+import { useCombatReset } from "../../combat/hooks/use-combat-reset.hook";
 import {
   createInitialAreaProgress,
   STAGES_PER_AREA,
-} from "../config/progression.config";
-import { useCombatReset } from "../../combat/hooks/use-combat-reset.hook";
+} from "../config/world-progression.config";
+import {
+  currentAreaProgressAtom,
+  currentStageProgressAtom,
+  worldProgressAtom,
+} from "../store/world-progression.atoms";
 
 /**
  * Custom hook for managing stage progression
  *
- * Provides methods to:
- * - Navigate between stages
- * - Track enemy kills
- * - Check stage completion
- * - Unlock new stages
+ * @method navigateToStage - Navigate to a specific stage if unlocked
+ * @method recordEnemyKill - Record an enemy kill and check for stage completion
+ * @method canNavigateToNextArea - Check if the player can navigate to the next area
+ * @method navigateToNextArea - Navigate to the next area if current area is completed
+ * @method resetStageProgress - Reset the current stage progress (called when player dies)
  */
 export const useStageProgression = () => {
-  const [playerProgress, setPlayerProgress] = useAtom(playerProgressAtom);
+  const [worldProgress, setWorldProgress] = useAtom(worldProgressAtom);
   const currentAreaProgress = useAtomValue(currentAreaProgressAtom);
   const currentStageProgress = useAtomValue(currentStageProgressAtom);
   const { resetCombat } = useCombatReset();
@@ -37,7 +37,7 @@ export const useStageProgression = () => {
   const navigateToStage = useCallback(
     (stageNumber: number) => {
       const targetStage = currentAreaProgress.stages.find(
-        (s) => s.stageNumber === stageNumber
+        (stage) => stage.stageNumber === stageNumber
       );
 
       if (!targetStage?.isUnlocked) {
@@ -48,7 +48,7 @@ export const useStageProgression = () => {
       // Reset combat state when switching stages
       resetCombat();
 
-      setPlayerProgress((prev) => ({
+      setWorldProgress((prev) => ({
         ...prev,
         currentStageNumber: stageNumber,
         areaProgress: {
@@ -60,14 +60,14 @@ export const useStageProgression = () => {
         },
       }));
     },
-    [currentAreaProgress.stages, setPlayerProgress, resetCombat]
+    [currentAreaProgress.stages, setWorldProgress, resetCombat]
   );
 
   /**
    * Record an enemy kill and check for stage completion
    */
   const recordEnemyKill = useCallback(() => {
-    setPlayerProgress((prev) => {
+    setWorldProgress((prev) => {
       const areaId = prev.currentAreaId;
       const stageNumber = prev.currentStageNumber;
       const areaProgress = prev.areaProgress[areaId];
@@ -115,7 +115,7 @@ export const useStageProgression = () => {
         },
       };
     });
-  }, [setPlayerProgress]);
+  }, [setWorldProgress]);
 
   /**
    * Check if the player can navigate to the next area
@@ -137,7 +137,7 @@ export const useStageProgression = () => {
       // Reset combat state when switching areas
       resetCombat();
 
-      setPlayerProgress((prev) => {
+      setWorldProgress((prev) => {
         // Initialize the next area if it doesn't exist
         const nextAreaProgress =
           prev.areaProgress[nextAreaId] ||
@@ -154,14 +154,14 @@ export const useStageProgression = () => {
         };
       });
     },
-    [canNavigateToNextArea, setPlayerProgress, resetCombat]
+    [canNavigateToNextArea, setWorldProgress, resetCombat]
   );
 
   /**
    * Reset the current stage progress (called when player dies)
    */
   const resetStageProgress = useCallback(() => {
-    setPlayerProgress((prev) => {
+    setWorldProgress((prev) => {
       const areaId = prev.currentAreaId;
       const stageNumber = prev.currentStageNumber;
       const areaProgress = prev.areaProgress[areaId];
@@ -186,14 +186,14 @@ export const useStageProgression = () => {
         },
       };
     });
-  }, [setPlayerProgress]);
+  }, [setWorldProgress]);
 
   return {
     // Current state
     currentStage: currentStageProgress,
     availableStages,
-    currentAreaId: playerProgress.currentAreaId,
-    currentStageNumber: playerProgress.currentStageNumber,
+    currentAreaId: worldProgress.currentAreaId,
+    currentStageNumber: worldProgress.currentStageNumber,
 
     // Actions
     navigateToStage,
