@@ -49,6 +49,16 @@ export enum UpgradeId {
   WARM_BLOODED = "WARM_BLOODED",
 }
 
+/**
+ * Specifies which entity type an upgrade targets.
+ * - PLAYER: Upgrade applies as a buff to player entities
+ * - ENEMY: Upgrade applies as a debuff to enemy entities
+ */
+export enum UpgradeTarget {
+  PLAYER = "PLAYER",
+  ENEMY = "ENEMY",
+}
+
 // ===== INTERFACES =====
 
 /** A trait that tracks player progress and unlocks upgrades */
@@ -64,12 +74,14 @@ export interface Trait {
   linkedUpgrade?: UpgradeId;
 }
 
-/** An upgrade that modifies player stats */
+/** An upgrade that modifies entity stats via the buff system */
 export interface Upgrade {
   id: UpgradeId;
   name: string;
   description: string;
   icon: string;
+  /** Which entity type this upgrade targets (PLAYER buff or ENEMY debuff) */
+  upgradeTarget: UpgradeTarget;
   upgradedStat: UpgradeStat;
   incrementType: UpgradeIncrementType;
   baseCost: number;

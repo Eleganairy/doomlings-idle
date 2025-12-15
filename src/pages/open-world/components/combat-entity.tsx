@@ -1,12 +1,8 @@
 import { Box } from "@mui/material";
-
-import type {
-  SpawnedEnemy,
-  SpawnedPlayer,
-} from "../../../features/combat/types/combat.types";
+import type { Entity } from "../../../features/entity/entity.class";
 
 interface CombatEntityProps {
-  entity: SpawnedPlayer | SpawnedEnemy;
+  entity: Entity;
 }
 
 export const CombatEntity = ({ entity }: CombatEntityProps) => {
@@ -30,7 +26,7 @@ export const CombatEntity = ({ entity }: CombatEntityProps) => {
           alignItems: "flex-end",
         }}
       >
-        <img height="320px" src={entity.sprite} alt="Entity Icon" />
+        <img height="160px" src={entity.sprite} alt="Entity Icon" />
       </Box>
     </Box>
   );

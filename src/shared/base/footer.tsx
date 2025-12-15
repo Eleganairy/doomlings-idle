@@ -1,4 +1,4 @@
-import { Box, Stack } from "@mui/system";
+import { Box, Stack } from "@mui/material";
 import { COLORS } from "../../constants/colors.constants";
 import { Pages, type PageTypes } from "../../constants/pages.constants";
 import { FooterNavigationButton } from "../UI/footer-navigation-button";

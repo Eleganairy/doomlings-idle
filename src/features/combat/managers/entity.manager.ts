@@ -1,58 +1,138 @@
+/**
+ * Entity Manager
+ *
+ * Manages entity spawning and utility methods for the Entity class system.
+ */
+
+import { Entity } from "../../entity/entity.class";
 import type {
-  Enemy,
-  Player,
-  SpawnedEnemy,
-  SpawnedPlayer,
-} from "../types/combat.types";
+  PlayerDefinition,
+  EnemyDefinition,
+  BossDefinition,
+  SpawnPosition,
+} from "../../entity/types/entity.types";
+import { getHelperDefinition } from "../../entity/config/helper-definitions.config";
+import { spawnPositionToPosition } from "../../entity/helpers/execute-ability.helper";
+
+// ====================================================================================
+// ENTITY MANAGER CLASS
+// ====================================================================================
 
 export class EntityManager {
-  // Spawn an entity at a specific position
-  static spawnEnemy(position: 0 | 1 | 2, enemy: Enemy): SpawnedEnemy {
-    return {
-      ...enemy,
-      id: `enemy-${position}-${Date.now()}`,
-      position,
-    };
+  // ==================================================================================
+  // ENTITY SPAWNING METHODS
+  // ==================================================================================
+
+  /**
+   * Spawn a player entity
+   */
+  static spawnPlayerEntity(
+    definition: PlayerDefinition,
+    position: 0 | 1 | 2
+  ): Entity {
+    return Entity.createPlayer(definition, position);
   }
 
-  static spawnPlayer(position: 0 | 1 | 2, player: Player): SpawnedPlayer {
-    return {
-      ...player,
-      id: `player-${position}`,
-      position,
-    };
+  /**
+   * Spawn an enemy entity
+   */
+  static spawnEnemyEntity(
+    definition: EnemyDefinition,
+    position: 0 | 1 | 2
+  ): Entity {
+    return Entity.createEnemy(definition, position);
   }
 
-  // Deal damage to a list of entities with overflow
-  static dealDamage<T extends { currentHealth: number; position: number }>(
-    entities: T[],
-    damage: number,
-    onEntityDeath: (entity: T) => void
-  ): T[] {
+  /**
+   * Spawn a boss entity
+   */
+  static spawnBossEntity(
+    definition: BossDefinition,
+    position: 0 | 1 | 2
+  ): Entity {
+    return Entity.createBoss(definition, position);
+  }
+
+  /**
+   * Spawn a helper entity
+   */
+  static spawnHelperEntity(
+    definitionId: string,
+    spawnPosition: SpawnPosition
+  ): Entity | null {
+    const definition = getHelperDefinition(definitionId);
+    if (!definition) {
+      console.warn(`Helper definition not found: ${definitionId}`);
+      return null;
+    }
+    const position = spawnPositionToPosition(spawnPosition);
+    return Entity.createHelper(definition, position);
+  }
+
+  // ==================================================================================
+  // DAMAGE METHODS
+  // ==================================================================================
+
+  /**
+   * Deal damage to a list of Entity instances with overflow
+   * Returns living entities AND killed entities separately
+   */
+  static dealDamageToEntities(
+    entities: Entity[],
+    damage: number
+  ): { living: Entity[]; killed: Entity[]; totalDamageDealt: number } {
     let remainingDamage = damage;
+    let totalDamageDealt = 0;
+
+    // Sort by position (front to back)
     const sortedEntities = [...entities].sort(
       (a, b) => a.position - b.position
     );
-    const updatedEntities: T[] = [];
+
+    const living: Entity[] = [];
+    const killed: Entity[] = [];
 
     for (const entity of sortedEntities) {
       if (remainingDamage <= 0) {
-        updatedEntities.push(entity);
+        living.push(entity);
         continue;
       }
 
-      const newHealth = entity.currentHealth - remainingDamage;
+      const result = entity.takeDamage(remainingDamage);
+      totalDamageDealt += result.damageTaken;
 
-      if (newHealth <= 0) {
-        remainingDamage = Math.abs(newHealth);
-        onEntityDeath(entity);
+      if (result.died) {
+        remainingDamage = result.overkill;
+        killed.push(entity);
       } else {
-        updatedEntities.push({ ...entity, currentHealth: newHealth });
+        living.push(entity);
         remainingDamage = 0;
       }
     }
 
-    // Return entities without repositioning - they keep their original slots
-    return updatedEntities;
+    return { living, killed, totalDamageDealt };
+  }
+
+  // ==================================================================================
+  // UTILITY METHODS
+  // ==================================================================================
+
+  /**
+   * Find an available position for spawning
+   * Returns null if no positions are available
+   */
+  static findAvailablePosition(
+    entities: Array<{ position: 0 | 1 | 2 }>,
+    preferredOrder: Array<0 | 1 | 2> = [1, 0, 2]
+  ): 0 | 1 | 2 | null {
+    const occupiedPositions = new Set(entities.map((e) => e.position));
+
+    for (const position of preferredOrder) {
+      if (!occupiedPositions.has(position)) {
+        return position;
+      }
+    }
+
+    return null; // All positions occupied
   }
 }

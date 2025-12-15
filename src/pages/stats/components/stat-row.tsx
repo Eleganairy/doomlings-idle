@@ -1,4 +1,4 @@
-import { Box } from "@mui/system";
+import { Box } from "@mui/material";
 import { COLORS } from "../../../constants/colors.constants";
 
 interface StatRowProps {

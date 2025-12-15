@@ -1,3 +1,10 @@
+/**
+ * Persistent Combat Hook
+ *
+ * Runs the combat loop continuously, even when on other pages.
+ * Uses the Entity class system for all combat operations.
+ */
+
 import { useEffect, useRef } from "react";
 import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import {
@@ -7,18 +14,25 @@ import {
   playerEnergyAtom,
 } from "../store/combat.atoms";
 import { activeAreaAtom } from "../../world/store/area.atoms";
-import { getRandomEnemy } from "../helpers/get-random-enemy.helper";
-import { EntityManager } from "../managers/entity.manager";
-import type { SpawnedEnemy, SpawnedPlayer } from "../types/combat.types";
 import {
   playerTrackedStatsAtom,
   upgradeLevelsAtom,
 } from "../../progression/store/progression.atoms";
-import {
-  calculatePlayerStats,
-  calculateEnergyBonusMultiplier,
-} from "../../player/helpers/calculate-player-stats.helper";
+import { calculateEnergyBonusMultiplier } from "../../player/helpers/calculate-player-stats.helper";
 import { useStageProgression } from "../../world/hooks/use-stage-progression.hook";
+
+// Entity system
+import { Entity } from "../../entity/entity.class";
+import {
+  DRUID_SLIME,
+  ELECTRIC_SLIME,
+  TANK_SLIME,
+} from "../../entity/config/player-definitions.config";
+import { spawnEnemyFromPool } from "../helpers/spawn-enemy.helper";
+import {
+  applyUpgradeBuffsToPlayer,
+  applyUpgradeDebuffsToEnemy,
+} from "../../entity/helpers/apply-upgrade-buffs.helper";
 
 const TICK_RATE = 50; // 50ms ticks for combat loop
 
@@ -73,12 +87,75 @@ export const usePersistentCombat = () => {
     lastUpdateTime.current = performance.now();
   }, []);
 
+  /**
+   * Create player entities for respawn.
+   * Applies all purchased upgrade buffs to each player.
+   */
+  const createPlayerEntitiesWithUpgrades = (): Entity[] => {
+    const players = [
+      Entity.createPlayer(DRUID_SLIME, 0),
+      Entity.createPlayer(ELECTRIC_SLIME, 1),
+      Entity.createPlayer(TANK_SLIME, 2),
+    ];
+
+    // Apply upgrade buffs to each player
+    for (const player of players) {
+      applyUpgradeBuffsToPlayer(player, upgradeLevelsRef.current);
+    }
+
+    return players;
+  };
+
+  /**
+   * Create an enemy entity with upgrade debuffs applied.
+   */
+  const createEnemyWithDebuffs = (position: 0 | 1 | 2): Entity => {
+    const enemy = spawnEnemyFromPool(
+      activeArea.enemyPool,
+      currentAreaId,
+      currentStageNumber,
+      position
+    );
+    applyUpgradeDebuffsToEnemy(enemy, upgradeLevelsRef.current);
+    return enemy;
+  };
+
+  /**
+   * Process loot from a killed enemy
+   */
+  const processEnemyLoot = (enemy: Entity) => {
+    const lootDrops = enemy.rollLoot();
+    const energyMultiplier = calculateEnergyBonusMultiplier(
+      upgradeLevelsRef.current
+    );
+
+    for (const drop of lootDrops) {
+      if (drop.type === "energy") {
+        const energyGained = Math.floor(drop.amount * energyMultiplier);
+        setPlayerEnergy((prev) => prev + energyGained);
+        setPlayerTrackedStats((prev) => ({
+          ...prev,
+          totalEnergyGained: prev.totalEnergyGained + energyGained,
+        }));
+      }
+    }
+
+    recordEnemyKill();
+    setPlayerTrackedStats((prev) => ({
+      ...prev,
+      totalEnemiesKilled: prev.totalEnemiesKilled + 1,
+      enemyKillsByName: {
+        ...prev.enemyKillsByName,
+        [enemy.name]: (prev.enemyKillsByName[enemy.name] || 0) + 1,
+      },
+    }));
+  };
+
   // Main combat loop
   useEffect(() => {
     const interval = setInterval(() => {
       if (!isCombatActiveRef.current) return;
 
-      // Calculate actual elapsed time since last update
       const currentTime = performance.now();
       const deltaTime = currentTime - lastUpdateTime.current;
       lastUpdateTime.current = currentTime;
@@ -91,13 +168,12 @@ export const usePersistentCombat = () => {
       // Process player attacks
       for (const player of players) {
         const timerId = player.id;
-        const currentTime = playerAttackTimers.current[timerId] ?? 0;
+        const currentTimer = playerAttackTimers.current[timerId] ?? 0;
         const attackIntervalMs = 1000 / player.attackSpeed;
 
-        const newTime = currentTime + deltaTime;
+        const newTime = currentTimer + deltaTime;
 
         if (newTime >= attackIntervalMs) {
-          // Player attacks!
           const damage = player.attackDamage;
 
           // Track highest single hit
@@ -117,7 +193,7 @@ export const usePersistentCombat = () => {
             const sortedEnemies = [...current].sort(
               (a, b) => a.position - b.position
             );
-            const updatedEnemies: SpawnedEnemy[] = [];
+            const updatedEnemies: Entity[] = [];
 
             for (const enemy of sortedEnemies) {
               if (remainingDamage <= 0) {
@@ -125,53 +201,21 @@ export const usePersistentCombat = () => {
                 continue;
               }
 
-              const newHealth = enemy.currentHealth - remainingDamage;
+              const damageResult = enemy.takeDamage(remainingDamage);
 
-              if (newHealth <= 0) {
-                // Enemy died
-                remainingDamage = Math.abs(newHealth);
-
-                // Calculate energy with bonus
-                const energyMultiplier = calculateEnergyBonusMultiplier(
-                  upgradeLevelsRef.current
-                );
-                const energyGained = Math.floor(
-                  enemy.lootTable.energy.dropAmount * energyMultiplier
-                );
-
-                setPlayerEnergy((prev) => prev + energyGained);
-                recordEnemyKill();
-
-                setPlayerTrackedStats((prev) => ({
-                  ...prev,
-                  totalEnemiesKilled: prev.totalEnemiesKilled + 1,
-                  enemyKillsByName: {
-                    ...prev.enemyKillsByName,
-                    [enemy.name]: (prev.enemyKillsByName[enemy.name] || 0) + 1,
-                  },
-                  totalEnergyGained: prev.totalEnergyGained + energyGained,
-                }));
-
-                // Clean up enemy timer
+              if (damageResult.died) {
+                remainingDamage = damageResult.overkill;
+                processEnemyLoot(enemy);
                 delete enemyAttackTimers.current[enemy.id];
               } else {
-                updatedEnemies.push({ ...enemy, currentHealth: newHealth });
+                updatedEnemies.push(enemy);
                 remainingDamage = 0;
               }
             }
 
-            // If no enemies left, spawn a new one
+            // Spawn new enemy if all enemies died
             if (updatedEnemies.length === 0) {
-              return [
-                EntityManager.spawnEnemy(
-                  1,
-                  getRandomEnemy(
-                    activeArea.enemyPool,
-                    currentAreaId,
-                    currentStageNumber
-                  )
-                ),
-              ];
+              return [createEnemyWithDebuffs(1)];
             }
 
             return updatedEnemies;
@@ -186,10 +230,10 @@ export const usePersistentCombat = () => {
       // Process enemy attacks
       for (const enemy of enemies) {
         const timerId = enemy.id;
-        const currentTime = enemyAttackTimers.current[timerId] ?? 0;
+        const currentTimer = enemyAttackTimers.current[timerId] ?? 0;
         const attackIntervalMs = 1000 / enemy.attackSpeed;
 
-        const newTime = currentTime + deltaTime;
+        const newTime = currentTimer + deltaTime;
 
         if (newTime >= attackIntervalMs) {
           const damage = enemy.attackDamage;
@@ -201,14 +245,14 @@ export const usePersistentCombat = () => {
           }));
 
           // Deal damage to players
-          setActivePlayers((players) => {
-            if (players.length === 0) return players;
+          setActivePlayers((current) => {
+            if (current.length === 0) return current;
 
             let remainingDamage = damage;
-            const sortedPlayers = [...players].sort(
+            const sortedPlayers = [...current].sort(
               (a, b) => a.position - b.position
             );
-            const updatedPlayers: SpawnedPlayer[] = [];
+            const updatedPlayers: Entity[] = [];
 
             for (const player of sortedPlayers) {
               if (remainingDamage <= 0) {
@@ -216,32 +260,21 @@ export const usePersistentCombat = () => {
                 continue;
               }
 
-              const newHealth = player.currentHealth - remainingDamage;
+              const damageResult = player.takeDamage(remainingDamage);
 
-              if (newHealth <= 0) {
-                remainingDamage = Math.abs(newHealth);
-                // Clean up player timer
+              if (damageResult.died) {
+                remainingDamage = damageResult.overkill;
                 delete playerAttackTimers.current[player.id];
               } else {
-                updatedPlayers.push({ ...player, currentHealth: newHealth });
+                updatedPlayers.push(player);
                 remainingDamage = 0;
               }
             }
 
-            // If no players left, spawn a new one with upgraded stats
+            // Respawn all players if all died
             if (updatedPlayers.length === 0) {
-              // Reset stage progress when player dies
               resetStageProgress();
-
-              const calculatedStats = calculatePlayerStats(
-                upgradeLevelsRef.current
-              );
-              return [
-                EntityManager.spawnPlayer(1, {
-                  ...calculatedStats,
-                  shield: 0,
-                }),
-              ];
+              return createPlayerEntitiesWithUpgrades();
             }
 
             return updatedPlayers;
@@ -266,26 +299,4 @@ export const usePersistentCombat = () => {
     setPlayerEnergy,
     setPlayerTrackedStats,
   ]);
-
-  // Update player stats when upgrades change (when alive)
-  useEffect(() => {
-    if (activePlayers.length > 0) {
-      const calculatedStats = calculatePlayerStats(upgradeLevels);
-
-      setActivePlayers((players) =>
-        players.map((player) => ({
-          ...player,
-          maxHealth: calculatedStats.maxHealth,
-          // Only update current health if it exceeds new max, otherwise keep it
-          currentHealth: Math.min(
-            player.currentHealth,
-            calculatedStats.maxHealth
-          ),
-          attackDamage: calculatedStats.attackDamage,
-          attackSpeed: calculatedStats.attackSpeed,
-          critChance: calculatedStats.critChance,
-        }))
-      );
-    }
-  }, [upgradeLevels, setActivePlayers, activePlayers.length]);
 };

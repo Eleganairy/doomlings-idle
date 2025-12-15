@@ -4,7 +4,7 @@ import {
   completedTraitIdsAtom,
   traitProgressAtom,
 } from "../store/progression.atoms";
-import type { Trait, TraitId } from "../types/progression.types";
+import type { TraitId } from "../types/progression.types";
 
 export const useTraits = () => {
   const completedTraitIds = useAtomValue(completedTraitIdsAtom);

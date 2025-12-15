@@ -1,4 +1,4 @@
-import { useAtom, useAtomValue, useSetAtom } from "jotai";
+import { useAtom, useAtomValue } from "jotai";
 import { playerEnergyAtom } from "../../combat/store/combat.atoms";
 import { ALL_UPGRADES } from "../config/progression.config";
 import {

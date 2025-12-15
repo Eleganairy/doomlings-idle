@@ -1,13 +1,9 @@
 import { Box, Stack } from "@mui/material";
-
-import type {
-  SpawnedEnemy,
-  SpawnedPlayer,
-} from "../../../features/combat/types/combat.types";
+import type { Entity } from "../../../features/entity/entity.class";
 import { COLORS } from "../../../constants/colors.constants";
 
 interface EntityStatusBarProps {
-  entity: SpawnedPlayer | SpawnedEnemy;
+  entity: Entity;
   isActive: boolean;
   type: "player" | "enemy";
 }

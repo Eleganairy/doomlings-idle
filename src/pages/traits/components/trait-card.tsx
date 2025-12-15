@@ -1,4 +1,4 @@
-import { Box, Stack } from "@mui/system";
+import { Box, Stack } from "@mui/material";
 import { getUpgradeById } from "../../../features/progression/config/progression.config";
 import type { Trait } from "../../../features/progression/types/progression.types";
 import { COLORS } from "../../../constants/colors.constants";

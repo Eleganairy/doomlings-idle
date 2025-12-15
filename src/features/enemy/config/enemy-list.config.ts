@@ -1,9 +1,20 @@
-import type { Enemy } from "../../combat/types/combat.types";
-import { getEnemyBaseStats } from "../helpers/get-enemy-base-stats.helper";
+/**
+ * Enemy List Configuration
+ *
+ * Defines all enemies for each area using EnemyDefinition.
+ * Stats are calculated from base values with rarity and type multipliers.
+ */
+
+import type { EnemyDefinition } from "../../entity/types/entity.types";
+import { createEnemyDefinition } from "../helpers/create-enemy-definition.helper";
 import { EnemyRarity, EnemyType } from "../types/enemy.types";
 
-export const ENEMY_LIST_AREA_1: Record<string, Enemy> = {
-  GRASSHOPPER: getEnemyBaseStats({
+// ====================================================================================
+// AREA 1 - GRASSLANDS
+// ====================================================================================
+
+export const ENEMY_LIST_AREA_1: Record<string, EnemyDefinition> = {
+  GRASSHOPPER: createEnemyDefinition({
     name: "Grasshopper",
     description: "A small and quick enemy.",
     areaNumber: 1,
@@ -12,16 +23,16 @@ export const ENEMY_LIST_AREA_1: Record<string, Enemy> = {
     sprite: "/enemy/Snail1.png",
     icon: "/enemy/Snail1.png",
   }),
-  SNAIL: getEnemyBaseStats({
+  SNAIL: createEnemyDefinition({
     name: "Snail",
-    description: "A small and quick enemy.",
+    description: "A slow but sturdy creature.",
     areaNumber: 1,
     rarity: EnemyRarity.COMMON,
     type: EnemyType.TANK,
     sprite: "/enemy/Snail1.png",
     icon: "/enemy/Snail1.png",
   }),
-  FIELD_MOUSE: getEnemyBaseStats({
+  FIELD_MOUSE: createEnemyDefinition({
     name: "Field mouse",
     description: "A standard enemy.",
     areaNumber: 1,
@@ -30,18 +41,18 @@ export const ENEMY_LIST_AREA_1: Record<string, Enemy> = {
     sprite: "/enemy/Mouse1.png",
     icon: "/enemy/Mouse1.png",
   }),
-  WILD_RABBIT: getEnemyBaseStats({
+  WILD_RABBIT: createEnemyDefinition({
     name: "Wild rabbit",
-    description: "A more strong enemy.",
+    description: "A stronger enemy.",
     areaNumber: 1,
     rarity: EnemyRarity.UNCOMMON,
     type: EnemyType.STRONG,
     sprite: "/enemy/Rabbit1.png",
     icon: "/enemy/Rabbit1.png",
   }),
-  RED_FOX: getEnemyBaseStats({
+  RED_FOX: createEnemyDefinition({
     name: "Red fox",
-    description: "A more strong enemy.",
+    description: "A rare and powerful predator.",
     areaNumber: 1,
     rarity: EnemyRarity.RARE,
     type: EnemyType.STRONG,
@@ -50,46 +61,50 @@ export const ENEMY_LIST_AREA_1: Record<string, Enemy> = {
   }),
 };
 
-export const ENEMY_LIST_AREA_2: Record<string, Enemy> = {
-  SEWER_RAT: getEnemyBaseStats({
+// ====================================================================================
+// AREA 2 - URBAN SEWERS
+// ====================================================================================
+
+export const ENEMY_LIST_AREA_2: Record<string, EnemyDefinition> = {
+  SEWER_RAT: createEnemyDefinition({
     name: "Sewer rat",
-    description: "A small and quick enemy.",
+    description: "A quick nuisance from the depths.",
     areaNumber: 2,
     rarity: EnemyRarity.COMMON,
     type: EnemyType.FAST,
     sprite: "/enemy/Snail1.png",
     icon: "/enemy/Snail1.png",
   }),
-  COCKROACH: getEnemyBaseStats({
+  COCKROACH: createEnemyDefinition({
     name: "Cockroach",
-    description: "A small and quick enemy.",
+    description: "Nearly indestructible pest.",
     areaNumber: 2,
     rarity: EnemyRarity.COMMON,
     type: EnemyType.TANK,
     sprite: "/enemy/Snail1.png",
     icon: "/enemy/Snail1.png",
   }),
-  MUTANT_RACCOON: getEnemyBaseStats({
+  MUTANT_RACCOON: createEnemyDefinition({
     name: "Mutant raccoon",
-    description: "A standard enemy.",
+    description: "Twisted by toxic waste.",
     areaNumber: 2,
     rarity: EnemyRarity.UNCOMMON,
     type: EnemyType.STANDARD,
     sprite: "/enemy/Snail1.png",
     icon: "/enemy/Snail1.png",
   }),
-  FERAL_DOG: getEnemyBaseStats({
+  FERAL_DOG: createEnemyDefinition({
     name: "Feral dog",
-    description: "A more strong enemy.",
+    description: "A vicious scavenger.",
     areaNumber: 2,
     rarity: EnemyRarity.UNCOMMON,
     type: EnemyType.STRONG,
     sprite: "/enemy/Snail1.png",
     icon: "/enemy/Snail1.png",
   }),
-  WASTE_ALLIGATOR: getEnemyBaseStats({
+  WASTE_ALLIGATOR: createEnemyDefinition({
     name: "Waste alligator",
-    description: "A more strong enemy.",
+    description: "Apex predator of the sewers.",
     areaNumber: 2,
     rarity: EnemyRarity.RARE,
     type: EnemyType.STRONG,
@@ -98,47 +113,51 @@ export const ENEMY_LIST_AREA_2: Record<string, Enemy> = {
   }),
 };
 
-export const ENEMY_LIST_AREA_3: Record<string, Enemy> = {
-  THORN_BUSH: getEnemyBaseStats({
+// ====================================================================================
+// AREA 3 - LIVING FOREST
+// ====================================================================================
+
+export const ENEMY_LIST_AREA_3: Record<string, EnemyDefinition> = {
+  THORN_BUSH: createEnemyDefinition({
     name: "Thorn Bush",
-    description: "A more strong enemy.",
-    areaNumber: 2,
+    description: "A hostile plant with sharp thorns.",
+    areaNumber: 3,
     rarity: EnemyRarity.COMMON,
     type: EnemyType.STRONG,
     sprite: "/enemy/Snail1.png",
     icon: "/enemy/Snail1.png",
   }),
-  VINE_CREEPER: getEnemyBaseStats({
-    name: "Carnivorous Plant",
-    description: "A standard enemy.",
-    areaNumber: 2,
+  VINE_CREEPER: createEnemyDefinition({
+    name: "Vine Creeper",
+    description: "Strangling vines that move with purpose.",
+    areaNumber: 3,
     rarity: EnemyRarity.COMMON,
     type: EnemyType.STANDARD,
     sprite: "/enemy/Snail1.png",
     icon: "/enemy/Snail1.png",
   }),
-  CARNIVOROUS_PLANT: getEnemyBaseStats({
+  CARNIVOROUS_PLANT: createEnemyDefinition({
     name: "Carnivorous Plant",
-    description: "A standard enemy.",
-    areaNumber: 2,
+    description: "A flesh-eating flower.",
+    areaNumber: 3,
     rarity: EnemyRarity.UNCOMMON,
     type: EnemyType.STANDARD,
     sprite: "/enemy/Snail1.png",
     icon: "/enemy/Snail1.png",
   }),
-  POISON_IVY_SERPENT: getEnemyBaseStats({
-    name: "Carnivorous Plant",
-    description: "A standard enemy.",
-    areaNumber: 2,
+  POISON_IVY_SERPENT: createEnemyDefinition({
+    name: "Poison Ivy Serpent",
+    description: "A venomous plant creature.",
+    areaNumber: 3,
     rarity: EnemyRarity.UNCOMMON,
-    type: EnemyType.STANDARD,
+    type: EnemyType.FAST,
     sprite: "/enemy/Snail1.png",
     icon: "/enemy/Snail1.png",
   }),
-  ANCIENT_TREANT: getEnemyBaseStats({
+  ANCIENT_TREANT: createEnemyDefinition({
     name: "Ancient Treant",
-    description: "A more tanky enemy.",
-    areaNumber: 2,
+    description: "A massive tree guardian.",
+    areaNumber: 3,
     rarity: EnemyRarity.RARE,
     type: EnemyType.TANK,
     sprite: "/enemy/Snail1.png",

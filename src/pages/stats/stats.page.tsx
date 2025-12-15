@@ -2,7 +2,7 @@ import { Box, Stack } from "@mui/material";
 import { useAtomValue } from "jotai";
 import { calculatePlayerStats } from "../../features/player/helpers/calculate-player-stats.helper";
 import { upgradeLevelsAtom } from "../../features/progression/store/progression.atoms";
-import PlayerSprite from "/player/Blob1.png";
+import PlayerSprite from "/player/BasicSlime.png";
 import { StatRow } from "./components";
 import { BigNumber } from "../../utils/big-number.utils";
 import { COLORS } from "../../constants/colors.constants";
@@ -109,11 +109,6 @@ export const StatsPage = () => {
             icon="💥"
             label="Critical Chance"
             value={`${Math.floor(calculatedStats.critChance)}%`}
-          />
-          <StatRow
-            icon="🛡️"
-            label="Shield"
-            value={Math.floor(calculatedStats.shield)}
           />
         </Stack>
 

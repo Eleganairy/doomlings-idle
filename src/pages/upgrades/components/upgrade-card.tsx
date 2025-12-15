@@ -1,5 +1,4 @@
-import { Button } from "@mui/material";
-import { Box, Stack } from "@mui/system";
+import { Button, Box, Stack } from "@mui/material";
 import { COLORS } from "../../../constants/colors.constants";
 import {
   UpgradeIncrementType,

@@ -7,7 +7,7 @@ import { playerEnergyAtom } from "../../features/combat/store/combat.atoms";
 import { pageComponents } from "../../utils/pages.utils";
 import { Footer, Header, MainContent } from "../base";
 import background from "/area/GrasslandsBackground.png";
-import PlayerSprite from "/player/Blob1.png";
+import PlayerSprite from "/player/BasicSlime.png";
 
 export const Layout = () => {
   const playerEnergy = useAtomValue(playerEnergyAtom);

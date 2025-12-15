@@ -1,7 +1,17 @@
-import type { Enemy } from "../../combat/types/combat.types";
+/**
+ * Enemy Calculation Multipliers
+ *
+ * Provides difficulty scaling multipliers based on area and stage number.
+ * Used by spawn-enemy.helper.ts to scale enemy stats at spawn time.
+ */
+
 import { ENEMY_CONFIG } from "../config/enemy-stats.config";
 
-export interface worldMultipliers {
+// ====================================================================================
+// MULTIPLIER TYPES
+// ====================================================================================
+
+export interface DifficultyMultipliers {
   health: number;
   attackDamage: number;
   attackSpeed: number;
@@ -10,48 +20,35 @@ export interface worldMultipliers {
   specificAreaReward: number;
 }
 
+// ====================================================================================
+// MULTIPLIER CALCULATION
+// ====================================================================================
+
+/**
+ * Calculate difficulty multipliers based on area and stage.
+ *
+ * Each area has 5 stages. Total stages = (area - 1) * 5 + stage.
+ * Stats scale exponentially (or linearly for attack speed).
+ *
+ * @param areaNumber Current area (1-indexed)
+ * @param stageNumber Current stage within area (1-indexed)
+ */
 export const getEnemyCalculationMultipliers = (
   areaNumber: number,
   stageNumber: number
-): worldMultipliers => {
+): DifficultyMultipliers => {
   const { AREA_SCALING } = ENEMY_CONFIG;
 
-  // Each area is 5 stages, so if you are at area 3 and stage 2 = (3-1)*5 + 2 = 12 total stages completed
-  // Total -1 for calculating the power
+  // Calculate total stages completed (0-indexed for power calculation)
+  // e.g., Area 3 Stage 2 = (3-1)*5 + 2 - 1 = 11
   const currentStageNumber = (areaNumber - 1) * 5 + stageNumber - 1;
 
   return {
     health: AREA_SCALING.health ** currentStageNumber,
     attackDamage: AREA_SCALING.attackDamage ** currentStageNumber,
-    attackSpeed: AREA_SCALING.attackSpeed * currentStageNumber, // Attack speed increases linear
+    attackSpeed: AREA_SCALING.attackSpeed * currentStageNumber, // Linear increase
     energyReward: AREA_SCALING.energyReward ** currentStageNumber,
     meteoriteReward: AREA_SCALING.meteoriteReward ** currentStageNumber,
     specificAreaReward: AREA_SCALING.specificAreaReward ** currentStageNumber,
-  };
-};
-
-export const getEnemyCalculatedStats = (
-  enemy: Enemy,
-  multipliers: worldMultipliers
-): Enemy => {
-  return {
-    ...enemy,
-    maxHealth: Math.floor(enemy.maxHealth * multipliers.health),
-    currentHealth: Math.floor(enemy.maxHealth * multipliers.health),
-    attackDamage: Math.floor(enemy.attackDamage * multipliers.attackDamage),
-    attackSpeed: enemy.attackSpeed + multipliers.attackSpeed,
-    lootTable: {
-      energy: {
-        dropChance: enemy.lootTable.energy.dropChance,
-        dropAmount: Math.floor(
-          enemy.lootTable.energy.dropAmount * multipliers.energyReward
-        ),
-      },
-      meteorite: {
-        dropChance: enemy.lootTable.meteorite.dropChance,
-        dropAmount:
-          enemy.lootTable.meteorite.dropAmount * multipliers.meteoriteReward,
-      },
-    },
   };
 };

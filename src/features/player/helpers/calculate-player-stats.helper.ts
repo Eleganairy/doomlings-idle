@@ -1,12 +1,26 @@
-import type { Player } from "../../combat/types/combat.types";
+/**
+ * Calculate Player Stats Helper
+ *
+ * Calculates player stats for display purposes (Stats page).
+ * This is NOT used for Entity creation - upgrades are applied as buffs directly.
+ *
+ * Note: For actual combat, upgrade buffs are applied via applyUpgradeBuffsToPlayer().
+ * This helper is only for UI display of what the player's stats would be.
+ */
+
 import { ALL_UPGRADES } from "../../progression/config/progression.config";
 import { getTotalUpgradeValue } from "../../progression/hooks/use-upgrades.hook";
 import {
   UpgradeId,
   UpgradeStat,
   UpgradeIncrementType,
+  UpgradeTarget,
 } from "../../progression/types/progression.types";
 import { PLAYER_CONFIG } from "../config/player-stats.config";
+
+// ====================================================================================
+// TYPES
+// ====================================================================================
 
 interface StatModifiers {
   additive: number;
@@ -15,11 +29,29 @@ interface StatModifiers {
 }
 
 /**
+ * Calculated player stats for UI display
+ */
+export interface DisplayPlayerStats {
+  name: string;
+  attackDamage: number;
+  attackSpeed: number;
+  critChance: number;
+  maxHealth: number;
+  shield: number;
+  icon: string;
+  sprite: string;
+}
+
+// ====================================================================================
+// STAT CALCULATION
+// ====================================================================================
+
+/**
  * Group upgrades by their increment type and calculate their total values
  */
 function getStatModifiers(
   stat: UpgradeStat,
-  upgradeLevels: Record<UpgradeId, number>
+  upgradeLevels: Partial<Record<UpgradeId, number>>
 ): StatModifiers {
   const modifiers: StatModifiers = {
     additive: 0,
@@ -28,6 +60,8 @@ function getStatModifiers(
   };
 
   for (const upgrade of ALL_UPGRADES) {
+    // Only process PLAYER-targeted upgrades
+    if (upgrade.upgradeTarget !== UpgradeTarget.PLAYER) continue;
     if (upgrade.upgradedStat !== stat) continue;
 
     const level = upgradeLevels[upgrade.id] ?? 0;
@@ -72,13 +106,19 @@ function applyModifiers(baseValue: number, modifiers: StatModifiers): number {
   return result;
 }
 
+// ====================================================================================
+// PUBLIC API
+// ====================================================================================
+
 /**
  * Calculate all player stats based on upgrade levels.
- * Applies upgrades in order: Additive → Multiplicative → Percentile
+ * Used for Stats page display only.
+ *
+ * @param upgradeLevels Current upgrade levels from progression store
  */
 export function calculatePlayerStats(
-  upgradeLevels: Record<UpgradeId, number>
-): Player {
+  upgradeLevels: Partial<Record<UpgradeId, number>>
+): DisplayPlayerStats {
   // Get modifiers for each stat
   const attackDamageModifiers = getStatModifiers(
     UpgradeStat.ATTACK_DAMAGE,
@@ -97,8 +137,6 @@ export function calculatePlayerStats(
     upgradeLevels
   );
 
-  const shieldModifiers = getStatModifiers(UpgradeStat.SHIELD, upgradeLevels);
-
   // Apply modifiers to base stats
   const attackDamage = applyModifiers(
     PLAYER_CONFIG.BASE_ATTACK_DAMAGE,
@@ -116,18 +154,16 @@ export function calculatePlayerStats(
     PLAYER_CONFIG.BASE_CRITICAL_CHANCE,
     critChanceModifiers
   );
-  const shield = applyModifiers(PLAYER_CONFIG.BASE_SHIELD, shieldModifiers);
 
   return {
     name: "Hero",
     maxHealth: Math.floor(maxHealth),
-    currentHealth: Math.floor(maxHealth),
     attackDamage: Math.floor(attackDamage),
     attackSpeed: Number(attackSpeed.toFixed(2)),
     critChance: Math.min(critChance, 100), // Cap at 100%
-    shield: Math.floor(shield),
-    icon: "/player/Blob1.png",
-    sprite: "/player/Blob1.png",
+    shield: 0,
+    icon: "/player/BasicSlime.png",
+    sprite: "/player/BasicSlime.png",
   };
 }
 
@@ -136,7 +172,7 @@ export function calculatePlayerStats(
  * Returns a multiplier (e.g., 1.2 for +20% bonus)
  */
 export function calculateEnergyBonusMultiplier(
-  upgradeLevels: Record<UpgradeId, number>
+  upgradeLevels: Partial<Record<UpgradeId, number>>
 ): number {
   const modifiers = getStatModifiers(UpgradeStat.ENERGY_BONUS, upgradeLevels);
 
