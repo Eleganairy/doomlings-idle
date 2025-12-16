@@ -496,6 +496,50 @@ export class Entity {
     this.state.position = position;
   }
 
+  /**
+   * Set current health to match max health.
+   * Call this after applying buffs on spawn to ensure entity starts at full HP.
+   *
+   * @example
+   * const player = Entity.createPlayer(def, 0);
+   * applyUpgradeBuffsToPlayer(player, levels);
+   * player.syncHealthToMax(); // Now at full buffed HP
+   */
+  syncHealthToMax(): void {
+    this.state.currentHealth = this.maxHealth;
+  }
+
+  /**
+   * Sync current health when max health changes from buffs.
+   * Adds the difference between new and old max health to current health.
+   * Useful when upgrading health during combat - players gain the extra HP immediately.
+   *
+   * @param previousMaxHealth The max health before the buff change
+   *
+   * @example
+   * const oldMax = player.maxHealth;
+   * applyNewBuffs(player);
+   * player.syncHealthWithMaxChange(oldMax);
+   */
+  syncHealthWithMaxChange(previousMaxHealth: number): void {
+    const newMaxHealth = this.maxHealth;
+    const difference = newMaxHealth - previousMaxHealth;
+
+    if (difference > 0) {
+      // Max health increased - add the extra HP
+      this.state.currentHealth = Math.min(
+        newMaxHealth,
+        this.state.currentHealth + difference
+      );
+    } else if (difference < 0) {
+      // Max health decreased - cap current health at new max
+      this.state.currentHealth = Math.min(
+        newMaxHealth,
+        this.state.currentHealth
+      );
+    }
+  }
+
   // ==================================================================================
   // BUFF/DEBUFF METHODS
   // ==================================================================================

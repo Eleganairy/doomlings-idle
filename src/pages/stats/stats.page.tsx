@@ -1,6 +1,6 @@
 import { Box, Stack } from "@mui/material";
 import { useAtomValue } from "jotai";
-import { calculatePlayerStats } from "../../features/player/helpers/calculate-player-stats.helper";
+import { calculatePlayerStats } from "../../features/progression/services/stat-modifiers.service";
 import { upgradeLevelsAtom } from "../../features/progression/store/progression.atoms";
 import PlayerSprite from "/player/BasicSlime.png";
 import { StatRow } from "./components";
@@ -73,7 +73,7 @@ export const StatsPage = () => {
             marginTop: "8px",
           }}
         >
-          Level 1 Hero
+          Level 1 Slime
         </Box>
       </Box>
 

@@ -36,4 +36,6 @@ export const COLORS = {
   HEALTH_ENEMY: "#f44336",
   ATTACK: "#ff9800",
   MANA: "#9b59b6",
+  SHIELD: "#b0b0b0", // Light gray for shield
+  ABILITY: "#9b59b6", // Purple for ability progress
 };

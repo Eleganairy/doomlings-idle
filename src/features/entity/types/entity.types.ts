@@ -196,6 +196,12 @@ export interface AbilityEffect {
   /** Who the effect targets */
   target: AbilityTarget;
 
+  /**
+   * Target position for FRIENDLY_SINGLE (0=front, 1=middle, 2=back).
+   * If undefined, a random living friendly entity is chosen.
+   */
+  targetPosition?: 0 | 1 | 2;
+
   // --- DAMAGE effect properties ---
   /** Multiplier for damage (1.0 = 100% of attack damage) */
   damageMultiplier?: number;

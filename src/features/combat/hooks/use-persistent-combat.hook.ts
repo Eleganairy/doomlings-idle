@@ -18,21 +18,20 @@ import {
   playerTrackedStatsAtom,
   upgradeLevelsAtom,
 } from "../../progression/store/progression.atoms";
-import { calculateEnergyBonusMultiplier } from "../../player/helpers/calculate-player-stats.helper";
+import { calculateEnergyBonusMultiplier } from "../../progression/services/stat-modifiers.service";
 import { useStageProgression } from "../../world/hooks/use-stage-progression.hook";
 
 // Entity system
 import { Entity } from "../../entity/entity.class";
-import {
-  DRUID_SLIME,
-  ELECTRIC_SLIME,
-  TANK_SLIME,
-} from "../../entity/config/player-definitions.config";
+import { PLAYER_DEFINITIONS } from "../../entity/config/player-definitions.config";
 import { spawnEnemyFromPool } from "../helpers/spawn-enemy.helper";
 import {
   applyUpgradeBuffsToPlayer,
   applyUpgradeDebuffsToEnemy,
 } from "../../entity/helpers/apply-upgrade-buffs.helper";
+import { executeAbility } from "../../entity/helpers/execute-ability.helper";
+import { AbilityTrigger } from "../../entity/types/entity.types";
+import { teamForCombatAtom } from "../../team/store/team.atoms";
 
 const TICK_RATE = 50; // 50ms ticks for combat loop
 
@@ -48,6 +47,7 @@ export const usePersistentCombat = () => {
   const setPlayerTrackedStats = useSetAtom(playerTrackedStatsAtom);
   const upgradeLevels = useAtomValue(upgradeLevelsAtom);
   const activeArea = useAtomValue(activeAreaAtom);
+  const teamForCombat = useAtomValue(teamForCombatAtom);
   const {
     recordEnemyKill,
     resetStageProgress,
@@ -74,6 +74,32 @@ export const usePersistentCombat = () => {
     upgradeLevelsRef.current = upgradeLevels;
   }, [upgradeLevels]);
 
+  // Re-apply upgrade buffs to existing players when upgrade levels change
+  useEffect(() => {
+    if (activePlayers.length === 0) return;
+
+    // Clear old upgrade buffs and re-apply with new levels
+    for (const player of activePlayers) {
+      // Store old max health before removing buffs
+      const oldMaxHealth = player.maxHealth;
+
+      // Clear existing upgrade buffs (they start with "upgrade_buff_")
+      const upgradeBuffIds = player.activeBuffs
+        .filter((buff) => buff.sourceAbilityId.startsWith("upgrade_buff_"))
+        .map((buff) => buff.sourceAbilityId);
+
+      for (const buffId of upgradeBuffIds) {
+        player.removeBuffsFromAbility(buffId);
+      }
+
+      // Apply fresh upgrade buffs
+      applyUpgradeBuffsToPlayer(player, upgradeLevels);
+
+      // Sync health if max health changed (e.g., health upgrade purchased)
+      player.syncHealthWithMaxChange(oldMaxHealth);
+    }
+  }, [upgradeLevels, activePlayers]);
+
   useEffect(() => {
     isCombatActiveRef.current = isCombatActive;
   }, [isCombatActive]);
@@ -88,19 +114,51 @@ export const usePersistentCombat = () => {
   }, []);
 
   /**
+   * Execute all abilities with a specific trigger for an entity
+   */
+  const executeTriggeredAbilities = (
+    entity: Entity,
+    trigger: AbilityTrigger,
+    friendlyEntities: Entity[],
+    enemyEntities: Entity[]
+  ) => {
+    const abilities = entity.getAbilitiesForTrigger(trigger);
+    for (const ability of abilities) {
+      executeAbility(entity, ability, friendlyEntities, enemyEntities);
+    }
+  };
+
+  /**
    * Create player entities for respawn.
+   * Uses the player's configured team from teamForCombatAtom.
    * Applies all purchased upgrade buffs to each player.
    */
   const createPlayerEntitiesWithUpgrades = (): Entity[] => {
-    const players = [
-      Entity.createPlayer(DRUID_SLIME, 0),
-      Entity.createPlayer(ELECTRIC_SLIME, 1),
-      Entity.createPlayer(TANK_SLIME, 2),
-    ];
+    // Create players based on team configuration
+    const players: Entity[] = [];
+    for (const { slimeId, position } of teamForCombat) {
+      const definition = PLAYER_DEFINITIONS[slimeId];
+      if (definition) {
+        players.push(Entity.createPlayer(definition, position));
+      }
+    }
 
     // Apply upgrade buffs to each player
     for (const player of players) {
       applyUpgradeBuffsToPlayer(player, upgradeLevelsRef.current);
+      // Sync health to max after buffs so players spawn at full buffed HP
+      player.syncHealthToMax();
+    }
+
+    // Trigger ON_SPAWN abilities for all players
+    const currentEnemies = activeEnemiesRef.current;
+    for (const player of players) {
+      executeTriggeredAbilities(
+        player,
+        AbilityTrigger.ON_SPAWN,
+        players,
+        currentEnemies
+      );
     }
 
     return players;
@@ -117,6 +175,17 @@ export const usePersistentCombat = () => {
       position
     );
     applyUpgradeDebuffsToEnemy(enemy, upgradeLevelsRef.current);
+
+    // Trigger ON_SPAWN abilities for the enemy
+    const currentPlayers = activePlayersRef.current;
+    const currentEnemies = activeEnemiesRef.current;
+    executeTriggeredAbilities(
+      enemy,
+      AbilityTrigger.ON_SPAWN,
+      [...currentEnemies, enemy],
+      currentPlayers
+    );
+
     return enemy;
   };
 
@@ -163,7 +232,52 @@ export const usePersistentCombat = () => {
       const players = activePlayersRef.current;
       const enemies = activeEnemiesRef.current;
 
-      if (players.length === 0 || enemies.length === 0) return;
+      // Initialize entities if combat just started and lists are empty
+      if (players.length === 0) {
+        setActivePlayers(createPlayerEntitiesWithUpgrades());
+        return; // Wait for next tick to use new entities
+      }
+
+      if (enemies.length === 0) {
+        setActiveEnemies([
+          createEnemyWithDebuffs(1),
+          createEnemyWithDebuffs(0),
+          createEnemyWithDebuffs(2),
+        ]);
+        return; // Wait for next tick to use new entities
+      }
+
+      // =====================================================
+      // ABILITY SYSTEM: Tick cooldowns and execute abilities
+      // =====================================================
+
+      // Update buff durations for all entities
+      for (const player of players) {
+        player.updateBuffs();
+      }
+      for (const enemy of enemies) {
+        enemy.updateBuffs();
+      }
+
+      // Tick player abilities and execute ready ones
+      for (const player of players) {
+        const readyAbilities = player.tickAbilities(deltaTime);
+        for (const ability of readyAbilities) {
+          executeAbility(player, ability, players, enemies);
+        }
+      }
+
+      // Tick enemy abilities and execute ready ones
+      for (const enemy of enemies) {
+        const readyAbilities = enemy.tickAbilities(deltaTime);
+        for (const ability of readyAbilities) {
+          executeAbility(enemy, ability, enemies, players);
+        }
+      }
+
+      // =====================================================
+      // ATTACK SYSTEM: Process attacks
+      // =====================================================
 
       // Process player attacks
       for (const player of players) {
@@ -194,6 +308,7 @@ export const usePersistentCombat = () => {
               (a, b) => a.position - b.position
             );
             const updatedEnemies: Entity[] = [];
+            const diedEnemies: Entity[] = [];
 
             for (const enemy of sortedEnemies) {
               if (remainingDamage <= 0) {
@@ -205,12 +320,23 @@ export const usePersistentCombat = () => {
 
               if (damageResult.died) {
                 remainingDamage = damageResult.overkill;
+                diedEnemies.push(enemy);
                 processEnemyLoot(enemy);
                 delete enemyAttackTimers.current[enemy.id];
               } else {
                 updatedEnemies.push(enemy);
                 remainingDamage = 0;
               }
+            }
+
+            // Execute ON_DEATH abilities for dead enemies
+            for (const deadEnemy of diedEnemies) {
+              executeTriggeredAbilities(
+                deadEnemy,
+                AbilityTrigger.ON_DEATH,
+                sortedEnemies, // friendlies = other enemies
+                players
+              );
             }
 
             // Spawn new enemy if all enemies died

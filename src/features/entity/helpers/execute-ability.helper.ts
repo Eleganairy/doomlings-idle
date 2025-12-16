@@ -101,7 +101,7 @@ export function executeAbility(
   for (const effect of ability.effects) {
     const targets = getTargetEntities(
       source,
-      effect.target,
+      effect,
       friendlyEntities,
       enemyEntities
     );
@@ -141,10 +141,12 @@ export function executeAbility(
  */
 function getTargetEntities(
   source: Entity,
-  target: AbilityTarget,
+  effect: AbilityEffect,
   friendlyEntities: Entity[],
   enemyEntities: Entity[]
 ): Entity[] {
+  const { target, targetPosition } = effect;
+
   switch (target) {
     case AbilityTarget.SELF:
       return [source];
@@ -155,11 +157,20 @@ function getTargetEntities(
       );
 
     case AbilityTarget.FRIENDLY_SINGLE: {
-      // Random living friendly entity
       const livingFriendly = friendlyEntities.filter(
         (filteredEntity) => filteredEntity.isAlive
       );
       if (livingFriendly.length === 0) return [];
+
+      // If targetPosition is specified, target that position
+      if (targetPosition !== undefined) {
+        const targetEntity = livingFriendly.find(
+          (entity) => entity.position === targetPosition
+        );
+        return targetEntity ? [targetEntity] : [];
+      }
+
+      // Otherwise pick random
       return [
         livingFriendly[Math.floor(Math.random() * livingFriendly.length)],
       ];

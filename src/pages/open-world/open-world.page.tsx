@@ -1,17 +1,42 @@
-import { Box, Button, Stack } from "@mui/material";
+import { Box, Button, IconButton, Stack } from "@mui/material";
+import { useAtom, useSetAtom } from "jotai";
+import SettingsIcon from "@mui/icons-material/Settings";
 
 import { COLORS } from "../../constants/colors.constants";
 import { useCombat } from "../../features/combat/hooks/use-combat.hook";
+import {
+  activePlayersAtom,
+  activeEnemiesAtom,
+  isCombatActiveAtom,
+} from "../../features/combat/store/combat.atoms";
+import { isTeamEditorOpenAtom } from "../../features/team/store/team.atoms";
 import {
   getButtonBaseStateColors,
   getButtonClickedStateColors,
   getButtonHoverStateColors,
 } from "../../utils/button-state-colors.utils";
-import { EntityStatusBar, StageSelector } from "./components";
+import { EntityStatusBar, StageSelector, TeamEditor } from "./components";
 
 export const OpenWorldPage = () => {
   const { activePlayers, activeEnemies, isCombatActive, toggleCombat } =
     useCombat();
+  const setActivePlayers = useSetAtom(activePlayersAtom);
+  const setActiveEnemies = useSetAtom(activeEnemiesAtom);
+  const setIsCombatActive = useSetAtom(isCombatActiveAtom);
+  const [isTeamEditorOpen, setIsTeamEditorOpen] = useAtom(isTeamEditorOpenAtom);
+
+  // Open team editor - stops combat and clears entities
+  const handleOpenTeamEditor = () => {
+    setIsCombatActive(false);
+    setActivePlayers([]);
+    setActiveEnemies([]);
+    setIsTeamEditorOpen(true);
+  };
+
+  // Close team editor - entities will respawn on next combat start
+  const handleCloseTeamEditor = () => {
+    setIsTeamEditorOpen(false);
+  };
 
   return (
     <Box
@@ -23,6 +48,9 @@ export const OpenWorldPage = () => {
         position: "relative",
       }}
     >
+      {/* Team Editor Overlay */}
+      {isTeamEditorOpen && <TeamEditor onClose={handleCloseTeamEditor} />}
+
       {/* Main battle area */}
       <Box
         sx={{
@@ -31,52 +59,57 @@ export const OpenWorldPage = () => {
           position: "relative",
         }}
       >
-        {/* Middle section - controls */}
-        <Box
-          sx={{
-            flex: 1,
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "flex-start",
-            alignItems: "center",
-            padding: "20px",
-          }}
-        >
-          <Stack direction="column" spacing={2}>
-            <StageSelector />
-          </Stack>
-
-          <Button
-            onClick={toggleCombat}
-            disableRipple
-            disableElevation
+        {/* Middle section - controls (hidden during team editing) */}
+        {!isTeamEditorOpen && (
+          <Box
             sx={{
-              marginTop: "20px",
-              width: "200px",
-              height: "60px",
-              backgroundColor: getButtonBaseStateColors(isCombatActive, false),
-              color: COLORS.TEXT_PRIMARY,
-              fontSize: "18px",
-              fontWeight: "bold",
-              border: `3px solid ${COLORS.CARD_BORDER}`,
-              borderRadius: "4px",
-              "&:hover": {
-                backgroundColor: getButtonHoverStateColors(
-                  isCombatActive,
-                  false
-                ),
-              },
-              "&:active": {
-                backgroundColor: getButtonClickedStateColors(
-                  isCombatActive,
-                  false
-                ),
-              },
+              flex: 1,
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "flex-start",
+              alignItems: "center",
+              padding: "20px",
             }}
           >
-            {isCombatActive ? "PAUSE" : "START"}
-          </Button>
-        </Box>
+            <Stack direction="column" spacing={2}>
+              <StageSelector />
+            </Stack>
+
+            <Button
+              onClick={toggleCombat}
+              disableRipple
+              disableElevation
+              sx={{
+                marginTop: "20px",
+                width: "200px",
+                height: "60px",
+                backgroundColor: getButtonBaseStateColors(
+                  isCombatActive,
+                  false
+                ),
+                color: COLORS.TEXT_PRIMARY,
+                fontSize: "18px",
+                fontWeight: "bold",
+                border: `3px solid ${COLORS.CARD_BORDER}`,
+                borderRadius: "4px",
+                "&:hover": {
+                  backgroundColor: getButtonHoverStateColors(
+                    isCombatActive,
+                    false
+                  ),
+                },
+                "&:active": {
+                  backgroundColor: getButtonClickedStateColors(
+                    isCombatActive,
+                    false
+                  ),
+                },
+              }}
+            >
+              {isCombatActive ? "PAUSE" : "START"}
+            </Button>
+          </Box>
+        )}
       </Box>
 
       {/* Bottom Status Panel */}
@@ -91,13 +124,40 @@ export const OpenWorldPage = () => {
           alignItems: "center",
         }}
       >
+        {/* Edit Team Button - hidden during team editing */}
+        {!isTeamEditorOpen && (
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              paddingLeft: "20px",
+            }}
+          >
+            <IconButton
+              onClick={handleOpenTeamEditor}
+              sx={{
+                backgroundColor: COLORS.CARD_BACKGROUND,
+                border: `2px solid ${COLORS.CARD_BORDER}`,
+                borderRadius: "8px",
+                width: "48px",
+                height: "48px",
+                "&:hover": {
+                  backgroundColor: COLORS.CARD_BACKGROUND_SECONDARY,
+                },
+              }}
+            >
+              <SettingsIcon sx={{ color: COLORS.TEXT_PRIMARY }} />
+            </IconButton>
+          </Box>
+        )}
+
         {/* Player Status Bars - matching left section layout */}
         <Box
           sx={{
             flex: 1,
             display: "flex",
             justifyContent: "center",
-            paddingLeft: "60px",
+            paddingLeft: "20px",
           }}
         >
           <Stack direction="row" spacing={2}>

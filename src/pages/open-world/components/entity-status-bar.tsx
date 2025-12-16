@@ -2,6 +2,7 @@ import { Box, Stack } from "@mui/material";
 import type { Entity } from "../../../features/entity/entity.class";
 import { COLORS } from "../../../constants/colors.constants";
 import { CombatEntity } from "./combat-entity";
+import { AbilityTrigger } from "../../../features/entity/types/entity.types";
 
 interface EntityStatusBarProps {
   entity: Entity;
@@ -9,7 +10,7 @@ interface EntityStatusBarProps {
   type: "player" | "enemy";
 }
 
-// Shows attack and health progress
+// Shows attack, ability progress, health, and shield
 export const EntityStatusBar = ({
   entity,
   isActive,
@@ -17,20 +18,64 @@ export const EntityStatusBar = ({
 }: EntityStatusBarProps) => {
   const maxHealth = entity.maxHealth;
   const currentHealth = entity.currentHealth;
+  const currentShield = entity.currentShield;
+
+  // Check if entity has any timed abilities
+  const timedAbilities = entity
+    .getAllAbilities()
+    .filter((a) => a.trigger === AbilityTrigger.ON_ABILITY_READY);
+  const hasTimedAbilities = timedAbilities.length > 0;
+
+  // Get first ability's cooldown for progress bar (if exists)
+  const firstAbility = timedAbilities[0];
+  const abilityProgress = firstAbility
+    ? entity.getAbilityProgress(firstAbility.id)
+    : 0;
+  const abilityCooldownMs = firstAbility?.cooldownMs ?? 1000;
 
   const healthColor =
     type === "player" ? COLORS.HEALTH_PLAYER : COLORS.HEALTH_ENEMY;
   const attackColor = COLORS.ATTACK;
+
+  // Border changes to gray and thicker when entity has shield
   const borderColor =
-    type === "player" ? COLORS.HEALTH_PLAYER : COLORS.HEALTH_ENEMY;
+    currentShield > 0
+      ? COLORS.SHIELD
+      : type === "player"
+      ? COLORS.HEALTH_PLAYER
+      : COLORS.HEALTH_ENEMY;
+  const borderWidth = currentShield > 0 ? 3 : 2;
 
   return (
     <Stack>
       <CombatEntity entity={entity} />
+
+      {/* Shield value display (above the info block) */}
+      <Box
+        sx={{
+          height: "20px",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        {currentShield > 0 && (
+          <Box
+            sx={{
+              color: COLORS.SHIELD,
+              fontSize: "12px",
+              fontWeight: "bold",
+            }}
+          >
+            🛡️ {Math.round(currentShield)}
+          </Box>
+        )}
+      </Box>
+
       <Box
         sx={{
           backgroundColor: COLORS.CARD_BACKGROUND,
-          border: `2px solid ${borderColor}`,
+          border: `${borderWidth}px solid ${borderColor}`,
           borderRadius: "6px",
           padding: "8px 12px",
         }}
@@ -100,6 +145,42 @@ export const EntityStatusBar = ({
                 },
               }}
             />
+          </Box>
+
+          {/* Ability Progress Bar - always allocate space */}
+          <Box
+            sx={{
+              width: "100%",
+              height: "6px",
+              backgroundColor: hasTimedAbilities
+                ? COLORS.CARD_BACKGROUND_DARK
+                : "transparent",
+              borderRadius: "3px",
+              overflow: "hidden",
+            }}
+          >
+            {hasTimedAbilities && (
+              <Box
+                sx={{
+                  width: "100%",
+                  height: "100%",
+                  backgroundColor: COLORS.ABILITY,
+                  transformOrigin: "left",
+                  transform: "scaleX(0)",
+                  animation: isActive
+                    ? `abilityProgress ${abilityCooldownMs}ms linear infinite`
+                    : "none",
+                  "@keyframes abilityProgress": {
+                    "0%": {
+                      transform: "scaleX(0)",
+                    },
+                    "100%": {
+                      transform: "scaleX(1)",
+                    },
+                  },
+                }}
+              />
+            )}
           </Box>
         </Stack>
       </Box>
