@@ -26,7 +26,7 @@ export const CombatEntity = ({ entity }: CombatEntityProps) => {
           alignItems: "flex-end",
         }}
       >
-        <img height="160px" src={entity.sprite} alt="Entity Icon" />
+        <img height="140px" src={entity.sprite} alt="Entity Icon" />
       </Box>
     </Box>
   );

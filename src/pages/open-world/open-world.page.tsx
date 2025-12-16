@@ -7,7 +7,7 @@ import {
   getButtonClickedStateColors,
   getButtonHoverStateColors,
 } from "../../utils/button-state-colors.utils";
-import { CombatEntity, EntityStatusBar, StageSelector } from "./components";
+import { EntityStatusBar, StageSelector } from "./components";
 
 export const OpenWorldPage = () => {
   const { activePlayers, activeEnemies, isCombatActive, toggleCombat } =
@@ -29,41 +29,8 @@ export const OpenWorldPage = () => {
           flex: 1,
           display: "flex",
           position: "relative",
-          paddingBottom: "120px", // Space for bottom panel
         }}
       >
-        {/* Left section - players */}
-        <Box
-          sx={{
-            flex: 1,
-            display: "flex",
-            alignItems: "stretch",
-            justifyContent: "center",
-            paddingLeft: "60px",
-          }}
-        >
-          <Stack direction="row" spacing={2} sx={{ height: "100%" }}>
-            {[2, 1, 0].map((slotPosition) => {
-              const player = activePlayers.find(
-                (p) => p.position === slotPosition
-              );
-              return (
-                <Box
-                  key={`player-slot-${slotPosition}`}
-                  sx={{
-                    width: "200px",
-                    minWidth: "200px",
-                    height: "100%",
-                    visibility: player ? "visible" : "hidden",
-                  }}
-                >
-                  {player && <CombatEntity key={player.id} entity={player} />}
-                </Box>
-              );
-            })}
-          </Stack>
-        </Box>
-
         {/* Middle section - controls */}
         <Box
           sx={{
@@ -87,7 +54,7 @@ export const OpenWorldPage = () => {
               marginTop: "20px",
               width: "200px",
               height: "60px",
-              backgroundColor: getButtonBaseStateColors(isCombatActive, true),
+              backgroundColor: getButtonBaseStateColors(isCombatActive, false),
               color: COLORS.TEXT_PRIMARY,
               fontSize: "18px",
               fontWeight: "bold",
@@ -96,51 +63,19 @@ export const OpenWorldPage = () => {
               "&:hover": {
                 backgroundColor: getButtonHoverStateColors(
                   isCombatActive,
-                  true
+                  false
                 ),
               },
               "&:active": {
                 backgroundColor: getButtonClickedStateColors(
                   isCombatActive,
-                  true
+                  false
                 ),
               },
             }}
           >
             {isCombatActive ? "PAUSE" : "START"}
           </Button>
-        </Box>
-
-        {/* Right section - enemies */}
-        <Box
-          sx={{
-            flex: 1,
-            display: "flex",
-            alignItems: "stretch",
-            justifyContent: "center",
-            paddingRight: "60px",
-          }}
-        >
-          <Stack direction="row" spacing={2} sx={{ height: "100%" }}>
-            {[0, 1, 2].map((slotPosition) => {
-              const enemy = activeEnemies.find(
-                (e) => e.position === slotPosition
-              );
-              return (
-                <Box
-                  key={`enemy-slot-${slotPosition}`}
-                  sx={{
-                    width: "200px",
-                    minWidth: "200px",
-                    height: "100%",
-                    visibility: enemy ? "visible" : "hidden",
-                  }}
-                >
-                  {enemy && <CombatEntity key={enemy.id} entity={enemy} />}
-                </Box>
-              );
-            })}
-          </Stack>
         </Box>
       </Box>
 
@@ -168,14 +103,14 @@ export const OpenWorldPage = () => {
           <Stack direction="row" spacing={2}>
             {[2, 1, 0].map((slotPosition) => {
               const player = activePlayers.find(
-                (p) => p.position === slotPosition
+                (foundPlayer) => foundPlayer.position === slotPosition
               );
               return (
                 <Box
                   key={`player-status-${slotPosition}`}
                   sx={{
                     width: "200px",
-                    visibility: player ? "visible" : "hidden",
+                    visibility: player ? "block" : "hidden",
                   }}
                 >
                   {player && (
@@ -206,14 +141,14 @@ export const OpenWorldPage = () => {
           <Stack direction="row" spacing={2}>
             {[0, 1, 2].map((slotPosition) => {
               const enemy = activeEnemies.find(
-                (e) => e.position === slotPosition
+                (foundEnemy) => foundEnemy.position === slotPosition
               );
               return (
                 <Box
                   key={`enemy-status-${slotPosition}`}
                   sx={{
                     width: "200px",
-                    visibility: enemy ? "visible" : "hidden",
+                    visibility: enemy ? "block" : "hidden",
                   }}
                 >
                   {enemy && (

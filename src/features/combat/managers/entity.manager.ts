@@ -1,9 +1,3 @@
-/**
- * Entity Manager
- *
- * Manages entity spawning and utility methods for the Entity class system.
- */
-
 import { Entity } from "../../entity/entity.class";
 import type {
   PlayerDefinition,
@@ -75,12 +69,12 @@ export class EntityManager {
 
   /**
    * Deal damage to a list of Entity instances with overflow
-   * Returns living entities AND killed entities separately
+   * Returns living entities AND slain entities separately
    */
   static dealDamageToEntities(
     entities: Entity[],
     damage: number
-  ): { living: Entity[]; killed: Entity[]; totalDamageDealt: number } {
+  ): { living: Entity[]; slain: Entity[]; totalDamageDealt: number } {
     let remainingDamage = damage;
     let totalDamageDealt = 0;
 
@@ -90,7 +84,7 @@ export class EntityManager {
     );
 
     const living: Entity[] = [];
-    const killed: Entity[] = [];
+    const slain: Entity[] = [];
 
     for (const entity of sortedEntities) {
       if (remainingDamage <= 0) {
@@ -103,14 +97,14 @@ export class EntityManager {
 
       if (result.died) {
         remainingDamage = result.overkill;
-        killed.push(entity);
+        slain.push(entity);
       } else {
         living.push(entity);
         remainingDamage = 0;
       }
     }
 
-    return { living, killed, totalDamageDealt };
+    return { living, slain, totalDamageDealt };
   }
 
   // ==================================================================================

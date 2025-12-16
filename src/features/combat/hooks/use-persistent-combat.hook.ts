@@ -215,7 +215,11 @@ export const usePersistentCombat = () => {
 
             // Spawn new enemy if all enemies died
             if (updatedEnemies.length === 0) {
-              return [createEnemyWithDebuffs(1)];
+              return [
+                createEnemyWithDebuffs(1),
+                createEnemyWithDebuffs(0),
+                createEnemyWithDebuffs(2),
+              ];
             }
 
             return updatedEnemies;

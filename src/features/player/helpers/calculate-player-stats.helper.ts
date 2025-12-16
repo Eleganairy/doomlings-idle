@@ -77,7 +77,7 @@ function getStatModifiers(
       case UpgradeIncrementType.MULTIPLICATIVE:
         // For multiplicative, each level multiplies by the value
         // e.g., ×1.2 for 3 levels = 1.2 * 1.2 * 1.2 = 1.728
-        modifiers.multiplicative *= Math.pow(upgrade.baseValue, level);
+        modifiers.multiplicative *= upgrade.baseValue ** level;
         break;
 
       case UpgradeIncrementType.PERCENTILE:

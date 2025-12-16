@@ -1,15 +1,4 @@
-/**
- * Enemy Calculation Multipliers
- *
- * Provides difficulty scaling multipliers based on area and stage number.
- * Used by spawn-enemy.helper.ts to scale enemy stats at spawn time.
- */
-
 import { ENEMY_CONFIG } from "../config/enemy-stats.config";
-
-// ====================================================================================
-// MULTIPLIER TYPES
-// ====================================================================================
 
 export interface DifficultyMultipliers {
   health: number;
@@ -19,10 +8,6 @@ export interface DifficultyMultipliers {
   meteoriteReward: number;
   specificAreaReward: number;
 }
-
-// ====================================================================================
-// MULTIPLIER CALCULATION
-// ====================================================================================
 
 /**
  * Calculate difficulty multipliers based on area and stage.

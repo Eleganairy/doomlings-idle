@@ -86,7 +86,11 @@ export const useCombat = () => {
     }
 
     if (activeEnemies.length === 0) {
-      setActiveEnemies([createEnemyWithDebuffs(1)]);
+      setActiveEnemies([
+        createEnemyWithDebuffs(1),
+        createEnemyWithDebuffs(0),
+        createEnemyWithDebuffs(2),
+      ]);
     }
 
     setIsCombatActive(true);

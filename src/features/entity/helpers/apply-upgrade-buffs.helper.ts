@@ -84,7 +84,7 @@ export function applyUpgradeBuffsToPlayer(
     let buffValue: number;
     if (upgrade.incrementType === UpgradeIncrementType.MULTIPLICATIVE) {
       // For multiplicative, calculate the final multiplier (e.g., 1.2^3 = 1.728)
-      buffValue = Math.pow(upgrade.baseValue, level);
+      buffValue = upgrade.baseValue ** level;
     } else {
       // For additive/percentile, sum up total value
       buffValue = getTotalUpgradeValue(upgrade, level);
@@ -133,7 +133,7 @@ export function applyUpgradeDebuffsToEnemy(
     // Calculate the debuff value (upgrade baseValue should be negative for debuffs)
     let debuffValue: number;
     if (upgrade.incrementType === UpgradeIncrementType.MULTIPLICATIVE) {
-      debuffValue = Math.pow(upgrade.baseValue, level);
+      debuffValue = upgrade.baseValue ** level;
     } else {
       debuffValue = getTotalUpgradeValue(upgrade, level);
     }

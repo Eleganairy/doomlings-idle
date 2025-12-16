@@ -150,25 +150,33 @@ function getTargetEntities(
       return [source];
 
     case AbilityTarget.FRIENDLY_ALL:
-      return friendlyEntities.filter((e) => e.isAlive);
+      return friendlyEntities.filter(
+        (filteredEntity) => filteredEntity.isAlive
+      );
 
-    case AbilityTarget.FRIENDLY_SINGLE:
+    case AbilityTarget.FRIENDLY_SINGLE: {
       // Random living friendly entity
-      const livingFriendly = friendlyEntities.filter((e) => e.isAlive);
+      const livingFriendly = friendlyEntities.filter(
+        (filteredEntity) => filteredEntity.isAlive
+      );
       if (livingFriendly.length === 0) return [];
       return [
         livingFriendly[Math.floor(Math.random() * livingFriendly.length)],
       ];
+    }
 
     case AbilityTarget.ENEMY_ALL:
-      return enemyEntities.filter((e) => e.isAlive);
+      return enemyEntities.filter((filteredEntity) => filteredEntity.isAlive);
 
-    case AbilityTarget.ENEMY_SINGLE:
+    case AbilityTarget.ENEMY_SINGLE: {
       // Front-most living enemy (lowest position number)
-      const livingEnemies = enemyEntities.filter((e) => e.isAlive);
+      const livingEnemies = enemyEntities.filter(
+        (filteredEntity) => filteredEntity.isAlive
+      );
       if (livingEnemies.length === 0) return [];
       livingEnemies.sort((a, b) => a.position - b.position);
       return [livingEnemies[0]];
+    }
 
     default:
       return [];

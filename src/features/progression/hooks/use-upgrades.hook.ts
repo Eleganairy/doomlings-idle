@@ -14,7 +14,7 @@ import { type Upgrade, UpgradeId } from "../types/progression.types";
  * Formula: baseCost × costMultiplier^level
  */
 export function getUpgradeCost(upgrade: Upgrade, level: number): number {
-  return Math.floor(upgrade.baseCost * Math.pow(upgrade.costMultiplier, level));
+  return Math.floor(upgrade.baseCost * upgrade.costMultiplier ** level);
 }
 
 /**
@@ -25,9 +25,7 @@ export function getUpgradeValue(upgrade: Upgrade, level: number): number {
   if (upgrade.valueMultiplier === 1.0) {
     return upgrade.baseValue; // No scaling
   }
-  return Math.floor(
-    upgrade.baseValue * Math.pow(upgrade.valueMultiplier, level)
-  );
+  return Math.floor(upgrade.baseValue * upgrade.valueMultiplier ** level);
 }
 
 /**
@@ -108,14 +106,16 @@ export const useUpgrades = () => {
    * Check if upgrade is unlocked
    */
   const isUnlocked = (upgradeId: UpgradeId): boolean => {
-    return unlockedUpgrades.some((u) => u.id === upgradeId);
+    return unlockedUpgrades.some((upgrade) => upgrade.id === upgradeId);
   };
 
   /**
    * Purchase an upgrade
    */
   const purchaseUpgrade = (upgradeId: UpgradeId): boolean => {
-    const upgrade = ALL_UPGRADES.find((u) => u.id === upgradeId);
+    const upgrade = ALL_UPGRADES.find(
+      (foundUpgrade) => foundUpgrade.id === upgradeId
+    );
     if (!upgrade) return false;
 
     if (!isUnlocked(upgradeId)) return false;

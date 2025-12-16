@@ -14,9 +14,9 @@ import { EnemyRarity, EnemyType } from "../types/enemy.types";
 // ====================================================================================
 
 export const ENEMY_LIST_AREA_1: Record<string, EnemyDefinition> = {
-  GRASSHOPPER: createEnemyDefinition({
-    name: "Grasshopper",
-    description: "A small and quick enemy.",
+  HEDGEHOG: createEnemyDefinition({
+    name: "Spiky Hedgehog",
+    description: "A small but fast creature.",
     areaNumber: 1,
     rarity: EnemyRarity.COMMON,
     type: EnemyType.FAST,
@@ -32,7 +32,7 @@ export const ENEMY_LIST_AREA_1: Record<string, EnemyDefinition> = {
     sprite: "/enemy/Snail1.png",
     icon: "/enemy/Snail1.png",
   }),
-  FIELD_MOUSE: createEnemyDefinition({
+  HAMMER_SQUIRREL: createEnemyDefinition({
     name: "Field mouse",
     description: "A standard enemy.",
     areaNumber: 1,
@@ -75,8 +75,8 @@ export const ENEMY_LIST_AREA_2: Record<string, EnemyDefinition> = {
     sprite: "/enemy/Snail1.png",
     icon: "/enemy/Snail1.png",
   }),
-  COCKROACH: createEnemyDefinition({
-    name: "Cockroach",
+  TRASH_PANDS: createEnemyDefinition({
+    name: "Trash panda",
     description: "Nearly indestructible pest.",
     areaNumber: 2,
     rarity: EnemyRarity.COMMON,
@@ -93,8 +93,8 @@ export const ENEMY_LIST_AREA_2: Record<string, EnemyDefinition> = {
     sprite: "/enemy/Snail1.png",
     icon: "/enemy/Snail1.png",
   }),
-  FERAL_DOG: createEnemyDefinition({
-    name: "Feral dog",
+  RUST_DOG: createEnemyDefinition({
+    name: "Rust dog",
     description: "A vicious scavenger.",
     areaNumber: 2,
     rarity: EnemyRarity.UNCOMMON,
@@ -114,12 +114,12 @@ export const ENEMY_LIST_AREA_2: Record<string, EnemyDefinition> = {
 };
 
 // ====================================================================================
-// AREA 3 - LIVING FOREST
+// AREA 3 - MUSHROOM GROVE
 // ====================================================================================
 
 export const ENEMY_LIST_AREA_3: Record<string, EnemyDefinition> = {
-  THORN_BUSH: createEnemyDefinition({
-    name: "Thorn Bush",
+  SPORE_BOT: createEnemyDefinition({
+    name: "Spore bat",
     description: "A hostile plant with sharp thorns.",
     areaNumber: 3,
     rarity: EnemyRarity.COMMON,
@@ -127,8 +127,8 @@ export const ENEMY_LIST_AREA_3: Record<string, EnemyDefinition> = {
     sprite: "/enemy/Snail1.png",
     icon: "/enemy/Snail1.png",
   }),
-  VINE_CREEPER: createEnemyDefinition({
-    name: "Vine Creeper",
+  BLOOM_SHROOM: createEnemyDefinition({
+    name: "Bloom shroom",
     description: "Strangling vines that move with purpose.",
     areaNumber: 3,
     rarity: EnemyRarity.COMMON,
