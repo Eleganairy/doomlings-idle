@@ -1,5 +1,6 @@
 import { PageTypes } from "../constants/pages.constants";
 import { OpenWorldPage, UpgradesPage, TraitsPage, StatsPage } from "../pages";
+import { LabPage } from "../pages/lab";
 
 export const pageComponents: Record<
   PageTypes,
@@ -8,13 +9,13 @@ export const pageComponents: Record<
   [PageTypes.OPEN_WORLD]: OpenWorldPage,
   [PageTypes.UPGRADES]: UpgradesPage,
   [PageTypes.TRAITS]: TraitsPage,
-  [PageTypes.EVOLVE]: undefined,
+  [PageTypes.LAB]: LabPage,
   [PageTypes.POKEDEX]: undefined,
   [PageTypes.METEORITE]: undefined,
   [PageTypes.CRAFTING]: undefined,
   [PageTypes.RELICS]: undefined,
   [PageTypes.PETS]: undefined,
-  [PageTypes.TRAINING]: undefined,
+  [PageTypes.TERRITORY_CONTROL]: undefined,
   [PageTypes.STATS]: StatsPage,
   [PageTypes.SETTINGS]: undefined,
 };

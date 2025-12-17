@@ -3,6 +3,8 @@ import type { Entity } from "../../../features/entity/entity.class";
 import { COLORS } from "../../../constants/colors.constants";
 import { CombatEntity } from "./combat-entity";
 import { AbilityTrigger } from "../../../features/entity/types/entity.types";
+import { FONT_SIZE } from "../../../constants/text.constants";
+import { Paragraph } from "../../../shared/ui/paragraph";
 
 interface EntityStatusBarProps {
   entity: Entity;
@@ -23,14 +25,15 @@ export const EntityStatusBar = ({
   // Check if entity has any timed abilities
   const timedAbilities = entity
     .getAllAbilities()
-    .filter((a) => a.trigger === AbilityTrigger.ON_ABILITY_READY);
+    .filter(
+      (filteredAbility) =>
+        filteredAbility.trigger === AbilityTrigger.ON_ABILITY_READY
+    );
   const hasTimedAbilities = timedAbilities.length > 0;
 
   // Get first ability's cooldown for progress bar (if exists)
   const firstAbility = timedAbilities[0];
-  const abilityProgress = firstAbility
-    ? entity.getAbilityProgress(firstAbility.id)
-    : 0;
+
   const abilityCooldownMs = firstAbility?.cooldownMs ?? 1000;
 
   const healthColor =
@@ -57,18 +60,13 @@ export const EntityStatusBar = ({
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
+          marginBottom: "6px",
         }}
       >
         {currentShield > 0 && (
-          <Box
-            sx={{
-              color: COLORS.SHIELD,
-              fontSize: "12px",
-              fontWeight: "bold",
-            }}
-          >
+          <Paragraph color={COLORS.SHIELD} size={FONT_SIZE.MEDIUM} isBold>
             🛡️ {Math.round(currentShield)}
-          </Box>
+          </Paragraph>
         )}
       </Box>
 
@@ -84,13 +82,16 @@ export const EntityStatusBar = ({
           {/* Entity name / HP text */}
           <Box
             sx={{
-              color: "white",
-              fontSize: "14px",
-              fontWeight: "bold",
               textAlign: "center",
             }}
           >
-            HP: {Math.round(currentHealth)}/{maxHealth}
+            <Paragraph
+              color={COLORS.TEXT_PRIMARY}
+              size={FONT_SIZE.SMALL}
+              isBold
+            >
+              HP: {Math.round(currentHealth)}/{maxHealth}
+            </Paragraph>
           </Box>
 
           {/* Health Bar */}

@@ -1,5 +1,7 @@
 import { Box, Stack } from "@mui/material";
 import { COLORS } from "../../constants/colors.constants";
+import { Paragraph } from "../ui/paragraph";
+import { FONT_SIZE } from "../../constants/text.constants";
 
 interface HeaderProps {
   energy: number;
@@ -20,7 +22,14 @@ export const Header = ({ energy, sprite }: HeaderProps) => (
       color: "white",
     }}
   >
-    <Box sx={{ flex: 1, textAlign: "left" }}>Energy: {energy}</Box>
+    <Stack direction={"row"} spacing={5} sx={{ flex: 1, textAlign: "left" }}>
+      <Paragraph color={COLORS.TEXT_PRIMARY} size={FONT_SIZE.LARGE}>
+        Energy: {energy}
+      </Paragraph>
+      <Paragraph color={COLORS.TEXT_PRIMARY} size={FONT_SIZE.LARGE}>
+        Meteorite shards: {energy}
+      </Paragraph>
+    </Stack>
     <Box sx={{ flex: 1, textAlign: "center", paddingBottom: "30px" }}>
       <img src={sprite} alt="Player Icon" height={"100px"} width={"100px"} />
     </Box>
@@ -28,9 +37,15 @@ export const Header = ({ energy, sprite }: HeaderProps) => (
       direction={"row"}
       sx={{ flex: 1, textAlign: "right", justifyContent: "space-around" }}
     >
-      <Box>Currency 1: 0</Box>
-      <Box>Currency 1: 0</Box>
-      <Box>Currency 1: 0</Box>
+      <Paragraph color={COLORS.TEXT_PRIMARY} size={FONT_SIZE.MEDIUM}>
+        Currency 1: 0
+      </Paragraph>
+      <Paragraph color={COLORS.TEXT_PRIMARY} size={FONT_SIZE.MEDIUM}>
+        Currency 2: 0
+      </Paragraph>
+      <Paragraph color={COLORS.TEXT_PRIMARY} size={FONT_SIZE.MEDIUM}>
+        Currency 3: 0
+      </Paragraph>
     </Stack>
   </Stack>
 );

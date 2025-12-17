@@ -1,7 +1,9 @@
 import { Box, Stack } from "@mui/material";
 import { COLORS } from "../../constants/colors.constants";
 import { Pages, type PageTypes } from "../../constants/pages.constants";
-import { FooterNavigationButton } from "../UI/footer-navigation-button";
+import { FooterNavigationButton } from "../ui/footer-navigation-button";
+import { Paragraph } from "../ui/paragraph";
+import { FONT_SIZE } from "../../constants/text.constants";
 
 interface FooterProps {
   activePage: PageTypes;
@@ -23,20 +25,16 @@ export const Footer = ({ activePage, handleNavigation }: FooterProps) => (
         const pageIsActive = page.id === activePage;
         const pageIsLocked = page.lockedByBossNumber > 0;
         return (
-          <Stack
-            key={`page-${page.id}`}
-            sx={{
-              color: COLORS.TEXT_PRIMARY,
-              alignItems: "center",
-            }}
-          >
+          <Stack key={`page-${page.id}`} alignItems={"center"}>
             <FooterNavigationButton
               page={page}
               pageIsLocked={pageIsLocked}
               pageIsActive={pageIsActive}
               handleNavigation={(pageId) => handleNavigation(pageId)}
             />
-            {pageIsLocked ? page.lockedByBossNumber : page.name}
+            <Paragraph color={COLORS.TEXT_PRIMARY} size={FONT_SIZE.MEDIUM}>
+              {pageIsLocked ? page.lockedByBossNumber : page.name}
+            </Paragraph>
           </Stack>
         );
       })}

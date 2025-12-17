@@ -5,7 +5,7 @@
  * Uses the Entity class system for all combat operations.
  */
 
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import {
   activePlayersAtom,
@@ -133,9 +133,10 @@ export const usePersistentCombat = () => {
    * Uses the player's configured team from teamForCombatAtom.
    * Applies all purchased upgrade buffs to each player.
    */
-  const createPlayerEntitiesWithUpgrades = (): Entity[] => {
+  const createPlayerEntitiesWithUpgrades = useCallback((): Entity[] => {
     // Create players based on team configuration
     const players: Entity[] = [];
+    console.log(teamForCombat);
     for (const { slimeId, position } of teamForCombat) {
       const definition = PLAYER_DEFINITIONS[slimeId];
       if (definition) {
@@ -162,63 +163,69 @@ export const usePersistentCombat = () => {
     }
 
     return players;
-  };
+  }, [teamForCombat]);
 
   /**
    * Create an enemy entity with upgrade debuffs applied.
    */
-  const createEnemyWithDebuffs = (position: 0 | 1 | 2): Entity => {
-    const enemy = spawnEnemyFromPool(
-      activeArea.enemyPool,
-      currentAreaId,
-      currentStageNumber,
-      position
-    );
-    applyUpgradeDebuffsToEnemy(enemy, upgradeLevelsRef.current);
+  const createEnemyWithDebuffs = useCallback(
+    (position: 0 | 1 | 2): Entity => {
+      const enemy = spawnEnemyFromPool(
+        activeArea.enemyPool,
+        currentAreaId,
+        currentStageNumber,
+        position
+      );
+      applyUpgradeDebuffsToEnemy(enemy, upgradeLevelsRef.current);
 
-    // Trigger ON_SPAWN abilities for the enemy
-    const currentPlayers = activePlayersRef.current;
-    const currentEnemies = activeEnemiesRef.current;
-    executeTriggeredAbilities(
-      enemy,
-      AbilityTrigger.ON_SPAWN,
-      [...currentEnemies, enemy],
-      currentPlayers
-    );
+      // Trigger ON_SPAWN abilities for the enemy
+      const currentPlayers = activePlayersRef.current;
+      const currentEnemies = activeEnemiesRef.current;
+      executeTriggeredAbilities(
+        enemy,
+        AbilityTrigger.ON_SPAWN,
+        [...currentEnemies, enemy],
+        currentPlayers
+      );
 
-    return enemy;
-  };
+      return enemy;
+    },
+    [activeArea.enemyPool, currentAreaId, currentStageNumber]
+  );
 
   /**
    * Process loot from a killed enemy
    */
-  const processEnemyLoot = (enemy: Entity) => {
-    const lootDrops = enemy.rollLoot();
-    const energyMultiplier = calculateEnergyBonusMultiplier(
-      upgradeLevelsRef.current
-    );
+  const processEnemyLoot = useCallback(
+    (enemy: Entity) => {
+      const lootDrops = enemy.rollLoot();
+      const energyMultiplier = calculateEnergyBonusMultiplier(
+        upgradeLevelsRef.current
+      );
 
-    for (const drop of lootDrops) {
-      if (drop.type === "energy") {
-        const energyGained = Math.floor(drop.amount * energyMultiplier);
-        setPlayerEnergy((prev) => prev + energyGained);
-        setPlayerTrackedStats((prev) => ({
-          ...prev,
-          totalEnergyGained: prev.totalEnergyGained + energyGained,
-        }));
+      for (const drop of lootDrops) {
+        if (drop.type === "energy") {
+          const energyGained = Math.floor(drop.amount * energyMultiplier);
+          setPlayerEnergy((prev) => prev + energyGained);
+          setPlayerTrackedStats((prev) => ({
+            ...prev,
+            totalEnergyGained: prev.totalEnergyGained + energyGained,
+          }));
+        }
       }
-    }
 
-    recordEnemyKill();
-    setPlayerTrackedStats((prev) => ({
-      ...prev,
-      totalEnemiesKilled: prev.totalEnemiesKilled + 1,
-      enemyKillsByName: {
-        ...prev.enemyKillsByName,
-        [enemy.name]: (prev.enemyKillsByName[enemy.name] || 0) + 1,
-      },
-    }));
-  };
+      recordEnemyKill();
+      setPlayerTrackedStats((prev) => ({
+        ...prev,
+        totalEnemiesKilled: prev.totalEnemiesKilled + 1,
+        enemyKillsByName: {
+          ...prev.enemyKillsByName,
+          [enemy.name]: (prev.enemyKillsByName[enemy.name] || 0) + 1,
+        },
+      }));
+    },
+    [setPlayerEnergy, setPlayerTrackedStats, recordEnemyKill]
+  );
 
   // Main combat loop
   useEffect(() => {
@@ -420,8 +427,11 @@ export const usePersistentCombat = () => {
     return () => clearInterval(interval);
   }, [
     activeArea.enemyPool,
+    createEnemyWithDebuffs,
+    createPlayerEntitiesWithUpgrades,
     currentAreaId,
     currentStageNumber,
+    processEnemyLoot,
     recordEnemyKill,
     resetStageProgress,
     setActiveEnemies,

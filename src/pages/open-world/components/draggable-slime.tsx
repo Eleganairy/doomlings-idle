@@ -1,12 +1,8 @@
-/**
- * Draggable Slime Component
- *
- * A slime card that can be dragged to battle slots or the grid.
- */
-
-import { Box, Typography } from "@mui/material";
+import { Box } from "@mui/material";
 import { COLORS } from "../../../constants/colors.constants";
 import type { PlayerDefinition } from "../../../features/entity/types/entity.types";
+import { FONT_SIZE } from "../../../constants/text.constants";
+import { Paragraph } from "../../../shared/ui/paragraph";
 
 interface DraggableSlimeProps {
   definition: PlayerDefinition;
@@ -21,14 +17,14 @@ export const DraggableSlime = ({
   onDragStart,
   onDragEnd,
 }: DraggableSlimeProps) => {
-  const handleDragStart = (e: React.DragEvent) => {
+  const handleDragStart = (event: React.DragEvent) => {
     if (isLocked) {
-      e.preventDefault();
+      event.preventDefault();
       return;
     }
-    e.dataTransfer.setData("slimeId", definition.id);
-    e.dataTransfer.effectAllowed = "move";
-    onDragStart(e, definition.id);
+    event.dataTransfer.setData("slimeId", definition.id);
+    event.dataTransfer.effectAllowed = "move";
+    onDragStart(event, definition.id);
   };
 
   return (
@@ -77,27 +73,13 @@ export const DraggableSlime = ({
           filter: isLocked ? "grayscale(100%)" : "none",
         }}
       />
-      <Typography
-        sx={{
-          color: isLocked ? COLORS.TEXT_DISABLED : COLORS.TEXT_PRIMARY,
-          fontSize: "12px",
-          fontWeight: "bold",
-          textAlign: "center",
-          marginTop: "4px",
-        }}
-      >
+      <Paragraph color={COLORS.TEXT_DISABLED} size={FONT_SIZE.SMALL} isBold>
         {definition.baseStats.name}
-      </Typography>
+      </Paragraph>
       {isLocked && (
-        <Typography
-          sx={{
-            color: COLORS.TEXT_DISABLED,
-            fontSize: "10px",
-            textAlign: "center",
-          }}
-        >
+        <Paragraph color={COLORS.TEXT_DISABLED} size={FONT_SIZE.SMALL}>
           🔒 Locked
-        </Typography>
+        </Paragraph>
       )}
     </Box>
   );

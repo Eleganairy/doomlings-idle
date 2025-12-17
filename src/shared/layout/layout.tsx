@@ -32,7 +32,7 @@ export const Layout = () => {
     >
       <Header energy={playerEnergy} sprite={PlayerSprite} />
 
-      <MainContent background={background}>
+      <MainContent activeBackground={background}>
         {ActivePageComponent ? (
           <ActivePageComponent />
         ) : (

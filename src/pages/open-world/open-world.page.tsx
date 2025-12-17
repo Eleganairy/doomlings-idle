@@ -16,6 +16,8 @@ import {
   getButtonHoverStateColors,
 } from "../../utils/button-state-colors.utils";
 import { EntityStatusBar, StageSelector, TeamEditor } from "./components";
+import { FONT_SIZE } from "../../constants/text.constants";
+import { Paragraph } from "../../shared/ui/paragraph";
 
 export const OpenWorldPage = () => {
   const { activePlayers, activeEnemies, isCombatActive, toggleCombat } =
@@ -106,7 +108,9 @@ export const OpenWorldPage = () => {
                 },
               }}
             >
-              {isCombatActive ? "PAUSE" : "START"}
+              <Paragraph color={COLORS.TEXT_PRIMARY} size={FONT_SIZE.MEDIUM}>
+                {isCombatActive ? "PAUSE" : "START"}
+              </Paragraph>
             </Button>
           </Box>
         )}

@@ -50,7 +50,7 @@ export const playerTeamAtom = atomWithStorage<TeamConfig>(
  */
 export const unlockedSlimeIdsAtom = atomWithStorage<string[]>(
   "unlockedSlimes",
-  ["basic_slime"]
+  ["basic_slime", "druid_slime", "fortified_slime"]
 );
 
 // ====================================================================================

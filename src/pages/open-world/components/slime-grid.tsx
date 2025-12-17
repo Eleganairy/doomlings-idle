@@ -1,11 +1,8 @@
-/**
- * Team Editor Slime Grid
- * Shows available slimes with selection and details.
- */
-
-import { Box, Stack, Typography } from "@mui/material";
+import { Box, Stack } from "@mui/material";
 import { COLORS } from "../../../constants/colors.constants";
 import type { PlayerDefinition } from "../../../features/entity/types/entity.types";
+import { FONT_SIZE } from "../../../constants/text.constants";
+import { Paragraph } from "../../../shared/ui/paragraph";
 
 interface SlimeGridProps {
   slimes: PlayerDefinition[];
@@ -16,6 +13,34 @@ interface SlimeGridProps {
   onDragStart: (e: React.DragEvent, slimeId: string) => void;
   onDropToRemove: (e: React.DragEvent) => void;
 }
+
+const StatBars = ({
+  value,
+  maxValue,
+  color = COLORS.ACCENT_GREEN,
+}: {
+  value: number;
+  maxValue: number;
+  color?: string;
+}) => {
+  const filledBars = Math.round((value / maxValue) * 5);
+
+  return (
+    <Stack direction="row" spacing={0.5}>
+      {Array.from({ length: 5 }).map((_, index) => (
+        <Box
+          key={index}
+          sx={{
+            width: "8px",
+            height: "16px",
+            backgroundColor: index < filledBars ? color : "#1a1a1a",
+            borderRadius: "2px",
+          }}
+        />
+      ))}
+    </Stack>
+  );
+};
 
 export const SlimeGrid = ({
   slimes,
@@ -29,15 +54,15 @@ export const SlimeGrid = ({
   return (
     <Box
       sx={{
-        width: "380px",
+        width: "570px",
         display: "flex",
         flexDirection: "column",
         backgroundColor: COLORS.CARD_BACKGROUND + "F0",
         borderLeft: `2px solid ${COLORS.CARD_BORDER}`,
       }}
-      onDragOver={(e) => {
-        e.preventDefault();
-        e.dataTransfer.dropEffect = "move";
+      onDragOver={(event) => {
+        event.preventDefault();
+        event.dataTransfer.dropEffect = "move";
       }}
       onDrop={onDropToRemove}
     >
@@ -48,15 +73,9 @@ export const SlimeGrid = ({
           borderBottom: `1px solid ${COLORS.CARD_BORDER}`,
         }}
       >
-        <Typography
-          sx={{
-            color: COLORS.TEXT_PRIMARY,
-            fontSize: "16px",
-            fontWeight: "bold",
-          }}
-        >
-          Available Slimes
-        </Typography>
+        <Paragraph color={COLORS.TEXT_PRIMARY} size={FONT_SIZE.LARGE} isBold>
+          Slime Collection
+        </Paragraph>
       </Box>
 
       {/* Grid */}
@@ -71,7 +90,7 @@ export const SlimeGrid = ({
           overflowY: "auto",
         }}
       >
-        {slimes.map((slime) => {
+        {[...slimes, ...slimes, ...slimes].map((slime) => {
           const isUnlocked = unlockedIds.includes(slime.id);
           const isInTeam = teamSlimeIds.includes(slime.id);
           const isSelected = selectedSlime?.id === slime.id;
@@ -81,18 +100,21 @@ export const SlimeGrid = ({
               key={slime.id}
               draggable={isUnlocked && !isInTeam}
               onClick={() => onSelect(slime)}
-              onDragStart={(e) => {
-                if (isUnlocked && !isInTeam) onDragStart(e, slime.id);
-                else e.preventDefault();
+              onDragStart={(event) => {
+                if (isUnlocked && !isInTeam) {
+                  onDragStart(event, slime.id);
+                  return;
+                }
+                event.preventDefault();
               }}
               sx={{
-                width: "80px",
-                height: "95px",
+                width: "120px",
+                height: "120px",
                 backgroundColor: isInTeam
-                  ? COLORS.ACCENT_BLUE + "30"
+                  ? COLORS.CARD_BACKGROUND_CLEAR
                   : COLORS.CARD_BACKGROUND_DARK,
                 border: `2px solid ${
-                  isSelected ? COLORS.ACCENT_BLUE : COLORS.CARD_BORDER
+                  isSelected ? COLORS.ACCENT_GREEN : COLORS.CARD_BORDER
                 }`,
                 borderRadius: "6px",
                 display: "flex",
@@ -103,11 +125,11 @@ export const SlimeGrid = ({
                   ? isInTeam
                     ? "pointer"
                     : "grab"
-                  : "not-allowed",
+                  : "disabled",
                 opacity: isUnlocked ? 1 : 0.5,
                 transition: "all 0.15s",
                 "&:hover": isUnlocked
-                  ? { borderColor: COLORS.ACCENT_BLUE }
+                  ? { borderColor: COLORS.ACCENT_GREEN }
                   : {},
               }}
             >
@@ -116,29 +138,20 @@ export const SlimeGrid = ({
                 src={slime.baseStats.icon}
                 alt={slime.baseStats.name}
                 sx={{
-                  width: "45px",
-                  height: "45px",
+                  width: "80px",
+                  height: "80px",
                   objectFit: "contain",
                   filter: isUnlocked ? "none" : "grayscale(100%)",
+                  mb: "10px",
                 }}
               />
-              <Typography
-                sx={{
-                  color: COLORS.TEXT_PRIMARY,
-                  fontSize: "10px",
-                  fontWeight: "bold",
-                  textAlign: "center",
-                  mt: 0.5,
-                }}
-              >
-                {slime.baseStats.name}
-              </Typography>
+              <Paragraph color={COLORS.TEXT_PRIMARY} size={FONT_SIZE.SMALL}>
+                {isUnlocked && slime.baseStats.name}
+              </Paragraph>
               {!isUnlocked && (
-                <Typography
-                  sx={{ color: COLORS.TEXT_DISABLED, fontSize: "9px" }}
-                >
+                <Paragraph color={COLORS.TEXT_DISABLED} size={FONT_SIZE.SMALL}>
                   🔒
-                </Typography>
+                </Paragraph>
               )}
             </Box>
           );
@@ -148,7 +161,7 @@ export const SlimeGrid = ({
       {/* Details Panel */}
       <Box
         sx={{
-          height: "180px",
+          height: "210px",
           borderTop: `2px solid ${COLORS.CARD_BORDER}`,
           padding: "16px",
           backgroundColor: COLORS.CARD_BACKGROUND,
@@ -156,56 +169,107 @@ export const SlimeGrid = ({
       >
         {selectedSlime ? (
           <Stack spacing={1}>
-            <Typography
-              sx={{
-                color: COLORS.TEXT_PRIMARY,
-                fontWeight: "bold",
-                fontSize: "16px",
-              }}
+            <Paragraph
+              color={COLORS.TEXT_PRIMARY}
+              size={FONT_SIZE.MEDIUM}
+              isBold
             >
               {selectedSlime.baseStats.name}
-            </Typography>
-            <Typography sx={{ color: COLORS.TEXT_SECONDARY, fontSize: "13px" }}>
+            </Paragraph>
+            <Paragraph color={COLORS.TEXT_SECONDARY} size={FONT_SIZE.SMALL}>
               {selectedSlime.baseStats.description}
-            </Typography>
-            <Stack direction="row" spacing={2}>
-              <Typography
-                sx={{ color: COLORS.HEALTH_PLAYER, fontSize: "13px" }}
-              >
-                ❤️ {selectedSlime.baseStats.maxHealth} HP
-              </Typography>
-              <Typography sx={{ color: COLORS.ATTACK, fontSize: "13px" }}>
-                ⚔️ {selectedSlime.baseStats.attackDamage} DMG
-              </Typography>
-              <Typography
-                sx={{ color: COLORS.TEXT_SECONDARY, fontSize: "13px" }}
-              >
-                ⚡ {selectedSlime.baseStats.attackSpeed} SPD
-              </Typography>
+            </Paragraph>
+            <Stack
+              direction="row"
+              spacing={2}
+              sx={{
+                width: "100%",
+              }}
+            >
+              {/* Left Column */}
+              <Stack spacing={1} sx={{ width: "50%" }}>
+                <Stack
+                  direction="row"
+                  spacing={2}
+                  alignItems="center"
+                  justifyContent="space-between"
+                >
+                  <Paragraph
+                    color={COLORS.HEALTH_PLAYER}
+                    size={FONT_SIZE.MEDIUM}
+                  >
+                    Health
+                  </Paragraph>
+                  <StatBars
+                    value={selectedSlime.baseStats.maxHealth}
+                    maxValue={100}
+                  />
+                </Stack>
+
+                <Stack
+                  direction="row"
+                  spacing={2}
+                  alignItems="center"
+                  justifyContent="space-between"
+                >
+                  <Paragraph
+                    color={COLORS.ACCENT_ORANGE}
+                    size={FONT_SIZE.MEDIUM}
+                  >
+                    Attack Damage
+                  </Paragraph>
+                  <StatBars
+                    value={selectedSlime.baseStats.attackDamage}
+                    maxValue={2}
+                  />
+                </Stack>
+              </Stack>
+
+              {/* Right Column */}
+              <Stack spacing={1} sx={{ width: "50%" }}>
+                <Stack
+                  direction="row"
+                  spacing={2}
+                  alignItems="center"
+                  justifyContent="space-between"
+                >
+                  <Paragraph color={COLORS.ACCENT_BLUE} size={FONT_SIZE.MEDIUM}>
+                    Attack Speed
+                  </Paragraph>
+                  <StatBars
+                    value={selectedSlime.baseStats.attackSpeed}
+                    maxValue={2}
+                  />
+                </Stack>
+
+                <Stack
+                  direction="row"
+                  spacing={2}
+                  alignItems="center"
+                  justifyContent="space-between"
+                >
+                  <Paragraph color={COLORS.MANA} size={FONT_SIZE.MEDIUM}>
+                    Ability Strength
+                  </Paragraph>
+                  <StatBars value={1} maxValue={2} />
+                </Stack>
+              </Stack>
             </Stack>
             {selectedSlime.abilities && selectedSlime.abilities.length > 0 && (
-              <Box>
-                <Typography
-                  sx={{
-                    color: COLORS.ABILITY,
-                    fontSize: "13px",
-                    fontWeight: "bold",
-                  }}
-                >
-                  ✨ {selectedSlime.abilities[0].name}
-                </Typography>
-                <Typography
-                  sx={{ color: COLORS.TEXT_SECONDARY, fontSize: "12px" }}
-                >
+              <Stack spacing={1} pt={3}>
+                <Paragraph color={COLORS.MANA} size={FONT_SIZE.MEDIUM} isBold>
+                  {selectedSlime.abilities[0].name}
+                </Paragraph>
+                <Paragraph color={COLORS.TEXT_SECONDARY} size={FONT_SIZE.SMALL}>
                   {selectedSlime.abilities[0].description}
-                </Typography>
-              </Box>
+                </Paragraph>
+              </Stack>
             )}
           </Stack>
         ) : (
-          <Typography sx={{ color: COLORS.TEXT_DISABLED, fontSize: "14px" }}>
+          <Paragraph color={COLORS.TEXT_DISABLED} size={FONT_SIZE.MEDIUM}>
             Click a slime to see details
-          </Typography>
+          </Paragraph>
         )}
       </Box>
     </Box>

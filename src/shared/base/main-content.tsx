@@ -1,16 +1,19 @@
 import { Box } from "@mui/material";
 
 interface MainContentProps {
-  background: string;
+  activeBackground: string;
   children?: React.ReactNode;
 }
 
-export const MainContent = ({ children, background }: MainContentProps) => (
+export const MainContent = ({
+  children,
+  activeBackground,
+}: MainContentProps) => (
   <Box
     component={"main"}
     sx={{
       flex: 1,
-      backgroundImage: `url(${background})`, // Path to the image in the public folder
+      backgroundImage: `url(${activeBackground})`,
       backgroundSize: "cover",
       backgroundPosition: "center",
       backgroundRepeat: "no-repeat",

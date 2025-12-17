@@ -1,8 +1,3 @@
-/**
- * Team Editor
- * Simplified layout: team slots on left, centered submit button, slime grid on right.
- */
-
 import { Box, Button, Stack } from "@mui/material";
 import { useState, useCallback } from "react";
 import { useAtom, useAtomValue } from "jotai";
@@ -48,14 +43,14 @@ export const TeamEditor = ({ onClose }: TeamEditorProps) => {
   };
 
   const handleDrop = useCallback(
-    (e: React.DragEvent, targetPos: 0 | 1 | 2) => {
-      e.preventDefault();
-      const slimeId = e.dataTransfer.getData("slimeId");
-      const srcPosStr = e.dataTransfer.getData("sourcePosition");
+    (event: React.DragEvent, targetPos: 0 | 1 | 2) => {
+      event.preventDefault();
+      const slimeId = event.dataTransfer.getData("slimeId");
+      const srcPosStr = event.dataTransfer.getData("sourcePosition");
       if (!slimeId) return;
 
       setTeamConfig((prev) => {
-        const cfg = { ...prev };
+        const teamConfiguration = { ...prev };
         let srcPos: 0 | 1 | 2 | null = srcPosStr
           ? (parseInt(srcPosStr) as 0 | 1 | 2)
           : null;
@@ -64,21 +59,21 @@ export const TeamEditor = ({ onClose }: TeamEditorProps) => {
           else if (prev.position1 === slimeId) srcPos = 1;
           else if (prev.position2 === slimeId) srcPos = 2;
         }
-        const targetId =
-          targetPos === 0
-            ? prev.position0
-            : targetPos === 1
-            ? prev.position1
-            : prev.position2;
+        const positionMap = {
+          0: prev.position0,
+          1: prev.position1,
+          2: prev.position2,
+        } as const;
+        const targetId = positionMap[targetPos];
         if (srcPos !== null) {
-          if (srcPos === 0) cfg.position0 = targetId;
-          else if (srcPos === 1) cfg.position1 = targetId;
-          else cfg.position2 = targetId;
+          if (srcPos === 0) teamConfiguration.position0 = targetId;
+          else if (srcPos === 1) teamConfiguration.position1 = targetId;
+          else teamConfiguration.position2 = targetId;
         }
-        if (targetPos === 0) cfg.position0 = slimeId;
-        else if (targetPos === 1) cfg.position1 = slimeId;
-        else cfg.position2 = slimeId;
-        return cfg;
+        if (targetPos === 0) teamConfiguration.position0 = slimeId;
+        else if (targetPos === 1) teamConfiguration.position1 = slimeId;
+        else teamConfiguration.position2 = slimeId;
+        return teamConfiguration;
       });
       setDragOverPosition(null);
     },
@@ -86,17 +81,24 @@ export const TeamEditor = ({ onClose }: TeamEditorProps) => {
   );
 
   const handleRemoveFromSlot = useCallback(
-    (e: React.DragEvent) => {
-      e.preventDefault();
-      const srcPosStr = e.dataTransfer.getData("sourcePosition");
-      if (srcPosStr) {
-        const pos = parseInt(srcPosStr) as 0 | 1 | 2;
+    (event: React.DragEvent) => {
+      event.preventDefault();
+      const originalPosition = event.dataTransfer.getData("sourcePosition");
+      if (originalPosition) {
+        const removedTeamPosition = parseInt(originalPosition) as 0 | 1 | 2;
         setTeamConfig((prev) => {
-          const cfg = { ...prev };
-          if (pos === 0) cfg.position0 = null;
-          else if (pos === 1) cfg.position1 = null;
-          else cfg.position2 = null;
-          return cfg;
+          const teamConfiguration = { ...prev };
+
+          if (removedTeamPosition === 0) {
+            teamConfiguration.position0 = null;
+          }
+          if (removedTeamPosition === 1) {
+            teamConfiguration.position1 = null;
+          }
+          if (removedTeamPosition === 2) {
+            teamConfiguration.position2 = null;
+          }
+          return teamConfiguration;
         });
       }
     },
@@ -128,24 +130,27 @@ export const TeamEditor = ({ onClose }: TeamEditorProps) => {
           paddingLeft: "40px",
         }}
       >
-        <Stack direction="row" spacing={2}>
-          {([2, 1, 0] as const).map((pos) => (
+        <Stack direction="row" spacing={5}>
+          {([2, 1, 0] as const).map((currentPosition) => (
             <TeamEditorSlot
-              key={pos}
-              position={pos}
-              slime={getSlimeInPosition(pos)}
-              isDragOver={dragOverPosition === pos}
-              onDragOver={(e) => {
-                e.preventDefault();
-                setDragOverPosition(pos);
+              key={currentPosition}
+              position={currentPosition}
+              slime={getSlimeInPosition(currentPosition)}
+              isDragOver={dragOverPosition === currentPosition}
+              onDragOver={(event) => {
+                event.preventDefault();
+                setDragOverPosition(currentPosition);
               }}
               onDragLeave={() => setDragOverPosition(null)}
-              onDrop={(e) => handleDrop(e, pos)}
-              onDragStart={(e) => {
-                const s = getSlimeInPosition(pos);
-                if (s) {
-                  e.dataTransfer.setData("slimeId", s.id);
-                  e.dataTransfer.setData("sourcePosition", pos.toString());
+              onDrop={(event) => handleDrop(event, currentPosition)}
+              onDragStart={(event) => {
+                const currentSlime = getSlimeInPosition(currentPosition);
+                if (currentSlime) {
+                  event.dataTransfer.setData("slimeId", currentSlime.id);
+                  event.dataTransfer.setData(
+                    "sourcePosition",
+                    currentPosition.toString()
+                  );
                 }
               }}
             />
@@ -171,9 +176,11 @@ export const TeamEditor = ({ onClose }: TeamEditorProps) => {
               : COLORS.BUTTON_DISABLED,
             color: COLORS.TEXT_PRIMARY,
             fontWeight: "bold",
+            fontFamily: "Minecraft, sans-serif",
             fontSize: "18px",
             padding: "16px 40px",
             borderRadius: "8px",
+            border: `3px solid ${COLORS.CARD_BORDER}`,
             "&:hover": {
               backgroundColor: hasAtLeastOneSlime
                 ? COLORS.ACCENT_LIGHT_GREEN
@@ -181,7 +188,7 @@ export const TeamEditor = ({ onClose }: TeamEditorProps) => {
             },
           }}
         >
-          ✓ Confirm
+          Confirm team
         </Button>
       </Box>
 
@@ -192,9 +199,9 @@ export const TeamEditor = ({ onClose }: TeamEditorProps) => {
         teamSlimeIds={teamSlimeIds}
         selectedSlime={selectedSlime}
         onSelect={setSelectedSlime}
-        onDragStart={(e, id) => {
-          e.dataTransfer.setData("slimeId", id);
-          e.dataTransfer.effectAllowed = "move";
+        onDragStart={(event, id) => {
+          event.dataTransfer.setData("slimeId", id);
+          event.dataTransfer.effectAllowed = "move";
         }}
         onDropToRemove={handleRemoveFromSlot}
       />

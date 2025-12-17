@@ -1,11 +1,13 @@
 import CheckIcon from "@mui/icons-material/Check";
 import LockIcon from "@mui/icons-material/Lock";
-import { Box, Button, Stack, Typography } from "@mui/material";
+import { Box, Button, Stack } from "@mui/material";
 import { COLORS } from "../../../constants/colors.constants";
 import { AREA_LIST } from "../../../features/world/config/area-list.config";
 import { useStageProgression } from "../../../features/world/hooks/use-stage-progression.hook";
 import type { StageProgress } from "../../../features/world/types/progression.types";
 import { StageSelectorAreaButton } from "./stage-selector-area-button";
+import { FONT_SIZE } from "../../../constants/text.constants";
+import { Paragraph } from "../../../shared/ui/paragraph";
 
 /**
  * StageSelector Component
@@ -63,21 +65,14 @@ export const StageSelector = () => {
             backgroundColor: COLORS.CARD_BACKGROUND,
             border: `2px solid ${COLORS.CARD_BORDER}`,
             borderRadius: "4px",
-            padding: "4px 12px",
+            padding: "8px 16px",
             minWidth: "100px",
             textAlign: "center",
           }}
         >
-          <Typography
-            sx={{
-              fontFamily: "Minecraft",
-              fontSize: "14px",
-              color: COLORS.TEXT_PRIMARY,
-              fontWeight: "bold",
-            }}
-          >
+          <Paragraph color={COLORS.TEXT_PRIMARY} size={FONT_SIZE.MEDIUM} isBold>
             Enemies: {currentStage.enemiesKilled}/{currentStage.enemiesRequired}
-          </Typography>
+          </Paragraph>
         </Box>
       )}
 
@@ -142,10 +137,17 @@ export const StageSelector = () => {
               ) : isCompleted ? (
                 <>
                   <CheckIcon sx={{ fontSize: "16px" }} />
-                  <Box sx={{ fontSize: "10px" }}>{stage.stageNumber}</Box>
+                  <Paragraph
+                    color={COLORS.TEXT_PRIMARY}
+                    size={FONT_SIZE.MEDIUM}
+                  >
+                    {stage.stageNumber}
+                  </Paragraph>
                 </>
               ) : (
-                <Box>{stage.stageNumber}</Box>
+                <Paragraph color={COLORS.TEXT_PRIMARY} size={FONT_SIZE.MEDIUM}>
+                  {stage.stageNumber}
+                </Paragraph>
               )}
             </Button>
           );

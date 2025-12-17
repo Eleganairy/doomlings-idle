@@ -1,20 +1,17 @@
-/**
- * Team Editor Slot
- * Matches combat entity styling with green border on info block.
- */
-
-import { Box, Typography } from "@mui/material";
+import { Box, Stack } from "@mui/material";
 import { COLORS } from "../../../constants/colors.constants";
 import type { PlayerDefinition } from "../../../features/entity/types/entity.types";
+import { FONT_SIZE } from "../../../constants/text.constants";
+import { Paragraph } from "../../../shared/ui/paragraph";
 
 interface TeamEditorSlotProps {
   position: 0 | 1 | 2;
   slime: PlayerDefinition | null;
   isDragOver: boolean;
-  onDragOver: (e: React.DragEvent) => void;
+  onDragOver: (event: React.DragEvent) => void;
   onDragLeave: () => void;
-  onDrop: (e: React.DragEvent) => void;
-  onDragStart: (e: React.DragEvent) => void;
+  onDrop: (event: React.DragEvent) => void;
+  onDragStart: (event: React.DragEvent) => void;
 }
 
 const POSITION_LABELS = ["Front", "Middle", "Back"];
@@ -45,17 +42,15 @@ export const TeamEditorSlot = ({
         draggable={!!slime}
         onDragStart={onDragStart}
         sx={{
-          width: "100px",
-          height: "100px",
+          width: "200px",
+          height: "200px",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          border: isDragOver
-            ? `2px dashed ${COLORS.ACCENT_BLUE}`
-            : "2px dashed transparent",
+          border: `2px dashed ${COLORS.CARD_BORDER}`,
           borderRadius: "8px",
           backgroundColor: isDragOver
-            ? COLORS.ACCENT_BLUE + "20"
+            ? COLORS.CARD_BORDER_ACTIVE + "20"
             : "transparent",
           cursor: slime ? "grab" : "default",
           transition: "all 0.15s",
@@ -66,17 +61,18 @@ export const TeamEditorSlot = ({
             component="img"
             src={slime.baseStats.sprite}
             alt={slime.baseStats.name}
-            sx={{ width: "80px", height: "80px", objectFit: "contain" }}
+            sx={{ width: "200px", height: "200px", objectFit: "contain" }}
           />
         ) : (
-          <Typography sx={{ color: COLORS.TEXT_DISABLED, fontSize: "12px" }}>
+          <Paragraph color={COLORS.TEXT_DISABLED} size={FONT_SIZE.SMALL}>
             Drop here
-          </Typography>
+          </Paragraph>
         )}
       </Box>
 
       {/* Info block - green border like combat */}
-      <Box
+      <Stack
+        spacing={1}
         sx={{
           width: "100%",
           mt: 1,
@@ -84,41 +80,31 @@ export const TeamEditorSlot = ({
           backgroundColor: COLORS.CARD_BACKGROUND,
           border: `2px solid ${COLORS.HEALTH_PLAYER}`,
           borderRadius: "4px",
+          textAlign: "center",
         }}
       >
-        <Typography
-          sx={{
-            color: COLORS.TEXT_SECONDARY,
-            fontSize: "10px",
-            textAlign: "center",
-          }}
-        >
+        <Paragraph color={COLORS.TEXT_SECONDARY} size={FONT_SIZE.SMALL} isBold>
           {POSITION_LABELS[position]}
-        </Typography>
+        </Paragraph>
         {slime && (
           <>
-            <Typography
-              sx={{
-                color: COLORS.TEXT_PRIMARY,
-                fontSize: "12px",
-                fontWeight: "bold",
-                textAlign: "center",
-              }}
+            <Paragraph
+              color={COLORS.TEXT_PRIMARY}
+              size={FONT_SIZE.MEDIUM}
+              isBold
             >
               {slime.baseStats.name}
-            </Typography>
-            <Typography
-              sx={{
-                color: COLORS.TEXT_SECONDARY,
-                fontSize: "10px",
-                textAlign: "center",
-              }}
+            </Paragraph>
+            <Paragraph
+              color={COLORS.TEXT_SECONDARY}
+              size={FONT_SIZE.SMALL}
+              isBold
             >
               Level 1
-            </Typography>
+            </Paragraph>
           </>
         )}
-      </Box>
+      </Stack>
     </Box>
   );
 };

@@ -24,7 +24,8 @@ export const BASIC_SLIME: PlayerDefinition = {
   id: "basic_slime",
   baseStats: {
     name: "Slime",
-    description: "A friendly blob of goo. Your first companion.",
+    description:
+      "The basic slime that flew with the meteorite to earth. It does not look like it does not look like it can do anything special. Anyway let's feed it meteorite, that is a good idea.",
     maxHealth: 50,
     attackDamage: 1,
     attackSpeed: 1,
@@ -44,7 +45,8 @@ export const DRUID_SLIME: PlayerDefinition = {
   id: "druid_slime",
   baseStats: {
     name: "Druid Slime",
-    description: "A nurturing slime that radiates healing energy.",
+    description:
+      "Using the energy of living beings and trees this slime is able to use the energy it gains for good. Instead of dealing damage this slime can heal it's allies and has strong abilities in return for weaker base stats",
     maxHealth: 60,
     attackDamage: 1,
     attackSpeed: 0.8,
@@ -80,7 +82,8 @@ export const ELECTRIC_SLIME: PlayerDefinition = {
   id: "electric_slime",
   baseStats: {
     name: "Electric Slime",
-    description: "A crackling slime charged with lightning.",
+    description:
+      "Using the electricity from the planet and from the life around it this slime generates so much energy that it is completely made out of electricity. This slime can attack fast and generate strong attacks that damage all enemies.",
     maxHealth: 40,
     attackDamage: 1,
     attackSpeed: 1.1,
@@ -109,13 +112,14 @@ export const ELECTRIC_SLIME: PlayerDefinition = {
 };
 
 /**
- * Tank Slime - Defensive slime with high health and shield ability
+ * Fortified Slime - Defensive slime with high health and shield ability
  */
-export const TANK_SLIME: PlayerDefinition = {
-  id: "tank_slime",
+export const FORTIFIED_SLIME: PlayerDefinition = {
+  id: "fortified_slime",
   baseStats: {
-    name: "Tank Slime",
-    description: "A hardened slime with protective outer layer.",
+    name: "Fortified Slime",
+    description:
+      "Scraping the bark of the fortified trees brought to life a tanky slime that can take more damage and shield itself to protect himself from taking damage. Those trees came in handy after all.",
     maxHealth: 80,
     attackDamage: 1,
     attackSpeed: 0.7,
@@ -154,7 +158,7 @@ export const PLAYER_DEFINITIONS: Record<string, PlayerDefinition> = {
   basic_slime: BASIC_SLIME,
   druid_slime: DRUID_SLIME,
   electric_slime: ELECTRIC_SLIME,
-  tank_slime: TANK_SLIME,
+  tank_slime: FORTIFIED_SLIME,
 };
 
 /**

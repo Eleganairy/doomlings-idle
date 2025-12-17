@@ -13,8 +13,8 @@ interface SlimeSlotProps {
   position: 0 | 1 | 2;
   slimeDefinition: PlayerDefinition | null;
   onDrop: (slimeId: string, position: 0 | 1 | 2) => void;
-  onDragStart: (e: React.DragEvent, slimeId: string) => void;
-  onDragEnd: (e: React.DragEvent) => void;
+  onDragStart: (event: React.DragEvent, slimeId: string) => void;
+  onDragEnd: (event: React.DragEvent) => void;
   isDraggedOver: boolean;
   onDragEnter: (position: 0 | 1 | 2) => void;
   onDragLeave: () => void;
@@ -32,35 +32,35 @@ export const SlimeSlot = ({
   onDragEnter,
   onDragLeave,
 }: SlimeSlotProps) => {
-  const handleDragOver = (e: React.DragEvent) => {
-    e.preventDefault();
-    e.dataTransfer.dropEffect = "move";
+  const handleDragOver = (event: React.DragEvent) => {
+    event.preventDefault();
+    event.dataTransfer.dropEffect = "move";
   };
 
-  const handleDrop = (e: React.DragEvent) => {
-    e.preventDefault();
-    const slimeId = e.dataTransfer.getData("slimeId");
+  const handleDrop = (event: React.DragEvent) => {
+    event.preventDefault();
+    const slimeId = event.dataTransfer.getData("slimeId");
     if (slimeId) {
       onDrop(slimeId, position);
     }
   };
 
-  const handleDragStart = (e: React.DragEvent) => {
+  const handleDragStart = (event: React.DragEvent) => {
     if (slimeDefinition) {
-      e.dataTransfer.setData("slimeId", slimeDefinition.id);
-      e.dataTransfer.setData("sourcePosition", position.toString());
-      e.dataTransfer.effectAllowed = "move";
-      onDragStart(e, slimeDefinition.id);
+      event.dataTransfer.setData("slimeId", slimeDefinition.id);
+      event.dataTransfer.setData("sourcePosition", position.toString());
+      event.dataTransfer.effectAllowed = "move";
+      onDragStart(event, slimeDefinition.id);
     }
   };
 
-  const handleDragEnter = (e: React.DragEvent) => {
-    e.preventDefault();
+  const handleDragEnter = (event: React.DragEvent) => {
+    event.preventDefault();
     onDragEnter(position);
   };
 
-  const handleDragLeaveEvent = (e: React.DragEvent) => {
-    e.preventDefault();
+  const handleDragLeaveEvent = (event: React.DragEvent) => {
+    event.preventDefault();
     onDragLeave();
   };
 
