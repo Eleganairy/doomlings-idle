@@ -99,7 +99,7 @@ export const ELECTRIC_SLIME: PlayerDefinition = {
       description: "Strikes all enemies for 50% of attack damage",
       icon: "/abilities/lightning.png",
       trigger: AbilityTrigger.ON_ABILITY_READY,
-      cooldownMs: 10000, // 10 seconds
+      cooldownMs: 1000, // 1 second
       effects: [
         {
           type: AbilityEffectType.DAMAGE,
@@ -124,23 +124,38 @@ export const FORTIFIED_SLIME: PlayerDefinition = {
     attackDamage: 1,
     attackSpeed: 0.7,
     critChance: 0,
-    icon: "/player/TankSlime.png", // TODO: Add tank sprite
-    sprite: "/player/TankSlime.png",
+    icon: "/player/FortifiedSlime.png", // TODO: Add tank sprite
+    sprite: "/player/FortifiedSlime.png",
   },
-  shield: 10,
+  shield: 0,
   abilities: [
     {
-      id: "protective_barrier",
-      name: "Protective Barrier",
-      description: "Grants 25 shield to self",
+      id: "Shield-Ability",
+      name: "Pick up shield",
+      description: "Grants 10% health shield on start",
       icon: "/abilities/shield.png",
-      trigger: AbilityTrigger.ON_ABILITY_READY,
-      cooldownMs: 12000, // 12 seconds
+      trigger: AbilityTrigger.ON_SPAWN,
+      cooldownMs: 0,
       effects: [
         {
           type: AbilityEffectType.SHIELD,
           target: AbilityTarget.SELF,
-          shieldAmount: 25,
+          shieldPercent: 10,
+        },
+      ],
+    },
+    {
+      id: "protective_barrier",
+      name: "Protective Barrier",
+      description: "Grants 20% health shield to self every 8 seconds",
+      icon: "/abilities/shield.png",
+      trigger: AbilityTrigger.ON_ABILITY_READY,
+      cooldownMs: 8000, // 8 seconds
+      effects: [
+        {
+          type: AbilityEffectType.SHIELD,
+          target: AbilityTarget.SELF,
+          shieldPercent: 20,
         },
       ],
     },
@@ -158,7 +173,7 @@ export const PLAYER_DEFINITIONS: Record<string, PlayerDefinition> = {
   basic_slime: BASIC_SLIME,
   druid_slime: DRUID_SLIME,
   electric_slime: ELECTRIC_SLIME,
-  tank_slime: FORTIFIED_SLIME,
+  fortified_slime: FORTIFIED_SLIME,
 };
 
 /**

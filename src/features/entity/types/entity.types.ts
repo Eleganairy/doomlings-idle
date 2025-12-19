@@ -223,7 +223,7 @@ export interface AbilityEffect {
 
   // --- SHIELD effect properties ---
   /** Amount of shield to grant */
-  shieldAmount?: number;
+  shieldPercent?: number;
 }
 
 // ====================================================================================

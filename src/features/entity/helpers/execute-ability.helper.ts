@@ -280,10 +280,10 @@ function executeShieldEffect(
   targets: Entity[],
   result: AbilityExecutionResult
 ): void {
-  if (!effect.shieldAmount) return;
+  if (!effect.shieldPercent) return;
 
   for (const target of targets) {
-    target.addShield(effect.shieldAmount);
+    target.shieldPercent(effect.shieldPercent);
 
     if (!result.affectedEntities.includes(target)) {
       result.affectedEntities.push(target);

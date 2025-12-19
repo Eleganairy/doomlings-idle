@@ -483,8 +483,23 @@ export class Entity {
    * @example
    * player.addShield(100);
    */
-  addShield(amount: number): void {
-    this.state.currentShield += amount;
+  addShield(amount: number): number {
+    return (this.state.currentShield += amount);
+  }
+
+  /**
+   * Grant shield to this entity by a percentage of max health
+   * Only adds shield if less than the value or until the calculated amount is reached.
+   *
+   * @param percent Percentage of max health to add as shield (0-100)
+   *
+   * @example
+   * player.addShieldPercent(20); // Add shield equal to 20% of max HP
+   */
+  shieldPercent(percent: number): number {
+    const amount = Math.floor(this.maxHealth * (percent / 100));
+    const maxAmount = Math.max(amount, this.state.currentShield);
+    return this.addShield(maxAmount - this.state.currentShield);
   }
 
   /**
