@@ -95,14 +95,14 @@ export const Pages: Page[] = [
   {
     id: PageTypes.STATS,
     name: "Stats",
-    icon: "icon",
+    icon: "/icons/StatsIcon.png",
     background: "background",
     lockedByBossNumber: 0,
   },
   {
     id: PageTypes.SETTINGS,
     name: "Settings",
-    icon: "icon",
+    icon: "/icons/EditIcon.png",
     background: "background",
     lockedByBossNumber: 0,
   },

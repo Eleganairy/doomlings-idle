@@ -119,7 +119,6 @@ export const SlimeSlot = ({
             sx={{
               color: COLORS.TEXT_PRIMARY,
               fontSize: "11px",
-              fontWeight: "bold",
               textAlign: "center",
               marginTop: "4px",
             }}

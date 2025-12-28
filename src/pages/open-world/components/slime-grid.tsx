@@ -73,7 +73,7 @@ export const SlimeGrid = ({
           borderBottom: `1px solid ${COLORS.CARD_BORDER}`,
         }}
       >
-        <Paragraph color={COLORS.TEXT_PRIMARY} size={FONT_SIZE.LARGE} isBold>
+        <Paragraph color={COLORS.TEXT_PRIMARY} size={FONT_SIZE.LARGE}>
           Slime Collection
         </Paragraph>
       </Box>
@@ -169,11 +169,7 @@ export const SlimeGrid = ({
       >
         {selectedSlime ? (
           <Stack spacing={1}>
-            <Paragraph
-              color={COLORS.TEXT_PRIMARY}
-              size={FONT_SIZE.MEDIUM}
-              isBold
-            >
+            <Paragraph color={COLORS.TEXT_PRIMARY} size={FONT_SIZE.MEDIUM}>
               {selectedSlime.baseStats.name}
             </Paragraph>
             <Paragraph color={COLORS.TEXT_SECONDARY} size={FONT_SIZE.SMALL}>
@@ -257,7 +253,7 @@ export const SlimeGrid = ({
             </Stack>
             {selectedSlime.abilities && selectedSlime.abilities.length > 0 && (
               <Stack spacing={1} pt={3}>
-                <Paragraph color={COLORS.MANA} size={FONT_SIZE.MEDIUM} isBold>
+                <Paragraph color={COLORS.MANA} size={FONT_SIZE.MEDIUM}>
                   {selectedSlime.abilities[0].name}
                 </Paragraph>
                 <Paragraph color={COLORS.TEXT_SECONDARY} size={FONT_SIZE.SMALL}>

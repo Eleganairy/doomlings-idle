@@ -108,7 +108,6 @@ export const OpenWorldPage = () => {
                 ),
                 color: COLORS.TEXT_PRIMARY,
                 fontSize: "18px",
-                fontWeight: "bold",
                 border: `3px solid ${COLORS.CARD_BORDER}`,
                 borderRadius: "4px",
                 "&:hover": {
@@ -158,17 +157,18 @@ export const OpenWorldPage = () => {
               <IconButton
                 onClick={handleOpenTeamEditor}
                 sx={{
-                  backgroundColor: COLORS.CARD_BACKGROUND,
-                  border: `2px solid ${COLORS.CARD_BORDER}`,
-                  borderRadius: "8px",
-                  width: "48px",
-                  height: "48px",
+                  backgroundColor: COLORS.BUTTON_INACTIVE,
+                  border: `3px solid ${COLORS.CARD_BORDER}`,
+                  borderRadius: "4px",
+                  top: "10px",
+                  width: "62px",
+                  height: "62px",
                   "&:hover": {
-                    backgroundColor: COLORS.CARD_BACKGROUND_SECONDARY,
+                    backgroundColor: COLORS.BUTTON_INACTIVE_HOVER,
                   },
                 }}
               >
-                <SettingsIcon sx={{ color: COLORS.TEXT_PRIMARY }} />
+                <img src="/icons/EditIcon.png" height="48px" />
               </IconButton>
             </Box>
           )}

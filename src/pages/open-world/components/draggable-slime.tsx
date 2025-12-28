@@ -73,7 +73,7 @@ export const DraggableSlime = ({
           filter: isLocked ? "grayscale(100%)" : "none",
         }}
       />
-      <Paragraph color={COLORS.TEXT_DISABLED} size={FONT_SIZE.SMALL} isBold>
+      <Paragraph color={COLORS.TEXT_DISABLED} size={FONT_SIZE.SMALL}>
         {definition.baseStats.name}
       </Paragraph>
       {isLocked && (

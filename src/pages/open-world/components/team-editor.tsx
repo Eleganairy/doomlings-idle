@@ -175,7 +175,6 @@ export const TeamEditor = ({ onClose }: TeamEditorProps) => {
               ? COLORS.ACCENT_GREEN
               : COLORS.BUTTON_DISABLED,
             color: COLORS.TEXT_PRIMARY,
-            fontWeight: "bold",
             fontFamily: "Minecraft, sans-serif",
             fontSize: "18px",
             padding: "16px 40px",

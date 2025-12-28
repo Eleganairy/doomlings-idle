@@ -56,7 +56,6 @@ export const TraitCard = ({
           sx={{
             color: "white",
             fontSize: "18px",
-            fontWeight: "bold",
           }}
         >
           {trait.name}
@@ -106,7 +105,6 @@ export const TraitCard = ({
               color: COLORS.TEXT_PRIMARY,
               textShadow: "1px 1px black",
               fontSize: "12px",
-              fontWeight: "bold",
             }}
           >
             {isCompleted

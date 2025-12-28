@@ -72,7 +72,7 @@ export const UpgradeCard = ({
         display: "flex",
         height: "130px",
         overflow: "hidden",
-        opacity: isLocked ? 0.6 : 1,
+        visibility: isLocked ? "hidden" : "visible",
       }}
     >
       {/* Left Section - Icon and Name */}
@@ -99,7 +99,6 @@ export const UpgradeCard = ({
             color: COLORS.TEXT_PRIMARY,
             fontSize: "14px",
             textAlign: "center",
-            fontWeight: "bold",
           }}
         >
           {upgrade.name}
@@ -137,10 +136,9 @@ export const UpgradeCard = ({
               color: COLORS.TEXT_PRIMARY,
               fontSize: "16px",
               textAlign: "center",
-              fontWeight: "bold",
             }}
           >
-            {formatValue(totalValue, upgrade.incrementType)} →{" "}
+            {formatValue(totalValue, upgrade.incrementType)} {" > "}
             {formatValue(totalValueAfterUpgrade, upgrade.incrementType)}
           </Box>
         </Box>
@@ -161,10 +159,9 @@ export const UpgradeCard = ({
           sx={{
             color: "white",
             fontSize: "14px",
-            fontWeight: "bold",
           }}
         >
-          {level}/{upgrade.maxLevel}
+          {level} / {upgrade.maxLevel}
         </Box>
 
         <Button

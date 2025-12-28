@@ -4,22 +4,15 @@ type ParagraphProps = {
   children: React.ReactNode;
   color: string;
   size: string;
-  isBold?: boolean;
 };
 
-export const Paragraph = ({
-  children,
-  color,
-  size,
-  isBold,
-}: ParagraphProps) => {
+export const Paragraph = ({ children, color, size }: ParagraphProps) => {
   return (
     <Box
       style={{
         color: color,
         fontFamily: "Minecraft, sans-serif",
         fontSize: size,
-        fontWeight: isBold ? "bold" : "normal",
       }}
     >
       {children}

@@ -64,7 +64,7 @@ export const EntityStatusBar = ({
         }}
       >
         {currentShield > 0 && (
-          <Paragraph color={COLORS.SHIELD} size={FONT_SIZE.MEDIUM} isBold>
+          <Paragraph color={COLORS.SHIELD} size={FONT_SIZE.MEDIUM}>
             🛡️ {Math.round(currentShield)}
           </Paragraph>
         )}
@@ -85,11 +85,7 @@ export const EntityStatusBar = ({
               textAlign: "center",
             }}
           >
-            <Paragraph
-              color={COLORS.TEXT_PRIMARY}
-              size={FONT_SIZE.SMALL}
-              isBold
-            >
+            <Paragraph color={COLORS.TEXT_PRIMARY} size={FONT_SIZE.SMALL}>
               HP: {Math.round(currentHealth)}/{maxHealth}
             </Paragraph>
           </Box>

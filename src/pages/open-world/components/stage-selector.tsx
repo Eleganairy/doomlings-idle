@@ -80,11 +80,7 @@ export const StageSelector = () => {
               textAlign: "center",
             }}
           >
-            <Paragraph
-              color={COLORS.TEXT_PRIMARY}
-              size={FONT_SIZE.MEDIUM}
-              isBold
-            >
+            <Paragraph color={COLORS.TEXT_PRIMARY} size={FONT_SIZE.MEDIUM}>
               Enemies: {currentStage.enemiesKilled}/
               {currentStage.enemiesRequired}
             </Paragraph>
@@ -133,7 +129,6 @@ export const StageSelector = () => {
                   borderRadius: "4px",
                   fontFamily: "Minecraft",
                   fontSize: "14px",
-                  fontWeight: "bold",
                   display: "flex",
                   flexDirection: "column",
                   justifyContent: "center",
@@ -152,7 +147,6 @@ export const StageSelector = () => {
                   <LockIcon sx={{ fontSize: "20px" }} />
                 ) : isCompleted ? (
                   <>
-                    <CheckIcon sx={{ fontSize: "16px" }} />
                     <Paragraph
                       color={COLORS.TEXT_PRIMARY}
                       size={FONT_SIZE.MEDIUM}

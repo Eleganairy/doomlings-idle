@@ -28,7 +28,6 @@ export const StatRow = ({ label, value, icon }: StatRowProps) => (
       sx={{
         color: COLORS.TEXT_PRIMARY,
         fontSize: "18px",
-        fontWeight: "bold",
       }}
     >
       {value}

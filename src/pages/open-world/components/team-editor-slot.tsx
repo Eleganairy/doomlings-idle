@@ -83,23 +83,15 @@ export const TeamEditorSlot = ({
           textAlign: "center",
         }}
       >
-        <Paragraph color={COLORS.TEXT_SECONDARY} size={FONT_SIZE.SMALL} isBold>
+        <Paragraph color={COLORS.TEXT_SECONDARY} size={FONT_SIZE.SMALL}>
           {POSITION_LABELS[position]}
         </Paragraph>
         {slime && (
           <>
-            <Paragraph
-              color={COLORS.TEXT_PRIMARY}
-              size={FONT_SIZE.MEDIUM}
-              isBold
-            >
+            <Paragraph color={COLORS.TEXT_PRIMARY} size={FONT_SIZE.MEDIUM}>
               {slime.baseStats.name}
             </Paragraph>
-            <Paragraph
-              color={COLORS.TEXT_SECONDARY}
-              size={FONT_SIZE.SMALL}
-              isBold
-            >
+            <Paragraph color={COLORS.TEXT_SECONDARY} size={FONT_SIZE.SMALL}>
               Level 1
             </Paragraph>
           </>

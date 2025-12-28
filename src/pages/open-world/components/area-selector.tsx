@@ -151,7 +151,7 @@ export const AreaSelector = ({ onClose }: AreaSelectorProps) => {
             },
           }}
         >
-          <Paragraph color={COLORS.TEXT_PRIMARY} size={FONT_SIZE.MEDIUM} isBold>
+          <Paragraph color={COLORS.TEXT_PRIMARY} size={FONT_SIZE.MEDIUM}>
             Close
           </Paragraph>
         </Box>

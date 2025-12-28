@@ -35,7 +35,7 @@ export const StatsPage = () => {
           justifyContent: "center",
           backgroundColor: COLORS.CARD_BACKGROUND_CLEAR,
           borderRadius: "8px",
-          border: `3px solid ${COLORS.CARD_BORDER_ACTIVE}`,
+          border: `3px solid ${COLORS.CARD_BORDER}`,
         }}
       >
         <Box
@@ -60,7 +60,6 @@ export const StatsPage = () => {
           sx={{
             color: COLORS.TEXT_PRIMARY,
             fontSize: "28px",
-            fontWeight: "bold",
             marginTop: "20px",
           }}
         >
@@ -90,13 +89,12 @@ export const StatsPage = () => {
           sx={{
             color: COLORS.TEXT_PRIMARY,
             fontSize: "24px",
-            fontWeight: "bold",
+            marginTop: "30px",
             marginBottom: "20px",
           }}
         >
-          Player Stats
+          Combat stats
         </Box>
-
         <Stack spacing={1}>
           <StatRow icon="❤️" label="Max Health" value={fullHealth} />
           <StatRow icon="⚔️" label="Attack Damage" value={fullAttackDamage} />
@@ -110,21 +108,6 @@ export const StatsPage = () => {
             label="Critical Chance"
             value={`${Math.floor(calculatedStats.critChance)}%`}
           />
-        </Stack>
-
-        <Box
-          sx={{
-            color: COLORS.TEXT_PRIMARY,
-            fontSize: "24px",
-            fontWeight: "bold",
-            marginTop: "30px",
-            marginBottom: "20px",
-          }}
-        >
-          Combat Info
-        </Box>
-
-        <Stack spacing={1}>
           <StatRow
             icon="📊"
             label="DPS (Damage Per Second)"
@@ -132,15 +115,23 @@ export const StatsPage = () => {
               calculatedStats.attackDamage * calculatedStats.attackSpeed
             )}
           />
-          <StatRow
-            icon="🎯"
-            label="Effective DPS (with Crit)"
-            value={Math.floor(
-              calculatedStats.attackDamage *
-                calculatedStats.attackSpeed *
-                (1 + calculatedStats.critChance / 100)
-            )}
-          />
+        </Stack>
+
+        <Box
+          sx={{
+            color: COLORS.TEXT_PRIMARY,
+            fontSize: "24px",
+            marginTop: "30px",
+            marginBottom: "20px",
+          }}
+        >
+          Other stats
+        </Box>
+
+        <Stack spacing={1}>
+          <StatRow icon="🛡️" label="Team size" value={1} />
+          <StatRow icon="📊" label="Upgrades unlocked" value={3} />
+          <StatRow icon="📊" label="Traits unlocked" value={2} />
         </Stack>
       </Box>
     </Box>

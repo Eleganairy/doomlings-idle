@@ -35,7 +35,6 @@ export const TraitTierButton = ({
           isSelected ? COLORS.CARD_BORDER_ACTIVE : COLORS.CARD_BORDER
         }`,
         borderRadius: "4px",
-        fontWeight: "bold",
         fontFamily: "Minecraft",
         "&:hover": {
           backgroundColor: getButtonHoverStateColors(isSelected, !isAvailable),
