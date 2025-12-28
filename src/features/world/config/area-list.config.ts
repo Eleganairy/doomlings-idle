@@ -15,6 +15,7 @@ export interface Area {
   id: number;
   name: string;
   description: string;
+  background: string;
   enemyPool: Record<string, EnemyDefinition>;
   /** Area-specific loot that enemies can drop */
   areaLoot: AreaLootItem[];
@@ -31,6 +32,7 @@ export const AREA_LIST: Area[] = [
     id: 1,
     name: "Grasslands",
     description: "First contact with earth's surface",
+    background: "/area/Grasslands.png",
     enemyPool: ENEMY_LIST_AREA_1,
     areaLoot: [
       {
@@ -59,9 +61,9 @@ export const AREA_LIST: Area[] = [
   },
   {
     id: 2,
-    name: "Living Forest",
-    description:
-      "The plants have become sentient and hostile from the meteor's energy",
+    name: "Abandoned Subway",
+    description: "Abandoned subway system",
+    background: "/area/Subway.png",
     enemyPool: ENEMY_LIST_AREA_2,
     areaLoot: [
       {
@@ -89,8 +91,9 @@ export const AREA_LIST: Area[] = [
   },
   {
     id: 3,
-    name: "Mushroom Caverns",
+    name: "Mushroom Grove",
     description: "Underground fungal network mutated by the meteor debris",
+    background: "/area/Mushroom.png",
     enemyPool: ENEMY_LIST_AREA_2,
     areaLoot: [
       {

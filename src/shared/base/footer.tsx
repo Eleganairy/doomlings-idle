@@ -1,9 +1,9 @@
 import { Box, Stack } from "@mui/material";
 import { COLORS } from "../../constants/colors.constants";
 import { Pages, type PageTypes } from "../../constants/pages.constants";
-import { FooterNavigationButton } from "../ui/footer-navigation-button";
 import { Paragraph } from "../ui/paragraph";
 import { FONT_SIZE } from "../../constants/text.constants";
+import { FooterNavigationButton } from "../UI/footer-navigation-button";
 
 interface FooterProps {
   activePage: PageTypes;

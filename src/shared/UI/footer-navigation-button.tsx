@@ -49,7 +49,11 @@ export const FooterNavigationButton = ({
         },
       }}
     >
-      {pageIsLocked ? <LockIcon sx={{ fontSize: "40px" }} /> : page.icon}
+      {pageIsLocked ? (
+        <LockIcon sx={{ fontSize: "40px" }} />
+      ) : (
+        <img height={"60px"} src={page.icon} alt={"ICON"} />
+      )}
     </Button>
   );
 };

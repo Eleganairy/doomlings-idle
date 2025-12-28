@@ -4,13 +4,14 @@ import { useState } from "react";
 import { PageTypes } from "../../constants/pages.constants";
 import { usePersistentCombat } from "../../features/combat/hooks/use-persistent-combat.hook";
 import { playerEnergyAtom } from "../../features/combat/store/combat.atoms";
+import { activeAreaAtom } from "../../features/world/store/area.atoms";
 import { pageComponents } from "../../utils/pages.utils";
 import { Footer, Header, MainContent } from "../base";
-import background from "/area/GrasslandsBackground.png";
 import PlayerSprite from "/player/BasicSlime.png";
 
 export const Layout = () => {
   const playerEnergy = useAtomValue(playerEnergyAtom);
+  const activeArea = useAtomValue(activeAreaAtom);
 
   // Run persistent combat in background
   usePersistentCombat();
@@ -32,7 +33,7 @@ export const Layout = () => {
     >
       <Header energy={playerEnergy} sprite={PlayerSprite} />
 
-      <MainContent activeBackground={background}>
+      <MainContent activeBackground={activeArea.background}>
         {ActivePageComponent ? (
           <ActivePageComponent />
         ) : (

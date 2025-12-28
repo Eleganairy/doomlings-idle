@@ -1,3 +1,4 @@
+export * from "./area-selector";
 export * from "./combat-entity";
 export * from "./entity-status-bar";
 export * from "./stage-selector";

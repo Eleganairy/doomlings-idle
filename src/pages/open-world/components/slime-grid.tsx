@@ -54,7 +54,7 @@ export const SlimeGrid = ({
   return (
     <Box
       sx={{
-        width: "570px",
+        width: "580px",
         display: "flex",
         flexDirection: "column",
         backgroundColor: COLORS.CARD_BACKGROUND + "F0",
@@ -161,7 +161,7 @@ export const SlimeGrid = ({
       {/* Details Panel */}
       <Box
         sx={{
-          height: "210px",
+          height: "180px",
           borderTop: `2px solid ${COLORS.CARD_BORDER}`,
           padding: "16px",
           backgroundColor: COLORS.CARD_BACKGROUND,

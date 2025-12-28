@@ -1,7 +1,7 @@
-import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import { Button } from "@mui/material";
 import { COLORS } from "../../../constants/colors.constants";
+import ArrowRight from "/icons/ArrowRight.png";
+import ArrowLeft from "/icons/ArrowLeft.png";
 
 export interface StageSelectorAreaButtonProps {
   handleNavigation: () => void;
@@ -18,7 +18,6 @@ export const StageSelectorAreaButton = ({
     onClick={handleNavigation}
     disableRipple
     sx={{
-      minWidth: "40px",
       height: "50px",
       backgroundColor: isActive
         ? COLORS.ACCENT_GREEN
@@ -29,10 +28,14 @@ export const StageSelectorAreaButton = ({
       "&:hover": {
         backgroundColor: isActive
           ? COLORS.ACCENT_LIGHT_GREEN
-          : COLORS.CARD_BACKGROUND_SECONDARY,
+          : COLORS.CARD_BACKGROUND_SECONDARY_HOVER,
       },
     }}
   >
-    {goNext ? <ChevronRightIcon /> : <ChevronLeftIcon />}
+    {goNext ? (
+      <img height="38px" src={ArrowLeft} />
+    ) : (
+      <img height="38px" src={ArrowRight} />
+    )}
   </Button>
 );
