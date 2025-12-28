@@ -88,44 +88,43 @@ export const AreaButton = ({
           <Paragraph
             color={isUnlocked ? COLORS.TEXT_PRIMARY : COLORS.TEXT_DISABLED}
             size={FONT_SIZE.LARGE}
-            isBold
           >
             {area.name}
           </Paragraph>
         </Box>
 
         {/* Enemy Icons Row */}
-        <Stack
-          direction="row"
-          spacing={1}
-          sx={{
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          {enemyIcons.map((icon, index) => (
-            <Box
-              key={index}
-              component="img"
-              src={icon}
-              alt="enemy"
-              sx={{
-                width: "32px",
-                height: "32px",
-                filter: isUnlocked ? "none" : "grayscale(100%)",
-                opacity: isUnlocked ? 1 : 0.6,
-                objectFit: "contain",
-              }}
-            />
-          ))}
-        </Stack>
-
-        {/* Locked indicator */}
-        {!isUnlocked && (
+        {isUnlocked ? (
+          <Stack
+            direction="row"
+            spacing={3}
+            sx={{
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            {enemyIcons.map((icon, index) => (
+              <Box
+                key={index}
+                component="img"
+                src={icon}
+                alt="enemy"
+                sx={{
+                  width: "46px",
+                  height: "46px",
+                  filter: isUnlocked ? "none" : "grayscale(100%)",
+                  opacity: isUnlocked ? 1 : 0.6,
+                  objectFit: "contain",
+                }}
+              />
+            ))}
+          </Stack>
+        ) : (
+          /* Locked indicator */
           <Box
             sx={{
               marginTop: "8px",
-              textShadow: "1px 1px 2px rgba(0, 0, 0, 0.8)",
+              filter: "grayscale(100%)",
             }}
           >
             <Paragraph color={COLORS.TEXT_DISABLED} size={FONT_SIZE.SMALL}>

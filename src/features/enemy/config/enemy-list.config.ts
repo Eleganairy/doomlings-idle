@@ -20,8 +20,8 @@ export const ENEMY_LIST_AREA_1: Record<string, EnemyDefinition> = {
     areaNumber: 1,
     rarity: EnemyRarity.COMMON,
     type: EnemyType.FAST,
-    sprite: "/enemy/Snail1.png",
-    icon: "/enemy/Snail1.png",
+    sprite: "/enemy/grasslands-enemies/Hedgehog.png",
+    icon: "/enemy/grasslands-enemies/Hedgehog.png",
   }),
   SNAIL: createEnemyDefinition({
     name: "Snail",
@@ -29,35 +29,35 @@ export const ENEMY_LIST_AREA_1: Record<string, EnemyDefinition> = {
     areaNumber: 1,
     rarity: EnemyRarity.COMMON,
     type: EnemyType.TANK,
-    sprite: "/enemy/Snail1.png",
-    icon: "/enemy/Snail1.png",
-  }),
-  HAMMER_SQUIRREL: createEnemyDefinition({
-    name: "Field mouse",
-    description: "A standard enemy.",
-    areaNumber: 1,
-    rarity: EnemyRarity.UNCOMMON,
-    type: EnemyType.STANDARD,
-    sprite: "/enemy/Mouse1.png",
-    icon: "/enemy/Mouse1.png",
+    sprite: "/enemy/grasslands-enemies/Snail.png",
+    icon: "/enemy/grasslands-enemies/Snail.png",
   }),
   WILD_RABBIT: createEnemyDefinition({
     name: "Wild rabbit",
-    description: "A stronger enemy.",
+    description: "A stronger enemy with big teeth.",
     areaNumber: 1,
     rarity: EnemyRarity.UNCOMMON,
     type: EnemyType.STRONG,
-    sprite: "/enemy/Rabbit1.png",
-    icon: "/enemy/Rabbit1.png",
+    sprite: "/enemy/grasslands-enemies/Rabbit.png",
+    icon: "/enemy/grasslands-enemies/Rabbit.png",
   }),
   RED_FOX: createEnemyDefinition({
-    name: "Red fox",
-    description: "A rare and powerful predator.",
+    name: "Red Fox",
+    description: "An enemies with furry claws.",
+    areaNumber: 1,
+    rarity: EnemyRarity.UNCOMMON,
+    type: EnemyType.STANDARD,
+    sprite: "/enemy/grasslands-enemies/RedFox.png",
+    icon: "/enemy/grasslands-enemies/RedFox.png",
+  }),
+  HAMMER_SQUIRREL: createEnemyDefinition({
+    name: "Hammer Squirrel",
+    description: "Why is a squirrel holding a hammer and why is it glowing?",
     areaNumber: 1,
     rarity: EnemyRarity.RARE,
     type: EnemyType.STRONG,
-    sprite: "/enemy/RedFox1.png",
-    icon: "/enemy/RedFox1.png",
+    sprite: "/enemy/grasslands-enemies/Squirrel.png",
+    icon: "/enemy/grasslands-enemies/Squirrel.png",
   }),
 };
 
@@ -72,17 +72,17 @@ export const ENEMY_LIST_AREA_2: Record<string, EnemyDefinition> = {
     areaNumber: 2,
     rarity: EnemyRarity.COMMON,
     type: EnemyType.FAST,
-    sprite: "/enemy/Snail1.png",
-    icon: "/enemy/Snail1.png",
+    sprite: "/enemy/subway-enemies/Mouse.png",
+    icon: "/enemy/subway-enemies/Mouse.png",
   }),
-  TRASH_PANDS: createEnemyDefinition({
+  TRASH_PANDA: createEnemyDefinition({
     name: "Trash panda",
     description: "Nearly indestructible pest.",
     areaNumber: 2,
     rarity: EnemyRarity.COMMON,
     type: EnemyType.TANK,
-    sprite: "/enemy/Snail1.png",
-    icon: "/enemy/Snail1.png",
+    sprite: "/enemy/subway-enemies/TrashPanda.png",
+    icon: "/enemy/subway-enemies/TrashPanda.png",
   }),
   MUTANT_RACCOON: createEnemyDefinition({
     name: "Mutant raccoon",
@@ -90,8 +90,8 @@ export const ENEMY_LIST_AREA_2: Record<string, EnemyDefinition> = {
     areaNumber: 2,
     rarity: EnemyRarity.UNCOMMON,
     type: EnemyType.STANDARD,
-    sprite: "/enemy/Snail1.png",
-    icon: "/enemy/Snail1.png",
+    sprite: "/enemy/subway-enemies/TrashPanda.png",
+    icon: "/enemy/subway-enemies/TrashPanda.png",
   }),
   RUST_DOG: createEnemyDefinition({
     name: "Rust dog",
@@ -99,8 +99,8 @@ export const ENEMY_LIST_AREA_2: Record<string, EnemyDefinition> = {
     areaNumber: 2,
     rarity: EnemyRarity.UNCOMMON,
     type: EnemyType.STRONG,
-    sprite: "/enemy/Snail1.png",
-    icon: "/enemy/Snail1.png",
+    sprite: "/enemy/subway-enemies/Dog.png",
+    icon: "/enemy/subway-enemies/Dog.png",
   }),
   WASTE_ALLIGATOR: createEnemyDefinition({
     name: "Waste alligator",
@@ -108,8 +108,8 @@ export const ENEMY_LIST_AREA_2: Record<string, EnemyDefinition> = {
     areaNumber: 2,
     rarity: EnemyRarity.RARE,
     type: EnemyType.STRONG,
-    sprite: "/enemy/Snail1.png",
-    icon: "/enemy/Snail1.png",
+    sprite: "/enemy/subway-enemies/Alligator.png",
+    icon: "/enemy/subway-enemies/Alligator.png",
   }),
 };
 
@@ -118,7 +118,7 @@ export const ENEMY_LIST_AREA_2: Record<string, EnemyDefinition> = {
 // ====================================================================================
 
 export const ENEMY_LIST_AREA_3: Record<string, EnemyDefinition> = {
-  SPORE_BOT: createEnemyDefinition({
+  SPORE_BAT: createEnemyDefinition({
     name: "Spore bat",
     description: "A hostile plant with sharp thorns.",
     areaNumber: 3,
@@ -127,8 +127,8 @@ export const ENEMY_LIST_AREA_3: Record<string, EnemyDefinition> = {
     sprite: "/enemy/Snail1.png",
     icon: "/enemy/Snail1.png",
   }),
-  BLOOM_SHROOM: createEnemyDefinition({
-    name: "Bloom shroom",
+  CAP_POPPER: createEnemyDefinition({
+    name: "Cap popper",
     description: "Strangling vines that move with purpose.",
     areaNumber: 3,
     rarity: EnemyRarity.COMMON,
@@ -136,8 +136,8 @@ export const ENEMY_LIST_AREA_3: Record<string, EnemyDefinition> = {
     sprite: "/enemy/Snail1.png",
     icon: "/enemy/Snail1.png",
   }),
-  CARNIVOROUS_PLANT: createEnemyDefinition({
-    name: "Carnivorous Plant",
+  BLOOM_SHROOM: createEnemyDefinition({
+    name: "Bloom shroom",
     description: "A flesh-eating flower.",
     areaNumber: 3,
     rarity: EnemyRarity.UNCOMMON,
@@ -145,17 +145,17 @@ export const ENEMY_LIST_AREA_3: Record<string, EnemyDefinition> = {
     sprite: "/enemy/Snail1.png",
     icon: "/enemy/Snail1.png",
   }),
-  POISON_IVY_SERPENT: createEnemyDefinition({
-    name: "Poison Ivy Serpent",
-    description: "A venomous plant creature.",
+  MYCELIUM_CREEPY_CRAWLER: createEnemyDefinition({
+    name: "Mycelium creepy crawler",
+    description: "A venomous plant crawler.",
     areaNumber: 3,
     rarity: EnemyRarity.UNCOMMON,
     type: EnemyType.FAST,
     sprite: "/enemy/Snail1.png",
     icon: "/enemy/Snail1.png",
   }),
-  ANCIENT_TREANT: createEnemyDefinition({
-    name: "Ancient Treant",
+  TOXIC_BLOOM_LARVA: createEnemyDefinition({
+    name: "Toxic bloom larva",
     description: "A massive tree guardian.",
     areaNumber: 3,
     rarity: EnemyRarity.RARE,
