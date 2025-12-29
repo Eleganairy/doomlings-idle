@@ -33,7 +33,10 @@ export const AreaButton = ({
         border: isActive ? `4px solid white` : `4px solid black`,
         borderRadius: "8px",
         overflow: "hidden",
-        transition: "transform 0.2s ease, box-shadow 0.2s ease",
+        transition: "filter 0.3s ease",
+        "&:hover": {
+          filter: isActive ? "brightness(1.2)" : "none",
+        },
       }}
     >
       {/* Background Image */}
@@ -50,7 +53,6 @@ export const AreaButton = ({
           backgroundRepeat: "repeat",
           backgroundPosition: "center",
           filter: isUnlocked ? "none" : "grayscale(100%)",
-          opacity: isUnlocked ? 1 : 0.9,
         }}
       />
 

@@ -53,7 +53,7 @@ export const Pages: Page[] = [
   {
     id: PageTypes.POKEDEX,
     name: "Pokédex",
-    icon: "icon",
+    icon: "/icons/PokedexIcon.png",
     background: "background",
     lockedByBossNumber: 0,
   },

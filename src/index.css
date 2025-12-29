@@ -1,23 +1,23 @@
 :root {
-	color: black;
+  color: black;
 }
 
 * {
-	font-family: "Minecraft", sans-serif;
+  font-family: "Minecraft", sans-serif;
 }
 
 html,
 body {
-	font-family: "Minecraft", sans-serif;
-	overscroll-behavior: none;
-	overflow: hidden;
-	margin: 0;
+  font-family: "Minecraft", sans-serif;
+  overscroll-behavior: none;
+  overflow: hidden;
+  margin: 0;
 }
 
 img {
-	image-rendering: pixelated;
+  image-rendering: pixelated;
 }
 
 button {
-	font-family: "Minecraft", sans-serif;
+  font-family: "Minecraft", sans-serif;
 }

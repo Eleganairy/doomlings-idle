@@ -1,6 +1,4 @@
-import CheckIcon from "@mui/icons-material/Check";
 import LockIcon from "@mui/icons-material/Lock";
-import MapIcon from "@mui/icons-material/Map";
 import { Box, Button, IconButton, Stack } from "@mui/material";
 import { useSetAtom } from "jotai";
 import { COLORS } from "../../../constants/colors.constants";
@@ -27,19 +25,19 @@ export const StageSelector = () => {
     currentStageNumber,
     navigateToStage,
     currentAreaId,
-    navigateToNextArea,
+    navigateToArea,
     canNavigateToNextArea,
   } = useStageProgression();
 
   const handlePreviousArea = () => {
     if (currentAreaId > 1) {
-      navigateToNextArea(currentAreaId - 1);
+      navigateToArea(currentAreaId - 1);
     }
   };
 
   const handleNextArea = () => {
     if (currentAreaId < AREA_LIST.length && canNavigateToNextArea()) {
-      navigateToNextArea(currentAreaId + 1);
+      navigateToArea(currentAreaId + 1);
     }
   };
 
@@ -103,6 +101,7 @@ export const StageSelector = () => {
           <StageSelectorAreaButton
             handleNavigation={handlePreviousArea}
             isActive={canGoPreviousArea}
+            isFirstWorldActive={currentAreaId === 1}
             goNext={false}
           />
 
@@ -170,6 +169,7 @@ export const StageSelector = () => {
           <StageSelectorAreaButton
             handleNavigation={handleNextArea}
             isActive={canGoNextArea}
+            isFirstWorldActive={currentAreaId === 1}
             goNext={true}
           />
         </Stack>
@@ -183,13 +183,13 @@ export const StageSelector = () => {
           right: "-60px",
           top: "70%",
           transform: "translateY(-50%)",
-          backgroundColor: COLORS.CARD_BACKGROUND_SECONDARY,
+          backgroundColor: COLORS.BUTTON_INACTIVE,
           border: `3px solid ${COLORS.CARD_BORDER}`,
           borderRadius: "4px",
           width: "48px",
           height: "48px",
           "&:hover": {
-            backgroundColor: COLORS.CARD_BACKGROUND_SECONDARY_HOVER,
+            backgroundColor: COLORS.BUTTON_INACTIVE_HOVER,
           },
         }}
       >

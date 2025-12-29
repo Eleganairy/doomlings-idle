@@ -105,7 +105,7 @@ export const UpgradeCard = ({
         </Box>
       </Stack>
 
-      {/* Middle Section - Description and Value */}
+      {/* Middle Section */}
       <Stack
         sx={{
           flex: 1,

@@ -127,12 +127,9 @@ export const useStageProgression = () => {
   /**
    * Navigate to the next area (if current area is completed)
    */
-  const navigateToNextArea = useCallback(
+  const navigateToArea = useCallback(
     (nextAreaId: number) => {
-      if (!canNavigateToNextArea()) {
-        console.warn("Current area not completed yet");
-        return;
-      }
+      if (!canNavigateToNextArea()) return;
 
       // Reset combat state when switching areas
       resetCombat();
@@ -200,6 +197,6 @@ export const useStageProgression = () => {
     recordEnemyKill,
     resetStageProgress,
     canNavigateToNextArea,
-    navigateToNextArea,
+    navigateToArea,
   };
 };
