@@ -1,5 +1,7 @@
 // ===== ENUMS =====
 
+import type { BigNumber } from "../../../utils/big-number.utils";
+
 /** Types of stats that can be tracked for trait progression */
 export enum TrackedStatType {
   TOTAL_ENEMIES_KILLED = "TOTAL_ENEMIES_KILLED",
@@ -28,25 +30,25 @@ export enum UpgradeStat {
 
 // ===== ID ENUMS =====
 
-export enum TraitId {
-  // Tier 1
-  SPIKY = "SPIKY",
-  FUR = "FUR",
-  MUSCLES = "MUSCLES",
-  THICKER_SKIN = "THICKER_SKIN",
-  WARM_BLOODED = "WARM_BLOODED",
-}
-
-export enum UpgradeId {
+export enum ProgressionId {
   // Base upgrades (always unlocked)
   ATTACK_DAMAGE = "ATTACK_DAMAGE",
   HEALTH = "HEALTH",
-  // Trait-locked upgrades
+  // Tier 1
   SPIKY = "SPIKY",
-  FUR = "FUR",
-  MUSCLES = "MUSCLES",
+  SLIMY = "SLIMY",
+  TEETHY = "TEETHY",
+  FLUFFY = "FLUFFY",
   THICKER_SKIN = "THICKER_SKIN",
   WARM_BLOODED = "WARM_BLOODED",
+  // Tier 2
+  CHEESY = "CHEESY",
+  METAL_SHELLED = "METAL_SHELLED",
+  MORE_TEETH = "MORE_TEETH",
+  TAIL = "TAIL",
+  MUDDY = "MUDDY",
+  BETTER_VISION = "BETTER_VISION",
+  // Tier 3 TODO
 }
 
 /**
@@ -63,20 +65,20 @@ export enum UpgradeTarget {
 
 /** A trait that tracks player progress and unlocks upgrades */
 export interface Trait {
-  id: TraitId;
+  id: ProgressionId;
   name: string;
   description: string;
   icon: string;
   tier: number; // 1-10
   trackedStat: TrackedStatType;
   trackedEnemyName?: string; // Only for SPECIFIC_ENEMY_KILLED
-  goalValue: number;
-  linkedUpgrade?: UpgradeId;
+  goalValue: BigNumber;
+  linkedUpgrade?: ProgressionId;
 }
 
 /** An upgrade that modifies entity stats via the buff system */
 export interface Upgrade {
-  id: UpgradeId;
+  id: ProgressionId;
   name: string;
   description: string;
   icon: string;
@@ -89,7 +91,7 @@ export interface Upgrade {
   baseValue: number;
   valueMultiplier: number; // 1.0 if no scaling
   maxLevel: number;
-  unlockedByTrait?: TraitId; // undefined = always unlocked
+  unlockedByTrait?: ProgressionId; // undefined = always unlocked
 }
 
 /** Persistent stats tracked for trait progression */

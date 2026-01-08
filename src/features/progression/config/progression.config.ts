@@ -1,19 +1,17 @@
+import { bn } from "../../../utils/big-number.utils";
 import {
   TrackedStatType,
   type Trait,
-  TraitId,
+  ProgressionId,
   type Upgrade,
-  UpgradeId,
   UpgradeIncrementType,
   UpgradeStat,
   UpgradeTarget,
 } from "../types/progression.types";
 
-// ===== BASE UPGRADES (Always Unlocked) =====
-
 export const BASE_UPGRADES: Upgrade[] = [
   {
-    id: UpgradeId.ATTACK_DAMAGE,
+    id: ProgressionId.ATTACK_DAMAGE,
     name: "Attack Damage",
     description: "Increase your attack damage",
     icon: "⚔️",
@@ -27,7 +25,7 @@ export const BASE_UPGRADES: Upgrade[] = [
     maxLevel: 100,
   },
   {
-    id: UpgradeId.HEALTH,
+    id: ProgressionId.HEALTH,
     name: "Health",
     description: "Increase your maximum health",
     icon: "❤️",
@@ -42,12 +40,11 @@ export const BASE_UPGRADES: Upgrade[] = [
   },
 ];
 
-// ===== TRAIT-LOCKED UPGRADES =====
-
 export const TRAIT_UPGRADES: Upgrade[] = [
+  // Tier 1
   {
-    id: UpgradeId.SPIKY,
-    name: "Spiky",
+    id: ProgressionId.SPIKY,
+    name: "Spikes",
     description: "Increase attack damage by percentage",
     icon: "🦔",
     upgradeTarget: UpgradeTarget.PLAYER,
@@ -58,11 +55,11 @@ export const TRAIT_UPGRADES: Upgrade[] = [
     baseValue: 20, // +20%
     valueMultiplier: 1.0, // No value scaling
     maxLevel: 10,
-    unlockedByTrait: TraitId.SPIKY,
+    unlockedByTrait: ProgressionId.SPIKY,
   },
   {
-    id: UpgradeId.FUR,
-    name: "Fur",
+    id: ProgressionId.FLUFFY,
+    name: "Fluf",
     description: "Increase attack speed by percentage",
     icon: "🦊",
     upgradeTarget: UpgradeTarget.PLAYER,
@@ -73,11 +70,11 @@ export const TRAIT_UPGRADES: Upgrade[] = [
     baseValue: 10, // +10%
     valueMultiplier: 1.0,
     maxLevel: 5,
-    unlockedByTrait: TraitId.FUR,
+    unlockedByTrait: ProgressionId.FLUFFY,
   },
   {
-    id: UpgradeId.MUSCLES,
-    name: "Muscles",
+    id: ProgressionId.SLIMY,
+    name: "Slime",
     description: "Increase critical hit chance",
     icon: "💪",
     upgradeTarget: UpgradeTarget.PLAYER,
@@ -88,10 +85,10 @@ export const TRAIT_UPGRADES: Upgrade[] = [
     baseValue: 2, // +2%
     valueMultiplier: 1.0,
     maxLevel: 10,
-    unlockedByTrait: TraitId.MUSCLES,
+    unlockedByTrait: ProgressionId.SLIMY,
   },
   {
-    id: UpgradeId.THICKER_SKIN,
+    id: ProgressionId.THICKER_SKIN,
     name: "Thicker Skin",
     description: "Multiply your maximum health",
     icon: "🛡️",
@@ -103,11 +100,11 @@ export const TRAIT_UPGRADES: Upgrade[] = [
     baseValue: 1.2, // ×1.2
     valueMultiplier: 1.0,
     maxLevel: 5,
-    unlockedByTrait: TraitId.THICKER_SKIN,
+    unlockedByTrait: ProgressionId.THICKER_SKIN,
   },
   {
-    id: UpgradeId.WARM_BLOODED,
-    name: "Warm Blooded",
+    id: ProgressionId.WARM_BLOODED,
+    name: "Increase Temperature",
     description: "Increase energy gained from enemies",
     icon: "🔥",
     upgradeTarget: UpgradeTarget.PLAYER,
@@ -118,84 +115,252 @@ export const TRAIT_UPGRADES: Upgrade[] = [
     baseValue: 10, // +10%
     valueMultiplier: 1.0,
     maxLevel: 10,
-    unlockedByTrait: TraitId.WARM_BLOODED,
+    unlockedByTrait: ProgressionId.WARM_BLOODED,
+  },
+  {
+    id: ProgressionId.TEETHY,
+    name: "Teeth",
+    description: "Increase energy gained from enemies",
+    icon: "🔥",
+    upgradeTarget: UpgradeTarget.PLAYER,
+    upgradedStat: UpgradeStat.ENERGY_BONUS,
+    incrementType: UpgradeIncrementType.PERCENTILE,
+    baseCost: 150,
+    costMultiplier: 1.7,
+    baseValue: 10, // +10%
+    valueMultiplier: 1.0,
+    maxLevel: 10,
+    unlockedByTrait: ProgressionId.TEETHY,
+  },
+  // Tier 2
+  {
+    id: ProgressionId.CHEESY,
+    name: "Stinky",
+    description: "Increase energy gained from enemies",
+    icon: "🔥",
+    upgradeTarget: UpgradeTarget.PLAYER,
+    upgradedStat: UpgradeStat.ENERGY_BONUS,
+    incrementType: UpgradeIncrementType.PERCENTILE,
+    baseCost: 150,
+    costMultiplier: 1.7,
+    baseValue: 10, // +10%
+    valueMultiplier: 1.0,
+    maxLevel: 10,
+    unlockedByTrait: ProgressionId.CHEESY,
+  },
+  {
+    id: ProgressionId.METAL_SHELLED,
+    name: "Metal Shell",
+    description: "Increase energy gained from enemies",
+    icon: "🔥",
+    upgradeTarget: UpgradeTarget.PLAYER,
+    upgradedStat: UpgradeStat.ENERGY_BONUS,
+    incrementType: UpgradeIncrementType.PERCENTILE,
+    baseCost: 150,
+    costMultiplier: 1.7,
+    baseValue: 10, // +10%
+    valueMultiplier: 1.0,
+    maxLevel: 10,
+    unlockedByTrait: ProgressionId.METAL_SHELLED,
+  },
+  {
+    id: ProgressionId.MORE_TEETH,
+    name: "More Teeth",
+    description: "Increase energy gained from enemies",
+    icon: "🔥",
+    upgradeTarget: UpgradeTarget.PLAYER,
+    upgradedStat: UpgradeStat.ENERGY_BONUS,
+    incrementType: UpgradeIncrementType.PERCENTILE,
+    baseCost: 150,
+    costMultiplier: 1.7,
+    baseValue: 10, // +10%
+    valueMultiplier: 1.0,
+    maxLevel: 10,
+    unlockedByTrait: ProgressionId.MORE_TEETH,
+  },
+  {
+    id: ProgressionId.TAIL,
+    name: "Tail",
+    description: "Increase energy gained from enemies",
+    icon: "🔥",
+    upgradeTarget: UpgradeTarget.PLAYER,
+    upgradedStat: UpgradeStat.ENERGY_BONUS,
+    incrementType: UpgradeIncrementType.PERCENTILE,
+    baseCost: 150,
+    costMultiplier: 1.7,
+    baseValue: 10, // +10%
+    valueMultiplier: 1.0,
+    maxLevel: 10,
+    unlockedByTrait: ProgressionId.TAIL,
+  },
+  {
+    id: ProgressionId.MUDDY,
+    name: "Muddy",
+    description: "Increase energy gained from enemies",
+    icon: "🔥",
+    upgradeTarget: UpgradeTarget.PLAYER,
+    upgradedStat: UpgradeStat.ENERGY_BONUS,
+    incrementType: UpgradeIncrementType.PERCENTILE,
+    baseCost: 150,
+    costMultiplier: 1.7,
+    baseValue: 10, // +10%
+    valueMultiplier: 1.0,
+    maxLevel: 10,
+    unlockedByTrait: ProgressionId.MUDDY,
+  },
+  {
+    id: ProgressionId.BETTER_VISION,
+    name: "Increase Vision",
+    description: "Increase energy gained from enemies",
+    icon: "🔥",
+    upgradeTarget: UpgradeTarget.PLAYER,
+    upgradedStat: UpgradeStat.ENERGY_BONUS,
+    incrementType: UpgradeIncrementType.PERCENTILE,
+    baseCost: 150,
+    costMultiplier: 1.7,
+    baseValue: 10, // +10%
+    valueMultiplier: 1.0,
+    maxLevel: 10,
+    unlockedByTrait: ProgressionId.BETTER_VISION,
   },
 ];
 
-// ===== ALL UPGRADES =====
-
 export const ALL_UPGRADES: Upgrade[] = [...BASE_UPGRADES, ...TRAIT_UPGRADES];
-
-// ===== TRAITS =====
 
 export const TRAITS: Trait[] = [
   // Tier 1
   {
-    id: TraitId.SPIKY,
+    id: ProgressionId.SPIKY,
     name: "Spiky",
     description: "Slay a total of 50 enemies",
     icon: "🦔",
     tier: 1,
     trackedStat: TrackedStatType.TOTAL_ENEMIES_KILLED,
-    goalValue: 50,
-    linkedUpgrade: UpgradeId.SPIKY,
+    goalValue: bn("1.35e8"),
+    linkedUpgrade: ProgressionId.SPIKY,
   },
   {
-    id: TraitId.FUR,
-    name: "Fur",
+    id: ProgressionId.FLUFFY,
+    name: "Fluffy",
     description: "Slay 30 Red Fox enemies",
     icon: "🦊",
     tier: 1,
     trackedStat: TrackedStatType.SPECIFIC_ENEMY_KILLED,
     trackedEnemyName: "Red fox",
-    goalValue: 30,
-    linkedUpgrade: UpgradeId.FUR,
+    goalValue: bn(30),
+    linkedUpgrade: ProgressionId.FLUFFY,
   },
   {
-    id: TraitId.MUSCLES,
-    name: "Generate Muscles",
+    id: ProgressionId.SLIMY,
+    name: "Generate slime",
     description: "Deal 20 damage in a single hit",
     icon: "💪",
     tier: 1,
     trackedStat: TrackedStatType.HIGHEST_SINGLE_HIT,
-    goalValue: 20,
-    linkedUpgrade: UpgradeId.MUSCLES,
+    goalValue: bn(20),
+    linkedUpgrade: ProgressionId.SLIMY,
   },
   {
-    id: TraitId.THICKER_SKIN,
+    id: ProgressionId.THICKER_SKIN,
     name: "Thicker Skin",
     description: "Take a total of 500 damage",
     icon: "🛡️",
     tier: 1,
     trackedStat: TrackedStatType.TOTAL_DAMAGE_TAKEN,
-    goalValue: 500,
-    linkedUpgrade: UpgradeId.THICKER_SKIN,
+    goalValue: bn(500),
+    linkedUpgrade: ProgressionId.THICKER_SKIN,
   },
   {
-    id: TraitId.WARM_BLOODED,
+    id: ProgressionId.WARM_BLOODED,
     name: "Warm Blooded",
     description: "Gain a total of 200 energy",
     icon: "🔥",
     tier: 1,
     trackedStat: TrackedStatType.TOTAL_ENERGY_GAINED,
-    goalValue: 200,
-    linkedUpgrade: UpgradeId.WARM_BLOODED,
+    goalValue: bn(200),
+    linkedUpgrade: ProgressionId.WARM_BLOODED,
+  },
+  {
+    id: ProgressionId.TEETHY,
+    name: "Teethy",
+    description: "Gain a total of 200 energy",
+    icon: "🔥",
+    tier: 1,
+    trackedStat: TrackedStatType.TOTAL_ENERGY_GAINED,
+    goalValue: bn(200),
+    linkedUpgrade: ProgressionId.TEETHY,
+  },
+  // Tier 2
+  {
+    id: ProgressionId.CHEESY,
+    name: "Cheesy",
+    description: "Gain a total of 200 energy",
+    icon: "🔥",
+    tier: 2,
+    trackedStat: TrackedStatType.TOTAL_ENERGY_GAINED,
+    goalValue: bn(200),
+    linkedUpgrade: ProgressionId.CHEESY,
+  },
+  {
+    id: ProgressionId.METAL_SHELLED,
+    name: "Metal Shelled",
+    description: "Gain a total of 200 energy",
+    icon: "🔥",
+    tier: 2,
+    trackedStat: TrackedStatType.TOTAL_ENERGY_GAINED,
+    goalValue: bn(200),
+    linkedUpgrade: ProgressionId.METAL_SHELLED,
+  },
+  {
+    id: ProgressionId.MORE_TEETH,
+    name: "More Teeth",
+    description: "Gain a total of 200 energy",
+    icon: "🔥",
+    tier: 2,
+    trackedStat: TrackedStatType.TOTAL_ENERGY_GAINED,
+    goalValue: bn(200),
+    linkedUpgrade: ProgressionId.MORE_TEETH,
+  },
+  {
+    id: ProgressionId.TAIL,
+    name: "Tail",
+    description: "Gain a total of 200 energy",
+    icon: "🔥",
+    tier: 2,
+    trackedStat: TrackedStatType.TOTAL_ENERGY_GAINED,
+    goalValue: bn(200),
+    linkedUpgrade: ProgressionId.TAIL,
+  },
+  {
+    id: ProgressionId.MUDDY,
+    name: "Muddy",
+    description: "Gain a total of 200 energy",
+    icon: "🔥",
+    tier: 2,
+    trackedStat: TrackedStatType.TOTAL_ENERGY_GAINED,
+    goalValue: bn(200),
+    linkedUpgrade: ProgressionId.MUDDY,
+  },
+  {
+    id: ProgressionId.BETTER_VISION,
+    name: "Better Vision",
+    description: "Gain a total of 200 energy",
+    icon: "🔥",
+    tier: 2,
+    trackedStat: TrackedStatType.TOTAL_ENERGY_GAINED,
+    goalValue: bn(200),
+    linkedUpgrade: ProgressionId.BETTER_VISION,
   },
 ];
 
-// ===== HELPERS =====
-
-/** Get all traits for a specific tier */
 export function getTraitsByTier(tier: number): Trait[] {
-  return TRAITS.filter((t) => t.tier === tier);
+  return TRAITS.filter((trait) => trait.tier === tier);
 }
 
-/** Get an upgrade by ID */
-export function getUpgradeById(id: UpgradeId): Upgrade | undefined {
-  return ALL_UPGRADES.find((u) => u.id === id);
+export function getUpgradeById(id: ProgressionId): Upgrade | undefined {
+  return ALL_UPGRADES.find((upgrade) => upgrade.id === id);
 }
 
-/** Get a trait by ID */
-export function getTraitById(id: TraitId): Trait | undefined {
-  return TRAITS.find((t) => t.id === id);
+export function getTraitById(id: ProgressionId): Trait | undefined {
+  return TRAITS.find((trait) => trait.id === id);
 }

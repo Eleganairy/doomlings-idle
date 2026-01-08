@@ -2,10 +2,11 @@ import { Box, Stack } from "@mui/material";
 import { getUpgradeById } from "../../../features/progression/config/progression.config";
 import type { Trait } from "../../../features/progression/types/progression.types";
 import { COLORS } from "../../../constants/colors.constants";
+import { BigNumber } from "../../../utils/big-number.utils";
 
 interface TraitCardProps {
   trait: Trait;
-  currentValue: number;
+  currentValue: BigNumber;
   isCompleted: boolean;
 }
 
@@ -14,7 +15,10 @@ export const TraitCard = ({
   currentValue,
   isCompleted,
 }: TraitCardProps) => {
-  const progress = Math.min((currentValue / trait.goalValue) * 100, 100);
+  const progress = Math.min(
+    currentValue.divide(trait.goalValue).toNumber() * 100,
+    100
+  );
   const linkedUpgrade = trait.linkedUpgrade
     ? getUpgradeById(trait.linkedUpgrade)
     : null;
@@ -107,9 +111,7 @@ export const TraitCard = ({
               fontSize: "12px",
             }}
           >
-            {isCompleted
-              ? ""
-              : `${Math.floor(currentValue)} / ${trait.goalValue}`}
+            {isCompleted ? "" : `${currentValue} / ${trait.goalValue}`}
           </Box>
         </Box>
 

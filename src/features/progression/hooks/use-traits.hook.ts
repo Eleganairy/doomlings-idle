@@ -4,7 +4,7 @@ import {
   completedTraitIdsAtom,
   traitProgressAtom,
 } from "../store/progression.atoms";
-import type { TraitId } from "../types/progression.types";
+import type { ProgressionId } from "../types/progression.types";
 
 export const useTraits = () => {
   const completedTraitIds = useAtomValue(completedTraitIdsAtom);
@@ -13,15 +13,17 @@ export const useTraits = () => {
   /**
    * Check if a specific trait is completed
    */
-  const isCompleted = (traitId: TraitId): boolean => {
-    return completedTraitIds.includes(traitId);
+  const isCompleted = (ProgressionId: ProgressionId): boolean => {
+    return completedTraitIds.includes(ProgressionId);
   };
 
   /**
    * Get progress for a specific trait
    */
-  const getProgress = (traitId: TraitId) => {
-    return traitProgress.find((p) => p.trait.id === traitId);
+  const getProgress = (ProgressionId: ProgressionId) => {
+    return traitProgress.find(
+      (progression) => progression.trait.id === ProgressionId
+    );
   };
 
   /**
@@ -44,7 +46,7 @@ export const useTraits = () => {
    * Get list of available tiers (that have traits defined)
    */
   const getAvailableTiers = (): number[] => {
-    const tiers = new Set(TRAITS.map((t) => t.tier));
+    const tiers = new Set(TRAITS.map((trait) => trait.tier));
     return Array.from(tiers).sort((a, b) => a - b);
   };
 

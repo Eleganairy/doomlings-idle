@@ -2,6 +2,7 @@ import { Box, Grid, Stack } from "@mui/material";
 import { useState } from "react";
 import { useTraits } from "../../features/progression/hooks/use-traits.hook";
 import { TraitCard, TraitTierButton } from "./components";
+import { bn } from "../../utils/big-number.utils";
 
 export const TraitsPage = () => {
   const [selectedTier, setSelectedTier] = useState(1);
@@ -19,7 +20,7 @@ export const TraitsPage = () => {
       sx={{
         height: "100%",
         width: "100%",
-        overflowY: "auto",
+        overflowY: "hidden",
       }}
     >
       {/* Tier Tabs */}
@@ -55,7 +56,7 @@ export const TraitsPage = () => {
           <Grid size={6} key={trait.id}>
             <TraitCard
               trait={trait}
-              currentValue={currentValue}
+              currentValue={bn(currentValue)}
               isCompleted={isCompleted}
             />
           </Grid>

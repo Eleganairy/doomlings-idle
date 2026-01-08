@@ -4,26 +4,33 @@ import {
   type Upgrade,
   type Trait,
   type PlayerTrackedStats,
-  UpgradeId,
-  TraitId,
+  ProgressionId,
   TrackedStatType,
 } from "../types/progression.types";
+import { bn } from "../../../utils/big-number.utils";
 
 // ===== UPGRADE LEVELS STATE =====
 
 /** Current level for each upgrade (initialized to 0) */
-const initialUpgradeLevels: Record<UpgradeId, number> = {
-  [UpgradeId.ATTACK_DAMAGE]: 0,
-  [UpgradeId.HEALTH]: 0,
-  [UpgradeId.SPIKY]: 0,
-  [UpgradeId.FUR]: 0,
-  [UpgradeId.MUSCLES]: 0,
-  [UpgradeId.THICKER_SKIN]: 0,
-  [UpgradeId.WARM_BLOODED]: 0,
+const initialUpgradeLevels: Record<ProgressionId, number> = {
+  [ProgressionId.ATTACK_DAMAGE]: 0,
+  [ProgressionId.HEALTH]: 0,
+  [ProgressionId.SPIKY]: 0,
+  [ProgressionId.FLUFFY]: 0,
+  [ProgressionId.TEETHY]: 0,
+  [ProgressionId.THICKER_SKIN]: 0,
+  [ProgressionId.WARM_BLOODED]: 0,
+  [ProgressionId.SLIMY]: 0,
+  [ProgressionId.CHEESY]: 0,
+  [ProgressionId.METAL_SHELLED]: 0,
+  [ProgressionId.MORE_TEETH]: 0,
+  [ProgressionId.TAIL]: 0,
+  [ProgressionId.MUDDY]: 0,
+  [ProgressionId.BETTER_VISION]: 0,
 };
 
 export const upgradeLevelsAtom =
-  atom<Record<UpgradeId, number>>(initialUpgradeLevels);
+  atom<Record<ProgressionId, number>>(initialUpgradeLevels);
 
 // ===== PLAYER TRACKED STATS =====
 
@@ -63,11 +70,13 @@ function getTrackedValueForTrait(
 }
 
 /** List of completed trait IDs */
-export const completedTraitIdsAtom = atom<TraitId[]>((get) => {
+export const completedTraitIdsAtom = atom<ProgressionId[]>((get) => {
   const stats = get(playerTrackedStatsAtom);
-  return TRAITS.filter(
-    (t) => getTrackedValueForTrait(stats, t) >= t.goalValue
-  ).map((t) => t.id);
+  return TRAITS.filter((trait) =>
+    bn(getTrackedValueForTrait(stats, trait)).greaterThanOrEqual(
+      trait.goalValue
+    )
+  ).map((trackedTrait) => trackedTrait.id);
 });
 
 /** Get trait progress data (current value / goal) for each trait */
@@ -77,7 +86,9 @@ export const traitProgressAtom = atom((get) => {
     trait,
     currentValue: getTrackedValueForTrait(stats, trait),
     goalValue: trait.goalValue,
-    isCompleted: getTrackedValueForTrait(stats, trait) >= trait.goalValue,
+    isCompleted: bn(getTrackedValueForTrait(stats, trait)).greaterThanOrEqual(
+      trait.goalValue
+    ),
   }));
 });
 
@@ -85,7 +96,9 @@ export const traitProgressAtom = atom((get) => {
 export const unlockedUpgradesAtom = atom<Upgrade[]>((get) => {
   const completedTraitIds = get(completedTraitIdsAtom);
   return ALL_UPGRADES.filter(
-    (u) => !u.unlockedByTrait || completedTraitIds.includes(u.unlockedByTrait)
+    (upgrade) =>
+      !upgrade.unlockedByTrait ||
+      completedTraitIds.includes(upgrade.unlockedByTrait)
   );
 });
 

@@ -5,7 +5,7 @@ import {
   upgradeLevelsAtom,
   unlockedUpgradesAtom,
 } from "../store/progression.atoms";
-import { type Upgrade, UpgradeId } from "../types/progression.types";
+import { type Upgrade, ProgressionId } from "../types/progression.types";
 
 // ===== FORMULA HELPERS =====
 
@@ -58,8 +58,8 @@ export const useUpgrades = () => {
   /**
    * Get an upgrade's current level
    */
-  const getLevel = (upgradeId: UpgradeId): number => {
-    return upgradeLevels[upgradeId] ?? 0;
+  const getLevel = (ProgressionId: ProgressionId): number => {
+    return upgradeLevels[ProgressionId] ?? 0;
   };
 
   /**
@@ -105,20 +105,20 @@ export const useUpgrades = () => {
   /**
    * Check if upgrade is unlocked
    */
-  const isUnlocked = (upgradeId: UpgradeId): boolean => {
-    return unlockedUpgrades.some((upgrade) => upgrade.id === upgradeId);
+  const isUnlocked = (ProgressionId: ProgressionId): boolean => {
+    return unlockedUpgrades.some((upgrade) => upgrade.id === ProgressionId);
   };
 
   /**
    * Purchase an upgrade
    */
-  const purchaseUpgrade = (upgradeId: UpgradeId): boolean => {
+  const purchaseUpgrade = (ProgressionId: ProgressionId): boolean => {
     const upgrade = ALL_UPGRADES.find(
-      (foundUpgrade) => foundUpgrade.id === upgradeId
+      (foundUpgrade) => foundUpgrade.id === ProgressionId
     );
     if (!upgrade) return false;
 
-    if (!isUnlocked(upgradeId)) return false;
+    if (!isUnlocked(ProgressionId)) return false;
     if (isMaxLevel(upgrade)) return false;
     if (!canAfford(upgrade)) return false;
 
@@ -130,7 +130,7 @@ export const useUpgrades = () => {
     // Increment level
     setUpgradeLevels((prev) => ({
       ...prev,
-      [upgradeId]: (prev[upgradeId] ?? 0) + 1,
+      [ProgressionId]: (prev[ProgressionId] ?? 0) + 1,
     }));
 
     return true;

@@ -18,7 +18,6 @@ export {
 
   // Types
   type ModifiableStat,
-  type ModificationType,
   type LootType,
 
   // Interfaces

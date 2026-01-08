@@ -29,16 +29,18 @@ export const UpgradesPage = () => {
 
           return (
             <Grid size={4} key={upgrade.id}>
-              <UpgradeCard
-                upgrade={upgrade}
-                level={level}
-                currentCost={getCurrentCost(upgrade)}
-                totalValue={getTotalValue(upgrade)}
-                totalValueAfterUpgrade={getTotalValueAfterUpgrade(upgrade)}
-                canAfford={canAfford(upgrade)}
-                isLocked={isLocked}
-                onPurchase={() => purchaseUpgrade(upgrade.id)}
-              />
+              {!isLocked && (
+                <UpgradeCard
+                  upgrade={upgrade}
+                  level={level}
+                  currentCost={getCurrentCost(upgrade)}
+                  totalValue={getTotalValue(upgrade)}
+                  totalValueAfterUpgrade={getTotalValueAfterUpgrade(upgrade)}
+                  canAfford={canAfford(upgrade)}
+                  isLocked={isLocked}
+                  onPurchase={() => purchaseUpgrade(upgrade.id)}
+                />
+              )}
             </Grid>
           );
         })}

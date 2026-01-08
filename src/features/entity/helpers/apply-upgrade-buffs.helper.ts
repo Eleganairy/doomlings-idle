@@ -10,7 +10,7 @@
 
 import { Entity } from "../entity.class";
 import {
-  UpgradeId,
+  ProgressionId,
   UpgradeTarget,
 } from "../../progression/types/progression.types";
 import { applyUpgradeBuffsToEntity } from "../../progression/services/stat-modifiers.service";
@@ -33,7 +33,7 @@ import { applyUpgradeBuffsToEntity } from "../../progression/services/stat-modif
  */
 export function applyUpgradeBuffsToPlayer(
   entity: Entity,
-  upgradeLevels: Partial<Record<UpgradeId, number>>
+  upgradeLevels: Partial<Record<ProgressionId, number>>
 ): void {
   applyUpgradeBuffsToEntity(entity, upgradeLevels, UpgradeTarget.PLAYER);
 }
@@ -52,7 +52,7 @@ export function applyUpgradeBuffsToPlayer(
  */
 export function applyUpgradeDebuffsToEnemy(
   entity: Entity,
-  upgradeLevels: Partial<Record<UpgradeId, number>>
+  upgradeLevels: Partial<Record<ProgressionId, number>>
 ): void {
   applyUpgradeBuffsToEntity(entity, upgradeLevels, UpgradeTarget.ENEMY);
 }

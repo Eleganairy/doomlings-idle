@@ -11,16 +11,13 @@
 import { ALL_UPGRADES } from "../config/progression.config";
 import { getTotalUpgradeValue } from "../hooks/use-upgrades.hook";
 import {
-  UpgradeId,
+  ProgressionId,
   UpgradeStat,
   UpgradeIncrementType,
   UpgradeTarget,
 } from "../types/progression.types";
 import { Entity } from "../../entity/entity.class";
-import type {
-  ModifiableStat,
-  ModificationType,
-} from "../../entity/types/entity.types";
+import type { ModifiableStat } from "../../entity/types/entity.types";
 
 // ====================================================================================
 // TYPES
@@ -107,15 +104,6 @@ const STAT_KEY_TO_ENTITY_STAT: Record<
   energyBonus: null, // Not an entity stat
 };
 
-const INCREMENT_TYPE_TO_BUFF_TYPE: Record<
-  UpgradeIncrementType,
-  ModificationType
-> = {
-  [UpgradeIncrementType.ADDITIVE]: "add",
-  [UpgradeIncrementType.MULTIPLICATIVE]: "multiply",
-  [UpgradeIncrementType.PERCENTILE]: "percent",
-};
-
 // ====================================================================================
 // CORE CALCULATION - SINGLE SOURCE OF TRUTH
 // ====================================================================================
@@ -128,7 +116,7 @@ const INCREMENT_TYPE_TO_BUFF_TYPE: Record<
  * @param target Filter by upgrade target (PLAYER or ENEMY)
  */
 export function calculateStatModifiers(
-  upgradeLevels: Partial<Record<UpgradeId, number>>,
+  upgradeLevels: Partial<Record<ProgressionId, number>>,
   target: UpgradeTarget = UpgradeTarget.PLAYER
 ): AllStatModifiers {
   const modifiers = createDefaultModifiers();
@@ -199,7 +187,7 @@ export function applyModifiersToBase(
  */
 export function applyUpgradeBuffsToEntity(
   entity: Entity,
-  upgradeLevels: Partial<Record<UpgradeId, number>>,
+  upgradeLevels: Partial<Record<ProgressionId, number>>,
   target: UpgradeTarget = UpgradeTarget.PLAYER
 ): void {
   // Calculate modifiers once using the single source of truth
@@ -272,7 +260,7 @@ const BASE_PLAYER_STATS = {
  * @param upgradeLevels Current upgrade levels from progression store
  */
 export function calculatePlayerStats(
-  upgradeLevels: Partial<Record<UpgradeId, number>>
+  upgradeLevels: Partial<Record<ProgressionId, number>>
 ): CalculatedPlayerStats {
   const modifiers = calculateStatModifiers(upgradeLevels, UpgradeTarget.PLAYER);
 
@@ -312,7 +300,7 @@ export function calculatePlayerStats(
  * @param upgradeLevels Current upgrade levels from progression store
  */
 export function calculateEnergyBonusMultiplier(
-  upgradeLevels: Partial<Record<UpgradeId, number>>
+  upgradeLevels: Partial<Record<ProgressionId, number>>
 ): number {
   const modifiers = calculateStatModifiers(upgradeLevels, UpgradeTarget.PLAYER);
   return 1 + modifiers.energyBonus.percentile / 100;
